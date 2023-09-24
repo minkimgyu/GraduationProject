@@ -22,16 +22,18 @@ namespace BehaviorTree
 
             for (int i = 0; i < _childNodes.Count; i++)
             {
-                if (_childNodes[i].Evaluate() == NodeState.FAILURE)
+                NodeState nowState = _childNodes[i].Evaluate();
+
+                if (nowState == NodeState.FAILURE)
                 {
                     _state = NodeState.FAILURE;
                     return _state;
                 }
-                else if (_childNodes[i].Evaluate() == NodeState.SUCCESS)
+                else if (nowState == NodeState.SUCCESS)
                 {
                     continue;
                 }
-                else if (_childNodes[i].Evaluate() == NodeState.RUNNING)
+                else if (nowState == NodeState.RUNNING)
                 {
                     childNodeIsRunning = true;
                     continue;
@@ -65,16 +67,18 @@ namespace BehaviorTree
         {
             for (int i = 0; i < _childNodes.Count; i++)
             {
-                if (_childNodes[i].Evaluate() == NodeState.FAILURE)
+                NodeState nowState = _childNodes[i].Evaluate();
+
+                if (nowState == NodeState.FAILURE)
                 {
                     continue;
                 }
-                else if (_childNodes[i].Evaluate() == NodeState.SUCCESS)
+                else if (nowState == NodeState.SUCCESS)
                 {
                     _state = NodeState.SUCCESS;
                     return _state;
                 }
-                else if (_childNodes[i].Evaluate() == NodeState.RUNNING)
+                else if (nowState == NodeState.RUNNING)
                 {
                     _state = NodeState.RUNNING;
                     return _state;
