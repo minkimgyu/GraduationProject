@@ -10,19 +10,18 @@ abstract public class BaseEffect : MonoBehaviour
 
     abstract public void PlayEffect();
 
-    protected void DestroySelf() => Destroy(gameObject);
+    private void OnDisable()
+    {
+        ObjectPooler.ReturnToPool(gameObject);
+    }
+
+    protected void DisableObject() => gameObject.SetActive(false);
 }
 
-abstract public class LerpFadeEffect : BaseEffect
+abstract public class CoroutineEffect : BaseEffect
 {
     [SerializeField]
-    protected Color startColor;
-
-    [SerializeField]
-    protected Color endColor;
-
-    [SerializeField]
-    protected float duration = 0.1f;
+    protected float duration;
 
     protected float smoothness = 0.001f;
 
@@ -33,5 +32,5 @@ abstract public class LerpFadeEffect : BaseEffect
         waitTime = new WaitForSeconds(smoothness);
     }
 
-    abstract protected IEnumerator LerpFadeRoutine();
+    abstract protected IEnumerator Routine();
 }

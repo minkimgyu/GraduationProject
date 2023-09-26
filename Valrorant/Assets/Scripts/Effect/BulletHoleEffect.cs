@@ -2,13 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletHoleEffect : LerpFadeEffect
+public class BulletHoleEffect : CoroutineEffect
 {
-    ParticleSystem _objectBurstEffect;
-    SpriteRenderer _holeRenderer;
+    [SerializeField]
+    protected Color startColor;
+
+    [SerializeField]
+    protected Color endColor;
 
     [SerializeField]
     float waitForFade = 5f;
+
+    ParticleSystem _objectBurstEffect;
+    SpriteRenderer _holeRenderer;
 
     float spaceBetweenWall = 0.001f;
 
@@ -28,10 +34,10 @@ public class BulletHoleEffect : LerpFadeEffect
     public override void PlayEffect()
     {
         _objectBurstEffect.Play();
-        StartCoroutine(LerpFadeRoutine());
+        StartCoroutine(Routine());
     }
 
-    protected override IEnumerator LerpFadeRoutine()
+    protected override IEnumerator Routine()
     {
         yield return new WaitForSeconds(waitForFade);
 
@@ -44,6 +50,6 @@ public class BulletHoleEffect : LerpFadeEffect
             yield return new WaitForSeconds(smoothness);
         }
 
-        DestroySelf();
+        DisableObject();
     }
 }

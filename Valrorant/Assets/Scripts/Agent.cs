@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Agent : Tree
 {
-    [SerializeField] private Transform player;
     [SerializeField] private Transform actorBone;
     [SerializeField] private Transform direction;
 
@@ -127,7 +126,7 @@ public class CanShoot : Node
 
     public override NodeState Evaluate()
     {
-        if (Input.GetMouseButtonDown(0)) _state = NodeState.SUCCESS;
+        if (Input.GetMouseButton(0)) _state = NodeState.SUCCESS;
         else _state = NodeState.FAILURE;
 
         return _state;
@@ -136,6 +135,8 @@ public class CanShoot : Node
 
 public class Shoot : Node
 {
+    // 이 부분을 옵져버 패턴으로 구현해서 아예 구독시켜서 사용하는 방식으로 만들어보자
+
     Agent loadAgent;
 
     public Shoot(Agent agent) : base()
