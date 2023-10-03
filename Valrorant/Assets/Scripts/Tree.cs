@@ -7,7 +7,7 @@ public abstract class Tree : MonoBehaviour
 {
     private Node _rootNode = null;
 
-    protected void Start()
+    protected virtual void Start()
     {
         _rootNode = SetUp();
     }

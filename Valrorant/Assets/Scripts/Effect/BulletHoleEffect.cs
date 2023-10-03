@@ -27,6 +27,7 @@ public class BulletHoleEffect : CoroutineEffect
 
     public override void Initialize(Vector3 hitPosition, Vector3 hitNormal, Quaternion holeRotation)
     {
+        _holeRenderer.color = startColor;
         transform.position = hitPosition + (hitNormal * spaceBetweenWall);
         transform.rotation = holeRotation * transform.rotation;
     }
