@@ -40,6 +40,9 @@ abstract public class Gun : BaseWeapon
     protected Animator _animator;
     public Animator Animator { get { return _animator; } }
 
+    [SerializeField]
+    protected float reloadFinishTime;
+
     WaitForSeconds waitReloadFinishTime;
 
     protected override void Awake()
@@ -59,6 +62,8 @@ abstract public class Gun : BaseWeapon
 
     public override void OnReload()
     {
+        if (_mainAction.NowAction || _subAction.NowAction) return; // 만약 둘 중 하나가 작동 중인 경우
+
         if (stopOtherAction == true) return;
 
         if (CanReload() == false) return;
@@ -105,5 +110,15 @@ abstract public class Gun : BaseWeapon
         _muzzleFlash.Play();
         _emptyCartridgeSpawner.Play();
         _animator.Play("Fire", -1, 0f);
+    }
+
+    protected override void ChainMainAction()
+    {
+        _ownerAnimator.Play(_weaponName + "MainAction", -1, 0);
+    }
+
+    protected override void ChainSubAction()
+    {
+        _ownerAnimator.Play(_weaponName + "SubAction", -1, 0);
     }
 }

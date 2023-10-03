@@ -19,15 +19,13 @@ public class Classic : Gun
     [SerializeField]
     float _subAttackDelay;
 
-    AttackStrategy singleAttack;
-    AttackStrategy scatterAttack;
-
-    void Start()
+    protected override void Awake()
     {
-        singleAttack = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
+        base.Awake();
+        _mainResult = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
             _targetLayer, _weaponOwner, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect);
 
-        scatterAttack = new ScatterProjectileGunAttack(_camTransform, _range, _hitEffectName,
+        _subResult = new ScatterProjectileGunAttack(_camTransform, _range, _hitEffectName,
             _targetLayer, _weaponOwner, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset);
 
 
@@ -48,7 +46,7 @@ public class Classic : Gun
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= mainAttackBulletCount; // 1발 발사
 
-        singleAttack.Attack();
+        _mainResult.Attack();
         OnAttack();
     }
 
@@ -61,7 +59,7 @@ public class Classic : Gun
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= _projectileCounts; // 3발 발사
 
-        scatterAttack.Attack();
+        _subResult.Attack();
         OnAttack();
     }
 }

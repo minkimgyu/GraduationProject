@@ -5,13 +5,6 @@ using BehaviorTree;
 
 public class CanEquipMainWeapon : Node
 {
-    Agent loadAgent;
-
-    public CanEquipMainWeapon(Agent agent) : base()
-    {
-        loadAgent = agent;
-    }
-
     public override NodeState Evaluate()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1)) _state = NodeState.SUCCESS; // 이렇게 받지 말고 사격 시작 / 끝으로 구분해서 발사 적용시키자
@@ -41,13 +34,6 @@ public class EquipMainWeapon : Node
 
 public class CanEquipSubWeapon : Node
 {
-    Agent loadAgent;
-
-    public CanEquipSubWeapon(Agent agent) : base()
-    {
-        loadAgent = agent;
-    }
-
     public override NodeState Evaluate()
     {
         if (Input.GetKeyDown(KeyCode.Alpha2)) _state = NodeState.SUCCESS; // 이렇게 받지 말고 사격 시작 / 끝으로 구분해서 발사 적용시키자
@@ -77,13 +63,6 @@ public class EquipSubWeapon : Node
 
 public class CanEquipKnife : Node
 {
-    Agent loadAgent;
-
-    public CanEquipKnife(Agent agent) : base()
-    {
-        loadAgent = agent;
-    }
-
     public override NodeState Evaluate()
     {
         if (Input.GetKeyDown(KeyCode.Alpha3)) _state = NodeState.SUCCESS; // 이렇게 받지 말고 사격 시작 / 끝으로 구분해서 발사 적용시키자

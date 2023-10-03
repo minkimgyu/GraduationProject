@@ -80,10 +80,15 @@ MonoBehaviour:
   _range: 1.5
   _hitEffectName: KnifeScratchEffect
   _weaponName: Knife
-  equipFinishTime: 1.105
-  reloadFinishTime: 0
-  _mainAttackDelay: 0.5
-  _subAttackDelay: 1
+  equipFinishTime: 0.2
+  _mainAttackDelay: 0.8
+  _subAttackDelay: 1.3
+  attackLinkTime: 2.8
+  mainAttackEffectDelayTime:
+  - 0.16
+  - 0.45
+  - 0.16
+  subAttackEffectDelayTime: 0.25
 --- !u!1 &5977725173639698776
 GameObject:
   m_ObjectHideFlags: 0

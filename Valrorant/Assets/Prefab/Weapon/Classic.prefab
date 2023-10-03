@@ -294,8 +294,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4035419263818893934}
-  - component: {fileID: 7989557967660535828}
   - component: {fileID: 3032204464737102680}
+  - component: {fileID: 7989557967660535828}
   m_Layer: 6
   m_Name: Classic
   m_TagString: Untagged
@@ -324,6 +324,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3032204464737102680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3696154417213591764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4e76d746249a41468da3c43940f3d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _range: 100
+  _hitEffectName: BulletHoleEffect
+  _weaponName: Classic
+  equipFinishTime: 1
+  _muzzleFlash: {fileID: 4453960129729776034}
+  _emptyCartridgeSpawner: {fileID: 7066971304535707626}
+  _muzzle: {fileID: 2085943881}
+  _trajectoryLineEffect: TrajectoryLineEffect
+  _maxBulletCountInMagazine: 30
+  _nonPenetrateHitEffect: NonPenetrateBulletHoleEffect
+  _bulletCountInMagazine: 0
+  _possessingBullet: 60
+  reloadFinishTime: 2.3
+  mainAttackBulletCount: 1
+  _projectileCounts: 3
+  _spreadOffset: 0.3
+  _mainAttackDelay: 1
+  _subAttackDelay: 1
 --- !u!95 &7989557967660535828
 Animator:
   serializedVersion: 5
@@ -344,36 +374,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
---- !u!114 &3032204464737102680
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3696154417213591764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e76d746249a41468da3c43940f3d18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _range: 100
-  _hitEffectName: BulletHoleEffect
-  _weaponName: Classic
-  equipFinishTime: 1
-  reloadFinishTime: 2.3
-  _muzzleFlash: {fileID: 4453960129729776034}
-  _emptyCartridgeSpawner: {fileID: 7066971304535707626}
-  _muzzle: {fileID: 2085943881}
-  _trajectoryLineEffect: TrajectoryLineEffect
-  _maxBulletCountInMagazine: 30
-  _nonPenetrateHitEffect: NonPenetrateBulletHoleEffect
-  _bulletCountInMagazine: 0
-  _possessingBullet: 60
-  mainAttackBulletCount: 1
-  _projectileCounts: 3
-  _spreadOffset: 0.3
-  _mainAttackDelay: 1
-  _subAttackDelay: 1
 --- !u!1 &3810571523398445944
 GameObject:
   m_ObjectHideFlags: 0

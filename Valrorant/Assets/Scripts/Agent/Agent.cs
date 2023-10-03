@@ -8,7 +8,11 @@ public class Agent : Tree
     [SerializeField] private Transform actorBone;
     [SerializeField] private Transform direction;
 
-    [SerializeField] private Transform cameraHolder;
+    private Transform cameraHolder;
+
+    [SerializeField] private Transform cameraNormalTransform;
+    [SerializeField] private Transform cameraZoomTransform;
+
     private Vector3 _moveDir;
     private Rigidbody rb;
 
@@ -56,6 +60,9 @@ public class Agent : Tree
     Animator _animator;
     public Animator Animator { get { return _animator; } }
 
+    [SerializeField]
+    AimEvent _aimEvent;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -64,6 +71,16 @@ public class Agent : Tree
         rb = GetComponent<Rigidbody>();
 
         _weaponController.Initialize(transform, cam, _animator);
+
+        cameraHolder = cameraNormalTransform;
+
+        _aimEvent.OnAimRequested = SwitchViewMode;
+    }
+
+    public void SwitchViewMode(bool zoomMode)
+    {
+        if (zoomMode) cameraHolder = cameraZoomTransform;
+        else cameraHolder = cameraNormalTransform;
     }
 
     protected override void Start()
@@ -115,22 +132,23 @@ public class Agent : Tree
         Node root = new Selector(
             new List<Node>
             {
-                new Sequence(new List<Node> { new CanPlayMainAction(this), new PlayMainAction(this) }),
-                new Sequence(new List<Node> { new CanStopMainAction(this), new StopMainAction(this) }),
+                new Sequence(new List<Node> { new CanMainActionStart(), new MainActionStart(this) }),
+                new Sequence(new List<Node> { new CanMainActionEnd(), new MainActionEnd(this) }),
 
-                new Sequence(new List<Node> { new CanPlaySubAction(this), new PlaySubAction(this) }),
-                new Sequence(new List<Node> { new CanStopSubAction(this), new StopSubAction(this) }),
+                new Sequence(new List<Node> { new CanSubActionStart(), new SubActionStart(this) }),
+                new Sequence(new List<Node> { new CanSubActionEnd(), new SubActionEnd(this) }),
 
+                new Sequence(new List<Node> { new CanEquipMainWeapon(), new EquipMainWeapon(this) }),
+                new Sequence(new List<Node> { new CanEquipSubWeapon(), new EquipSubWeapon(this) }),
+                new Sequence(new List<Node> { new CanEquipKnife(), new EquipKnife(this) }),
 
-                new Sequence(new List<Node> { new CanEquipMainWeapon(this), new EquipMainWeapon(this) }),
-                new Sequence(new List<Node> { new CanEquipSubWeapon(this), new EquipSubWeapon(this) }),
-                new Sequence(new List<Node> { new CanEquipKnife(this), new EquipKnife(this) }),
-
-                new Sequence(new List<Node> { new CanReload(this), new Reload(this) }),
+                new Sequence(new List<Node> { new CanReload(), new Reload(this) }),
 
                 new Sequence(new List<Node> { new CanJump(this), new Jump(this) }),
                 new Sequence(new List<Node> { new CanCrouch(), new Crouch(this) }),
-                new Sequence(new List<Node> { new   new Move(this) })
+
+                // FAILURE을 반환할 때까지 실행
+                new Sequence(new List<Node> {new Move(this), new MainActionProgress(this), new SubActionProgress(this)})
             }
         );
 

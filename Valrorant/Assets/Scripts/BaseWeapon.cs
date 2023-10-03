@@ -27,6 +27,13 @@ abstract public class BaseWeapon : MonoBehaviour
 
     protected ActionStrategy _subAction;
 
+
+    protected ResultStrategy _mainResult;
+
+    protected ResultStrategy _subResult;
+
+
+
     protected Animator _ownerAnimator;
 
     public Animator OwnerAnimator { get { return _ownerAnimator; } }
@@ -37,9 +44,6 @@ abstract public class BaseWeapon : MonoBehaviour
 
     [SerializeField]
     protected float equipFinishTime;
-
-    [SerializeField]
-    protected float reloadFinishTime;
 
     WaitForSeconds waitEquipFinishTime;
 
@@ -91,43 +95,55 @@ abstract public class BaseWeapon : MonoBehaviour
 
         gameObject.SetActive(false);
         stopOtherAction = false;
+
+        _subResult.UnEquip();
     }
 
     public virtual void OnReload() { }
 
-    public void OnMainAction() 
+
+
+    public void OnMainActionStart() 
     {
         if (stopOtherAction == true) return;
-        _mainAction.DoAction();
-
+        _mainAction.Start();
     }
 
-    public void OnStopMainAction() 
+    public void OnMainActionProgress()
     {
         if (stopOtherAction == true) return;
-        _mainAction.StopAction(); 
+        _mainAction.Progress();
     }
 
-    public void OnDoSubAction() 
+    public void OnMainActionEnd()
     {
         if (stopOtherAction == true) return;
-        _subAction.DoAction();
-
+        _mainAction.End();
     }
 
-    public void OnStopSubAction() 
+
+
+    public void OnSubActionStart() 
     {
         if (stopOtherAction == true) return;
-        _subAction.StopAction(); 
+        _subAction.Start();
+
     }
 
-    protected virtual void ChainMainAction()
+    public void OnSubActionProgress()
     {
-        _ownerAnimator.Play(_weaponName + "MainAction", -1, 0);
+        if (stopOtherAction == true) return;
+        _subAction.Progress();
     }
 
-    protected virtual void ChainSubAction()
+    public void OnSubActionEnd() 
     {
-        _ownerAnimator.Play(_weaponName + "SubAction", -1, 0);
+        if (stopOtherAction == true) return;
+        _subAction.End(); 
     }
+
+
+    protected virtual void ChainMainAction() { }
+
+    protected virtual void ChainSubAction() { }
 }
