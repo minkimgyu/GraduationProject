@@ -351,7 +351,7 @@ MonoBehaviour:
   reloadFinishTime: 2.3
   mainAttackBulletCount: 1
   _projectileCounts: 3
-  _spreadOffset: 0.3
+  _spreadOffset: 0.8
   _mainAttackDelay: 1
   _subAttackDelay: 1
 --- !u!95 &7989557967660535828
@@ -838,7 +838,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: 9x19_Casing
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5938030064899754117, guid: 18ce429bc2578564598f8bdbaafacad9, type: 3}
+    - {fileID: 5969759670716770137, guid: 18ce429bc2578564598f8bdbaafacad9, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 18ce429bc2578564598f8bdbaafacad9, type: 3}
 --- !u!4 &6980485690742521472 stripped
 Transform:

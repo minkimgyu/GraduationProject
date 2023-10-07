@@ -22,7 +22,6 @@ public class Agent : Tree
     [SerializeField] private Transform camPivot;
     [SerializeField] private Transform cam;
 
-
     [SerializeField]
     private bool _isLevitating = false;
     public bool IsLevitating { get { return _isLevitating; } }
@@ -53,9 +52,9 @@ public class Agent : Tree
     [SerializeField]
     private bool _viewYInverted = false;
 
-    WeaponController _weaponController;
+    WeaponHolder _weaponController;
 
-    public WeaponController WeaponController { get { return _weaponController; } }
+    public WeaponHolder WeaponController { get { return _weaponController; } }
 
     Animator _animator;
     public Animator Animator { get { return _animator; } }
@@ -67,7 +66,7 @@ public class Agent : Tree
     void Awake()
     {
         _animator = GetComponentInChildren<Animator>();
-        _weaponController = GetComponent<WeaponController>();
+        _weaponController = GetComponent<WeaponHolder>();
         rb = GetComponent<Rigidbody>();
 
         _weaponController.Initialize(transform, cam, _animator);
@@ -104,7 +103,7 @@ public class Agent : Tree
 
     private void LateUpdate()
     {
-        actorBone.rotation = cam.rotation = Quaternion.Euler(maxY, direction.eulerAngles.y, 0);
+        cam.rotation = Quaternion.Euler(maxY, direction.eulerAngles.y, 0);
         camPivot.position = cameraHolder.position;
     }
 
@@ -147,8 +146,7 @@ public class Agent : Tree
                 new Sequence(new List<Node> { new CanJump(this), new Jump(this) }),
                 new Sequence(new List<Node> { new CanCrouch(), new Crouch(this) }),
 
-                // FAILURE을 반환할 때까지 실행
-                new Sequence(new List<Node> {new Move(this), new MainActionProgress(this), new SubActionProgress(this)})
+                new Sequence(new List<Node> { new MainActionProgress(this), new SubActionProgress(this), new Move(this)})
             }
         );
 

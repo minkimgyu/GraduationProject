@@ -118,11 +118,17 @@ abstract public class BaseGunAttack : ApplyAttack
 
         for (int i = 0; i < tmpHits.Length; i++)
         {
-            if (tmpHits[i].collider.transform == _weaponHolder) continue; // _weaponHolder 배열에서 제외하기
+            if (tmpHits[i].collider.transform == _weaponHolder)
+            {
+                continue; // _weaponHolder 배열에서 제외하기
+            }
             exitHits.Add(tmpHits[i]);
         }
 
         List<PenetrateData> penetrateDatas = new List<PenetrateData>();
+
+        Debug.Log(entryHits.Length);
+        Debug.Log(exitHits.Count);
 
         if (entryHits.Length != exitHits.Count) return null;
 
@@ -258,7 +264,7 @@ public class ScatterProjectileGunAttack : BaseGunAttack
             DrawDebugLine(offsetDistances[i]);
 
             List<PenetrateData> penetrateDatas = ReturnPenetrateData(offsetDistances[i]);
-            if (penetrateDatas == null) return;
+            if (penetrateDatas == null) continue;
 
             CalculatePenetratePower(penetrateDatas);
         }

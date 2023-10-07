@@ -23,6 +23,7 @@ abstract public class BaseWeapon : MonoBehaviour
 
     protected int _targetLayer;
 
+
     protected ActionStrategy _mainAction;
 
     protected ActionStrategy _subAction;

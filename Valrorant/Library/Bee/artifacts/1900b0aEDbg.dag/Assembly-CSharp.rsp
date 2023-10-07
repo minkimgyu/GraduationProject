@@ -372,6 +372,18 @@
 "Assets/Scripts/Agent/AgentNode/AgentEquipNode.cs"
 "Assets/Scripts/Agent/AgentNode/AgentMovementNode.cs"
 "Assets/Scripts/Agent/AgentNode/AgentReloadNode.cs"
+"Assets/Scripts/Agent/FSM/FSM.cs"
+"Assets/Scripts/Agent/FSM/MovementState/CrouchState.cs"
+"Assets/Scripts/Agent/FSM/MovementState/JumpState.cs"
+"Assets/Scripts/Agent/FSM/MovementState/StopState.cs"
+"Assets/Scripts/Agent/FSM/MovementState/WalkState.cs"
+"Assets/Scripts/Agent/FSM/WeaponState/AttackState.cs"
+"Assets/Scripts/Agent/FSM/WeaponState/EquipState.cs"
+"Assets/Scripts/Agent/FSM/WeaponState/IdleState.cs"
+"Assets/Scripts/Agent/FSM/WeaponState/ReloadState.cs"
+"Assets/Scripts/Agent/MovementComponent.cs"
+"Assets/Scripts/Agent/Player.cs"
+"Assets/Scripts/Agent/ViewComponent.cs"
 "Assets/Scripts/BaseWeapon.cs"
 "Assets/Scripts/Effect/BaseEffect.cs"
 "Assets/Scripts/Effect/BulletHoleEffect.cs"
@@ -388,7 +400,7 @@
 "Assets/Scripts/Weapon/Gun/PenetrateData.cs"
 "Assets/Scripts/Weapon/Gun/Phantom.cs"
 "Assets/Scripts/Weapon/Knife.cs"
-"Assets/Scripts/WeaponController.cs"
+"Assets/Scripts/WeaponHolder.cs"
 -langversion:9.0
 
 /deterministic
