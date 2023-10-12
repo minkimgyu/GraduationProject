@@ -7,10 +7,11 @@ public class Player : MonoBehaviour
 {
     public enum MovementState
     {
-        Walk,
         Stop,
         Crouch,
-        Jump,
+        Walk,
+        Creep,
+        Jump
     }
 
     public enum WeaponState
@@ -63,18 +64,26 @@ public class Player : MonoBehaviour
         _weaponFSM.DoLateUpdate();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        _movementFSM.DoCollisionEnter(collision);
+        _weaponFSM.DoCollisionEnter(collision);
+    }
+
     void InitializeFSM()
     {
         Dictionary<MovementState, IState> movementStates = new Dictionary<MovementState, IState>();
 
-        IState walk = new WalkState(this);
         IState stop = new StopState(this);
+        IState walk = new WalkState(this);
+        IState creep = new CreepState(this);
         IState crouch = new CrouchState(this);
         IState jump = new JumpState(this);
 
-        movementStates.Add(MovementState.Walk, walk);
         movementStates.Add(MovementState.Stop, stop);
         movementStates.Add(MovementState.Crouch, crouch);
+        movementStates.Add(MovementState.Walk, walk);
+        movementStates.Add(MovementState.Creep, creep);
         movementStates.Add(MovementState.Jump, jump);
 
         _movementFSM.Initialize(movementStates, MovementState.Stop);

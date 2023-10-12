@@ -6,10 +6,18 @@ namespace FSM
 {
     public interface IState
     {
+        void CheckStateChange();
+
         void OnStateEnter();
+
         void OnStateUpdate();
+
         void OnStateFixedUpdate();
+
         void OnStateLateUpdate();
+
+        void OnStateCollisionEnter(Collision collision);
+
         void OnStateExit();
     }
 
@@ -31,10 +39,17 @@ namespace FSM
             SetState(defaultState);
         }
 
+        public void DoCollisionEnter(Collision collision)
+        {
+            if (_currentState == null) return;
+            _currentState.OnStateCollisionEnter(collision);
+        }
+
         public void DoUpdate()
         {
             if (_currentState == null) return;
             _currentState.OnStateUpdate();
+            _currentState.CheckStateChange();
         }
 
         public void DoFixedUpdate()
@@ -73,6 +88,8 @@ namespace FSM
             //상태 교체.
             _currentState = _stateDictionary[stateName];
 
+            Debug.Log(stateName);
+
             if (_currentState != null) //새 상태의 Enter를 호출한다.
                 _currentState.OnStateEnter();
 
@@ -96,6 +113,8 @@ namespace FSM
 
             //상태 교체.
             _currentState = state;
+
+            Debug.Log(_currentState);
 
             if (_currentState != null) //새 상태의 Enter를 호출한다.
                 _currentState.OnStateEnter();

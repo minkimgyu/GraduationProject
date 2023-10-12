@@ -12,11 +12,6 @@ public class MovementComponent : MonoBehaviour
     [SerializeField] float _altMoveForce;
     [SerializeField] float _jumpForce;
 
-    private bool _isLevitating = false;
-    private bool _isCrouching = false;
-
-    
-
     [SerializeField]
     float _crouchDuration;
 
@@ -29,33 +24,25 @@ public class MovementComponent : MonoBehaviour
 
     WaitForSeconds waitTime;
 
+    [SerializeField]
+    Transform holder;
+
+    float capsuleCrouchHeight = 1f;
+    float capsuleStandHeight = 2f;
+
+    float capsuleCrouchCenter = 0.5f;
+    float capsuleStandCenter = 1f;
+
+    float standHeight = 0f;
+    float crouchHeight = -0.5f;
+
     // Start is called before the first frame update
     void Start()
     {
+        capsuleCrouchHeight = capsuleStandHeight + crouchHeight;
+
         _rigidbody = GetComponent<Rigidbody>();
         waitTime = new WaitForSeconds(smoothness);
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag == "Ground" && _isLevitating == true)
-        {
-            _isLevitating = false;
-        }
-    }
-    public bool CanMove()
-    {
-        return Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0;
-    }
-
-    public bool CanJump()
-    {
-        return Input.GetKeyDown(KeyCode.Space) && _isLevitating == false;
-    }
-
-    public bool CanCrouch()
-    {
-        return Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift);
     }
 
     public void ResetDirection()
@@ -65,11 +52,10 @@ public class MovementComponent : MonoBehaviour
 
     public void Jump()
     {
-        _isLevitating = true;
         _rigidbody.AddForce(new Vector3(0, _jumpForce, 0), ForceMode.Impulse);
     }
 
-    public void Move(bool pressAlt)
+    public void Move(bool pressAlt = false)
     {
         float moveForce;
 
@@ -79,10 +65,10 @@ public class MovementComponent : MonoBehaviour
         _rigidbody.AddForce(_moveDirection * moveForce, ForceMode.Force);
     }
 
-    public void Crouch()
+    public void Crouch(bool nowCrouch)
     {
-        _isCrouching = !_isCrouching;
-        _crouchCoroutine = StartCoroutine(CrouchRoutine(_isCrouching));
+        if (_crouchCoroutine != null) StopCoroutine(_crouchCoroutine);
+        _crouchCoroutine = StartCoroutine(CrouchRoutine(nowCrouch));
     }
 
     IEnumerator CrouchRoutine(bool nowCrouch)
@@ -91,10 +77,22 @@ public class MovementComponent : MonoBehaviour
         float increment = smoothness / _crouchDuration; //The amount of change to apply.
         while (progress < 1)
         {
-            capsuleCollider.center = Mathf.Lerp()
-            capsuleCollider.height
+            if(nowCrouch)
+            {
+                capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, capsuleCrouchHeight, progress);
+                capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, new Vector3(capsuleCollider.center.x, capsuleCrouchCenter, capsuleCollider.center.z), progress);
 
-           
+
+                holder.localPosition = Vector3.Lerp(holder.localPosition, new Vector3(holder.localPosition.x, crouchHeight, holder.localPosition.z), progress);
+            }
+            else
+            {
+                capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, capsuleStandHeight, progress);
+                capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, new Vector3(capsuleCollider.center.x, capsuleStandCenter, capsuleCollider.center.z), progress);
+
+                holder.localPosition = Vector3.Lerp(holder.localPosition, new Vector3(holder.localPosition.x, standHeight, holder.localPosition.z), progress);
+            }
+
             progress += increment;
             yield return new WaitForSeconds(smoothness);
         }

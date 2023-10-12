@@ -12,11 +12,27 @@ public class StopState : IState
         storedPlayer = player;
     }
 
-    void ChangeState()
+    public void CheckStateChange()
     {
-        if (storedPlayer.MovementComponent.CanMove()) storedPlayer.MovementFSM.SetState(Player.MovementState.Walk);
-        else if (storedPlayer.MovementComponent.CanJump()) storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
-        else if (storedPlayer.MovementComponent.CanCrouch()) storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
+        if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Creep);
+        }
+
+        if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Walk);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
+        }
     }
 
     public void OnStateEnter()
@@ -39,6 +55,9 @@ public class StopState : IState
     public void OnStateUpdate()
     {
         storedPlayer.ViewComponent.ResetView();
-        ChangeState();
+    }
+
+    public void OnStateCollisionEnter(Collision collision)
+    {
     }
 }

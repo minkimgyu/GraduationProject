@@ -20,23 +20,9 @@ public class WalkState : IState
     {
     }
 
-    public void OnStateUpdate()
-    {
-        storedPlayer.MovementComponent.ResetDirection();
-        storedPlayer.ViewComponent.ResetView();
-
-        ChangeState();
-    }
-
-    bool NowPressAlt()
-    {
-        return Input.GetKey(KeyCode.LeftAlt) == true || Input.GetKey(KeyCode.RightAlt) == true;
-    }
-
     public void OnStateFixedUpdate()
     {
-        bool pressAlt = NowPressAlt();
-        storedPlayer.MovementComponent.Move(pressAlt);
+        storedPlayer.MovementComponent.Move();
     }
 
     public void OnStateLateUpdate()
@@ -44,10 +30,36 @@ public class WalkState : IState
         storedPlayer.ViewComponent.ResetCamera();
     }
 
-    public void ChangeState()
+    public void OnStateUpdate()
     {
-        if (storedPlayer.MovementComponent.CanMove() == false) storedPlayer.MovementFSM.SetState(Player.MovementState.Stop);
-        else if (storedPlayer.MovementComponent.CanJump()) storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
-        else if (storedPlayer.MovementComponent.CanCrouch()) storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
+        storedPlayer.MovementComponent.ResetDirection();
+        storedPlayer.ViewComponent.ResetView();
+    }
+
+    public void CheckStateChange()
+    {
+        if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Stop);
+        }
+
+        if (((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)) && Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Creep);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
+        }
+    }
+
+    public void OnStateCollisionEnter(Collision collision)
+    {
     }
 }

@@ -5,6 +5,14 @@ using FSM;
 
 public class ReloadState : IState
 {
+    public void CheckStateChange()
+    {
+    }
+
+    public void OnStateCollisionEnter(Collision collision)
+    {
+    }
+
     public void OnStateEnter()
     {
     }
