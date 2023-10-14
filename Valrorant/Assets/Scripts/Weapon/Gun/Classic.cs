@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DamageUtility;
 
 public class Classic : Gun
 {
@@ -19,14 +20,22 @@ public class Classic : Gun
     [SerializeField]
     float _subAttackDelay;
 
-    protected override void Awake()
+    Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _attackDamageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
-        base.Awake();
+        { DistanceAreaData.HitArea.Head, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 78), new DistanceAreaData(30, 50, 66) } },
+        { DistanceAreaData.HitArea.Body, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 26), new DistanceAreaData(30, 50, 22) } },
+        { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 22), new DistanceAreaData(30, 50, 18) } },
+    };
+
+    public override void Initialize(Transform cam, Animator ownerAnimator)
+    {
+        base.Initialize(cam, ownerAnimator);
+
         _mainResult = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
-            _targetLayer, _weaponOwner, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect);
+            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _attackDamageDictionary);
 
         _subResult = new ScatterProjectileGunAttack(_camTransform, _range, _hitEffectName,
-            _targetLayer, _weaponOwner, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset);
+            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset, _attackDamageDictionary);
 
 
         _mainAction = new SingleAttactAction(_mainAttackDelay);
@@ -46,7 +55,7 @@ public class Classic : Gun
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= mainAttackBulletCount; // 1발 발사
 
-        _mainResult.Attack();
+        _mainResult.Do();
         OnAttack();
     }
 
@@ -59,7 +68,7 @@ public class Classic : Gun
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= _projectileCounts; // 3발 발사
 
-        _subResult.Attack();
+        _subResult.Do();
         OnAttack();
     }
 }

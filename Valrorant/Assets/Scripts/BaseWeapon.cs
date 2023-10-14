@@ -5,8 +5,6 @@ using UnityEngine;
 // 드랍, 무게 등등 다양한 변수 추가
 abstract public class BaseWeapon : MonoBehaviour
 {
-    protected Transform _weaponOwner;
-
     protected Transform _camTransform;
 
     [SerializeField]
@@ -33,39 +31,25 @@ abstract public class BaseWeapon : MonoBehaviour
 
     protected ResultStrategy _subResult;
 
-
-
-    protected Animator _ownerAnimator;
-
-    public Animator OwnerAnimator { get { return _ownerAnimator; } }
-
-    protected bool stopOtherAction = false;
-
-    protected Coroutine stopOtherActionCoroutine;
-
     [SerializeField]
     protected float equipFinishTime;
+    public float EquipFinishTime { get { return equipFinishTime; } }
 
-    WaitForSeconds waitEquipFinishTime;
+    protected Animator _ownerAnimator;
+    public Animator OwnerAnimator { get { return _ownerAnimator; } }
 
-    private void Update()
+    public void OnUpdate()
     {
         _mainAction.Tick();
         _subAction.Tick();
     }
 
-    protected virtual void Awake()
+    public virtual void Initialize(Transform cam, Animator ownerAnimator)
     {
-        _targetLayer = LayerMask.GetMask("PenetrateTarget");
-        waitEquipFinishTime = new WaitForSeconds(equipFinishTime);
-    }
-
-    public virtual void Initialize(Transform owner, Transform cam, Animator ownerAnimator)
-    {
-        _weaponOwner = owner;
         _camTransform = cam;
 
         _ownerAnimator = ownerAnimator;
+        _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
     }
 
     protected virtual void OnAttack() { }
@@ -74,77 +58,56 @@ abstract public class BaseWeapon : MonoBehaviour
     {
         gameObject.SetActive(true);
         _ownerAnimator.Play(_weaponName + "Equip");
-
-        stopOtherActionCoroutine = StartCoroutine(EquipFinishCoroutine(waitEquipFinishTime));
-    }
-
-    protected IEnumerator EquipFinishCoroutine(WaitForSeconds waitFinishTime)
-    {
-        stopOtherAction = true;
-        yield return waitFinishTime;
-        stopOtherAction = false;
     }
 
     public virtual void OnUnEquip()
     {
-        // 제거해줌
-        if (stopOtherActionCoroutine != null)
-        {
-            StopCoroutine(stopOtherActionCoroutine);
-            stopOtherActionCoroutine = null;
-        }
-
         gameObject.SetActive(false);
-        stopOtherAction = false;
-
-        _subResult.UnEquip();
     }
-
-    public virtual void OnReload() { }
-
-
 
     public void OnMainActionStart() 
     {
-        if (stopOtherAction == true) return;
         _mainAction.Start();
     }
 
     public void OnMainActionProgress()
     {
-        if (stopOtherAction == true) return;
         _mainAction.Progress();
     }
 
     public void OnMainActionEnd()
     {
-        if (stopOtherAction == true) return;
         _mainAction.End();
     }
 
-
-
     public void OnSubActionStart() 
     {
-        if (stopOtherAction == true) return;
         _subAction.Start();
-
     }
 
     public void OnSubActionProgress()
     {
-        if (stopOtherAction == true) return;
         _subAction.Progress();
     }
 
     public void OnSubActionEnd() 
     {
-        if (stopOtherAction == true) return;
         _subAction.End(); 
     }
 
+    public virtual bool CanReload() { return false; }
+
+    public virtual void OnReload() { }
+
+    public virtual void ReloadAmmo() { }
+
+    public virtual float ReturnReloadFinishTime() { return default; }
+
+    public virtual float ReturnReloadStateExitTime() { return default; }
 
     protected virtual void ChainMainAction() { }
 
     protected virtual void ChainSubAction() { }
+
+    public virtual void OffScopeModeInstantly() { } 
 }

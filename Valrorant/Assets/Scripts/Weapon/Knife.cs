@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DamageUtility;
 
 public class Knife : BaseWeapon
 {
@@ -24,9 +25,24 @@ public class Knife : BaseWeapon
     float attackTime = 0;
     int actionIndex = 1;
 
+    bool stopMainAction = false;
+    bool stopSubAction = false;
+
+    Coroutine stopMainActionRoutine;
+    Coroutine stopSubActionRoutine;
+
+    [SerializeField]
+    DirectionData _mainAttackDamageData;
+
+    [SerializeField]
+    DirectionData _subAttackDamageData;
+
     protected override void ChainMainAction()
     {
-        if(attackTime == 0)
+        if (stopMainAction) return;
+
+
+        if (attackTime == 0)
         {
             actionIndex = 1;
             attackTime = Time.time;
@@ -49,30 +65,65 @@ public class Knife : BaseWeapon
         }
 
         _ownerAnimator.Play(_weaponName + "MainAction" + actionIndex, -1, 0);
-        Invoke("DoSimpleAttack", mainAttackEffectDelayTime[actionIndex - 1]); //0.16f
+        StartCoroutine(DoSimpleAttackRoutine(mainAttackEffectDelayTime[actionIndex - 1]));
+
+        stopSubAction = true;
+
+        // 돌아가는 중이라면 취소시키고 다시 돌리기
+        if(stopSubActionRoutine != null) StopCoroutine(stopSubActionRoutine);
+        stopSubActionRoutine = StartCoroutine(DelaySubActionRoutine(_subAttackDelay));
     }
 
     protected override void ChainSubAction()
     {
+        if (stopSubAction) return;
+
+
         _ownerAnimator.Play(_weaponName + "SubAction", -1, 0);
-        Invoke("DoHardAttack", subAttackEffectDelayTime);
+        StartCoroutine(DoHardAttackRoutine(subAttackEffectDelayTime));
+
+        stopMainAction = true;
+
+        // 돌아가는 중이라면 취소시키고 다시 돌리기
+        if (stopMainActionRoutine != null) StopCoroutine(stopMainActionRoutine);
+        stopMainActionRoutine = StartCoroutine(DelayMainActionRoutine(_mainAttackDelay));
     }
 
-    void DoSimpleAttack()
+    IEnumerator DoSimpleAttackRoutine(float delay)
     {
-        _mainResult.Attack();
+        yield return new WaitForSeconds(delay);
+
+        _mainResult.Do();
     }
 
-    void DoHardAttack()
+    IEnumerator DoHardAttackRoutine(float delay)
     {
-        _subResult.Attack();
+        yield return new WaitForSeconds(delay);
+        _subResult.Do();
     }
 
-    protected override void Awake()
+    IEnumerator DelayMainActionRoutine(float delay)
     {
-        base.Awake();
-        _mainResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer);
-        _subResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer);
+        yield return new WaitForSeconds(delay);
+
+        stopMainAction = false;
+        stopMainActionRoutine = null;
+    }
+
+    IEnumerator DelaySubActionRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        stopSubAction = false;
+        stopSubActionRoutine = null;
+    }
+
+    public override void Initialize(Transform cam, Animator ownerAnimator)
+    {
+        base.Initialize(cam, ownerAnimator);
+
+        _mainResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer, _mainAttackDamageData);
+        _subResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer, _subAttackDamageData);
 
         _mainAction = new AutoAttackAction(_mainAttackDelay);
         _subAction = new AutoAttackAction(_subAttackDelay);

@@ -58,10 +58,5 @@ public class CreepState : IState
         {
             storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
         }
-
-        if (Input.GetKeyDown(KeyCode.LeftControl))
-        {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
-        }
     }
 }

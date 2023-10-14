@@ -11,10 +11,6 @@ abstract public class ActionStrategy
     public virtual void End() { }
     public virtual void Progress() { }
 
-    protected bool nowAction = false;
-
-    public bool NowAction { get { return nowAction; } set { nowAction = value; } }
-
     /// <summary>
     /// Update에서 도는 함수
     /// </summary>
@@ -46,14 +42,12 @@ public class AutoAttackAction : ActionStrategy
         if (_canAttack == false) return;
 
         _isFirstAttack = true;
-        nowAction = true;
         _canAttack = false;
     }
 
     public override void End()
     {
         _isFirstAttack = false;
-        nowAction = false;
     }
 
     public override void Tick()
@@ -104,12 +98,8 @@ public class SingleAttactAction : ActionStrategy
     {
         if (_canAttack == true)
         {
-            nowAction = true;
-
             OnActionStart();
             _canAttack = false;
-
-            nowAction = false;
         }
     }
 

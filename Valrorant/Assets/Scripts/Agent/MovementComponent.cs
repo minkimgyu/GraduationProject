@@ -8,9 +8,22 @@ public class MovementComponent : MonoBehaviour
     private Vector3 _moveDirection;
 
     [SerializeField] Transform direction;
+
     [SerializeField] float _moveForce;
     [SerializeField] float _altMoveForce;
+    [SerializeField] float _sitMoveForce;
+
     [SerializeField] float _jumpForce;
+
+    bool lockToSitMoveForce = false;
+
+    public bool LockToCrouchForce
+    {
+        set
+        {
+            lockToSitMoveForce = value;
+        }
+    }
 
     [SerializeField]
     float _crouchDuration;
@@ -27,20 +40,21 @@ public class MovementComponent : MonoBehaviour
     [SerializeField]
     Transform holder;
 
-    float capsuleCrouchHeight = 1f;
-    float capsuleStandHeight = 2f;
 
-    float capsuleCrouchCenter = 0.5f;
+    float capsuleCrouchHeight = 1.7f;
+    float capsuleCrouchCenter = 1.15f;
+
+
+    float capsuleStandHeight = 2f;
     float capsuleStandCenter = 1f;
 
     float standHeight = 0f;
-    float crouchHeight = -0.5f;
+    float crouchHeight = 0f;
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        capsuleCrouchHeight = capsuleStandHeight + crouchHeight;
-
         _rigidbody = GetComponent<Rigidbody>();
         waitTime = new WaitForSeconds(smoothness);
     }
@@ -59,8 +73,15 @@ public class MovementComponent : MonoBehaviour
     {
         float moveForce;
 
-        if (pressAlt) moveForce = _altMoveForce;
-        else moveForce = _moveForce;
+        if(lockToSitMoveForce)
+        {
+            moveForce = _sitMoveForce;
+        }
+        else
+        {
+            if (pressAlt) moveForce = _altMoveForce;
+            else moveForce = _moveForce;
+        }
 
         _rigidbody.AddForce(_moveDirection * moveForce, ForceMode.Force);
     }

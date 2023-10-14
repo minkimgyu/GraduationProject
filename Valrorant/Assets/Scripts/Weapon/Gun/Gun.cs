@@ -43,48 +43,34 @@ abstract public class Gun : BaseWeapon
     [SerializeField]
     protected float reloadFinishTime;
 
-    WaitForSeconds waitReloadFinishTime;
+    [SerializeField]
+    protected float reloadStateExitTime;
 
-    protected override void Awake()
+
+    public override void Initialize(Transform cam, Animator ownerAnimator)
     {
-        base.Awake();
+        base.Initialize(cam, ownerAnimator);
+
         _animator = GetComponent<Animator>();
         _bulletCountInMagazine = _maxBulletCountInMagazine;
-        waitReloadFinishTime = new WaitForSeconds(reloadFinishTime);
-    }
-
-    public override void Initialize(Transform holder, Transform cam, Animator ownerAnimator)
-    {
-        base.Initialize(holder, cam, ownerAnimator);
-
         // 여기에서 UI에 이밴트로 연결시키는 방식
     }
 
     public override void OnReload()
     {
-        if (_mainAction.NowAction || _subAction.NowAction) return; // 만약 둘 중 하나가 작동 중인 경우
-
-        if (stopOtherAction == true) return;
-
-        if (CanReload() == false) return;
-
         _animator.Play("Reload");
         _ownerAnimator.Play(_weaponName + "Reload");
-
-        stopOtherActionCoroutine = StartCoroutine(EquipFinishCoroutine(waitReloadFinishTime));
     }
 
-    bool CanReload()
+    public override bool CanReload()
     {
         // 현재 보유 중인 탄환이 없거나 탄창의 총알을 소모하지 않은 경우
         if (_maxBulletCountInMagazine == _bulletCountInMagazine || _possessingBullet == 0) return false;
         else return true;
     }
 
-    void ReloadAmmo()
+    public override void ReloadAmmo()
     {
-        if (CanReload() == false) return;
-
         int canLoadBulletCount = _maxBulletCountInMagazine - _bulletCountInMagazine;
 
         if (_possessingBullet >= canLoadBulletCount)
@@ -98,6 +84,10 @@ abstract public class Gun : BaseWeapon
             _possessingBullet = 0;
         }
     }
+
+    public override float ReturnReloadFinishTime() { return reloadFinishTime; }
+
+    public override float ReturnReloadStateExitTime() { return reloadStateExitTime; }
 
     public override void OnEquip()
     {

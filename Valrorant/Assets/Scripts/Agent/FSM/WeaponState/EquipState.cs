@@ -5,6 +5,15 @@ using FSM;
 
 public class EquipState : IState
 {
+    Player _storedPlayer;
+
+    Timer timer = new Timer();
+
+    public EquipState(Player player)
+    {
+        _storedPlayer = player;
+    }
+
     public void CheckStateChange()
     {
     }
@@ -15,10 +24,13 @@ public class EquipState : IState
 
     public void OnStateEnter()
     {
+        _storedPlayer.WeaponHolder.ChangeWeapon();
+        timer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.EquipFinishTime); // µÙ∑π¿Ã
     }
 
     public void OnStateExit()
     {
+
     }
 
     public void OnStateFixedUpdate()
@@ -31,5 +43,10 @@ public class EquipState : IState
 
     public void OnStateUpdate()
     {
+        timer.Update();
+        if (timer.IsTimerFinish())
+        {
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
+        }
     }
 }

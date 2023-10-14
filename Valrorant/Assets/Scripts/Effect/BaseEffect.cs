@@ -8,6 +8,8 @@ abstract public class BaseEffect : MonoBehaviour
 
     public virtual void Initialize(Vector3 hitPosition, Vector3 hitNormal, Quaternion holeRotation) { }
 
+    public virtual void Initialize(Vector3 hitPosition, Vector3 hitNormal, Quaternion holeRotation, float damamge) { }
+
     abstract public void PlayEffect();
 
     private void OnDisable()
@@ -18,19 +20,19 @@ abstract public class BaseEffect : MonoBehaviour
     protected void DisableObject() => gameObject.SetActive(false);
 }
 
-abstract public class CoroutineEffect : BaseEffect
-{
-    [SerializeField]
-    protected float duration;
+//abstract public class CoroutineEffect : BaseEffect
+//{
+//    [SerializeField]
+//    protected float duration;
 
-    protected float smoothness = 0.001f;
+//    protected float smoothness = 0.001f;
 
-    WaitForSeconds waitTime;
+//    WaitForSeconds waitTime;
 
-    protected virtual void Awake()
-    {
-        waitTime = new WaitForSeconds(smoothness);
-    }
+//    protected virtual void Awake()
+//    {
+//        waitTime = new WaitForSeconds(smoothness);
+//    }
 
-    abstract protected IEnumerator Routine();
-}
+//    abstract protected IEnumerator Routine();
+//}

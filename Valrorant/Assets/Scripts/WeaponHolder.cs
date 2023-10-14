@@ -17,23 +17,34 @@ public class WeaponHolder : MonoBehaviour
     BaseWeapon nowEquipedWeapon = null;
     public BaseWeapon NowEquipedWeapon { get { return nowEquipedWeapon; } }
 
-    public void Initialize(Transform owner, Transform camera, Animator ownerAnimator)
+    int weaponIndex = 0;
+    public int WeaponIndex { get { return weaponIndex; } set { weaponIndex = value; } }
+
+    public void Initialize(Transform camera, Animator ownerAnimator)
     {
         for (int i = 0; i < weapons.Length; i++)
         {
-            weapons[i].Initialize(owner, camera, ownerAnimator);
+            weapons[i].Initialize(camera, ownerAnimator);
         }
     }
 
-    public void ChangeWeapon(int index)
+    public void DoUpdate()
     {
-        if (nowEquipedWeapon == weapons[index]) return;
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            weapons[i].OnUpdate();
+        }
+    }
+
+    public void ChangeWeapon()
+    {
+        if (nowEquipedWeapon == weapons[weaponIndex]) return;
 
         for (int i = 0; i < weapons.Length; i++)
         {
-            if (i == index)
+            if (i == weaponIndex)
             {
-                nowEquipedWeapon = weapons[index];
+                nowEquipedWeapon = weapons[weaponIndex];
                 nowEquipedWeapon.OnEquip();
             }
             else

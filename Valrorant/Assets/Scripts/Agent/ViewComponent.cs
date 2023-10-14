@@ -7,13 +7,16 @@ public class ViewComponent : MonoBehaviour
     [SerializeField] private Transform actorBone;
     [SerializeField] private Transform direction;
 
-    private Transform cameraHolder;
+    [SerializeField] private Transform cameraHolder;
 
     [SerializeField] private Transform cameraNormalTransform;
     [SerializeField] private Transform cameraZoomTransform;
 
     [SerializeField] private Transform camPivot;
     [SerializeField] private Transform cam;
+    [SerializeField] private AimEvent aimEvent;
+
+    public Transform Cam { get { return cam; } }
 
     [SerializeField]
     private float _viewXSensitivity = 60;
@@ -30,10 +33,80 @@ public class ViewComponent : MonoBehaviour
     private float rotationX;
     private float rotationY;
 
-    public void SetZoom(bool nowZoom)
+    Coroutine zoomRoutine;
+
+    private void Start()
     {
-        if (nowZoom) cameraHolder = cameraZoomTransform;
-        else cameraHolder = cameraNormalTransform;
+        aimEvent.OnAimRequested = SetZoom;
+        aimEvent.OnAimOffInstantlyRequested = SetZoom;
+    }
+
+    void StopZoomRoutine()
+    {
+        if (zoomRoutine != null)
+        {
+            StopCoroutine(zoomRoutine);
+            zoomRoutine = null;
+        }
+    }
+
+    public void SetZoom(GameObject scope, bool nowZoom)
+    {
+        StopZoomRoutine();
+
+        scope.SetActive(nowZoom);
+
+        if (nowZoom) cameraHolder.position = cameraZoomTransform.position;
+        else cameraHolder.position = cameraNormalTransform.position;
+    }
+
+    public void SetZoom(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay)
+    {
+        StopZoomRoutine();
+
+        zoomRoutine = StartCoroutine(ZoomRoutine(scope, nowZoom, zoomDuration, scopeOnDelay));
+    }
+
+    // 코루틴으로 에임 전환 구현
+    IEnumerator ZoomRoutine(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay)
+    {
+        bool activeScope = false;
+        float smoothness = 0.001f;
+
+        float progress = 0; //This float will serve as the 3rd parameter of the lerp function.
+        float increment = smoothness / zoomDuration; //The amount of change to apply.
+        while (progress < 1)
+        {
+            if(nowZoom)
+            {
+                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraZoomTransform.position, progress);
+
+                if (progress > scopeOnDelay && activeScope == false)
+                {
+                    scope.SetActive(nowZoom);
+                    activeScope = true;
+                }
+            }
+            else
+            {
+                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraNormalTransform.position, progress);
+
+                if (activeScope == false)
+                {
+                    scope.SetActive(nowZoom);
+                    activeScope = true;
+                }
+            }
+
+            if (progress > 0.1 && activeScope == false)
+            {
+                scope.SetActive(nowZoom);
+                activeScope = true;
+            }
+
+            progress += increment;
+            yield return new WaitForSeconds(smoothness);
+        }
     }
 
     public void ResetView()

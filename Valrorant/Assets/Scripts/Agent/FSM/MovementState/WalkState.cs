@@ -52,11 +52,6 @@ public class WalkState : IState
         {
             storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
         }
-
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Crouch);
-        }
     }
 
     public void OnStateCollisionEnter(Collision collision)

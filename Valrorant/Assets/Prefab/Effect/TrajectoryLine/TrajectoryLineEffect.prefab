@@ -9,8 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8984947879229990904}
-  - component: {fileID: 8984947879229990905}
   - component: {fileID: 6264978252253841410}
+  - component: {fileID: 8984947879229990905}
+  - component: {fileID: 1305166961069207441}
   m_Layer: 0
   m_Name: TrajectoryLineEffect
   m_TagString: Untagged
@@ -33,19 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8984947879229990905
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8984947879229990854}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 496839f8d2dfd1147938fee1a7184049, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  duration: 0.01
 --- !u!96 &6264978252253841410
 TrailRenderer:
   serializedVersion: 2
@@ -145,3 +133,30 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 0
   m_Emitting: 1
+--- !u!114 &8984947879229990905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8984947879229990854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 496839f8d2dfd1147938fee1a7184049, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.01
+--- !u!114 &1305166961069207441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8984947879229990854}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea13b8d979b5cb42b81cd7e3b76fc5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  predelay: 0
+  duration: 0.01

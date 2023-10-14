@@ -44,11 +44,8 @@ public class JumpState : IState
         storedPlayer.MovementComponent.ResetDirection();
         storedPlayer.ViewComponent.ResetView();
 
-        if(Input.GetKey(KeyCode.LeftControl))
-        {
-            storedPlayer.MovementComponent.Crouch(true);
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftControl))
+        // Ctrl甫 丢 版快 旷农府扁 秒家
+        if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             storedPlayer.MovementComponent.Crouch(false);
         }

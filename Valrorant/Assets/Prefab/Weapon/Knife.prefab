@@ -89,6 +89,12 @@ MonoBehaviour:
   - 0.45
   - 0.16
   subAttackEffectDelayTime: 0.25
+  _mainAttackDamageData:
+    _backAttackDamage: 100
+    _frontAttackDamage: 50
+  _subAttackDamageData:
+    _backAttackDamage: 150
+    _frontAttackDamage: 75
 --- !u!1 &5977725173639698776
 GameObject:
   m_ObjectHideFlags: 0
