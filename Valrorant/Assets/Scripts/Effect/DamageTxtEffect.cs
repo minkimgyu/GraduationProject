@@ -5,7 +5,7 @@ using TMPro;
 
 public class DamageTxtEffect : BaseEffect
 {
-    protected RunningRoutine runningRoutine;
+    protected SmoothLerpRoutine runningRoutine;
 
     Vector3 finalPoint;
 

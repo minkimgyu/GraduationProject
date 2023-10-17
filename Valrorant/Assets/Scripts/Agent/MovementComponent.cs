@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ObserverPattern;
 
-public class MovementComponent : MonoBehaviour
+public class MovementComponent : MonoBehaviour, ISubject<float>
 {
     private Rigidbody _rigidbody;
     private Vector3 _moveDirection;
+
+    private float velocityLengthDecreaseRatio = 0.1f;
+    public float velocityLength { get { return _rigidbody.velocity.magnitude * velocityLengthDecreaseRatio; } }
 
     [SerializeField] Transform direction;
 
@@ -24,6 +28,8 @@ public class MovementComponent : MonoBehaviour
             lockToSitMoveForce = value;
         }
     }
+
+    public List<IObserver<float>> Observers { get; set; }
 
     [SerializeField]
     float _crouchDuration;
@@ -57,6 +63,7 @@ public class MovementComponent : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         waitTime = new WaitForSeconds(smoothness);
+        Observers = new List<IObserver<float>>();
     }
 
     public void ResetDirection()
@@ -116,6 +123,24 @@ public class MovementComponent : MonoBehaviour
 
             progress += increment;
             yield return new WaitForSeconds(smoothness);
+        }
+    }
+
+    public void AddObserver(IObserver<float> observer)
+    {
+        Observers.Add(observer);
+    }
+
+    public void RemoveObserver(IObserver<float> observer)
+    {
+        Observers.Remove(observer);
+    }
+
+    public void NotifyToObservers(float velocity)
+    {
+        for (int i = 0; i < Observers.Count; i++)
+        {
+            Observers[i].Notify(velocity);
         }
     }
 }

@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Dummy : MonoBehaviour, IDamageable
 {
-    public void GetDamage(float damage, Vector3 hitPosition, Vector3 hitNormal)
+    public void GetDamage(float damage)
     {
-        BaseEffect effect;
-        effect = ObjectPooler.SpawnFromPool<BaseEffect>("DamageTxt");
+    }
 
-        effect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal), damage);
-        effect.PlayEffect();
+    public Vector3 GetFowardVector()
+    {
+        return transform.forward;
     }
 }

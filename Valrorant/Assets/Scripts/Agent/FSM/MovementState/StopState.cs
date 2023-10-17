@@ -50,6 +50,7 @@ public class StopState : IState
     public void OnStateUpdate()
     {
         storedPlayer.ViewComponent.ResetView();
+        storedPlayer.MovementComponent.NotifyToObservers(storedPlayer.MovementComponent.velocityLength);
     }
 
     public void OnStateCollisionEnter(Collision collision)

@@ -22,12 +22,12 @@ public class RightActionState : IState
 
     public void OnStateEnter()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.OnSubActionStart();
+        storedPlayer.WeaponHolder.NowEquipedWeapon.StartSubAction();
     }
 
     public void OnStateExit()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.OnSubActionEnd();
+        storedPlayer.WeaponHolder.NowEquipedWeapon.EndSubAction();
     }
 
     public void OnStateFixedUpdate()
@@ -40,7 +40,7 @@ public class RightActionState : IState
 
     public void OnStateUpdate()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.OnSubActionProgress();
+        storedPlayer.WeaponHolder.NowEquipedWeapon.ProgressSubAction();
         if(Input.GetMouseButtonUp(1))
         {
             storedPlayer.WeaponFSM.RevertToPreviousState();

@@ -8,7 +8,7 @@ public class HitEffect : BaseEffect
 
     float spaceBetweenWall = 0.001f;
 
-    protected RunningRoutine runningRoutine;
+    protected SmoothLerpRoutine runningRoutine;
 
     protected virtual void Awake()
     {

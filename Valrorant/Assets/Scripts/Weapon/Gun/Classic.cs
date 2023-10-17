@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
+using ObserverPattern;
 
 public class Classic : Gun
 {
@@ -15,10 +16,22 @@ public class Classic : Gun
     float _spreadOffset;
 
     [SerializeField]
-    float _mainAttackDelay;
+    float _mainActionDelay;
 
     [SerializeField]
-    float _subAttackDelay;
+    float _subActionDelay;
+
+    [SerializeField]
+    RecoilRange _mainActionRecoilRange;
+
+    [SerializeField]
+    RecoilRange _subActionRecoilRange;
+
+    [SerializeField]
+    WeightApplier _mainWeightApplier;
+
+    [SerializeField]
+    WeightApplier _subWeightApplier;
 
     Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _attackDamageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
@@ -27,48 +40,65 @@ public class Classic : Gun
         { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 22), new DistanceAreaData(30, 50, 18) } },
     };
 
-    public override void Initialize(Transform cam, Animator ownerAnimator)
+    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(cam, ownerAnimator);
+        base.Initialize(player, cam, ownerAnimator);
 
-        _mainResult = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _attackDamageDictionary);
+        _mainResult = new SingleProjectileAttackWithWeight(_camTransform, _range, _hitEffectName,
+            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _attackDamageDictionary, _mainWeightApplier);
 
-        _subResult = new ScatterProjectileGunAttack(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset, _attackDamageDictionary);
+        _subResult = new ScatterProjectileGunAttackWithWeight(_camTransform, _range, _hitEffectName,
+            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
+       
+
+         _mainAction = new ManualAttackAction(_mainActionDelay);
+        _subAction = new ManualAttackAction(_subActionDelay);
 
 
-        _mainAction = new SingleAttactAction(_mainAttackDelay);
-        _subAction = new SingleAttactAction(_subAttackDelay);
+        IObserver<Vector2, Vector2, Vector2> recoilObserver = player.GetComponent<IObserver<Vector2, Vector2, Vector2>>();
 
-        // --> 추가로 탄환 사용 부분 등록해주기
-        _mainAction.OnActionStart = ChainMainAction;
-        _subAction.OnActionStart = ChainSubAction;
+
+        RecoilStrategy mainRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
+        mainRecoilGenerator.AddObserver(recoilObserver);
+
+        RecoilStrategy subRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
+        subRecoilGenerator.AddObserver(recoilObserver);
+
+        _mainRecoilGenerator = mainRecoilGenerator;
+        _subRecoilGenerator = subRecoilGenerator;
+
+        LinkActionStrategy();
     }
 
-    protected override void ChainMainAction()
+    protected override void ChainMainActionStartEvent()
     {
         if (_bulletCountInMagazine <= 0) return;
 
-        base.ChainMainAction();
+        PlayMainActionAnimation();
+
+        OnAttack();
 
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= mainAttackBulletCount; // 1발 발사
 
-        _mainResult.Do();
-        OnAttack();
+        _mainResult.Do(_receivedBulletSpreadPower);
+
+        _mainRecoilGenerator.CreateRecoil();
     }
 
-    protected override void ChainSubAction()
+    protected override void ChainSubActionStartEvent()
     {
         if (_bulletCountInMagazine <= 0) return;
 
-        base.ChainSubAction();
+        PlaySubActionAnimation();
+
+        OnAttack();
 
         // 여기서 총알 감소 부분 추가해주기
         _bulletCountInMagazine -= _projectileCounts; // 3발 발사
 
-        _subResult.Do();
-        OnAttack();
+        _subResult.Do(_receivedBulletSpreadPower);
+
+        _subRecoilGenerator.CreateRecoil();
     }
 }

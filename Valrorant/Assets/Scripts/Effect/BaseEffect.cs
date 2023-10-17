@@ -12,7 +12,7 @@ abstract public class BaseEffect : MonoBehaviour
 
     abstract public void PlayEffect();
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         ObjectPooler.ReturnToPool(gameObject);
     }

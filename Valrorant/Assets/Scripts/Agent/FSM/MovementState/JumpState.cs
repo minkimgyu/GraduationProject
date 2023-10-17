@@ -42,6 +42,7 @@ public class JumpState : IState
     public void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
+        storedPlayer.MovementComponent.NotifyToObservers(storedPlayer.MovementComponent.velocityLength);
         storedPlayer.ViewComponent.ResetView();
 
         // Ctrl甫 丢 版快 旷农府扁 秒家

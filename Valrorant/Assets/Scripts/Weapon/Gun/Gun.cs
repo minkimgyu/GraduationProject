@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ObserverPattern;
 
-abstract public class Gun : BaseWeapon
+abstract public class Gun : BaseWeapon, IObserver<float>
 {
     [SerializeField]
     ParticleSystem _muzzleFlash;
@@ -33,33 +34,42 @@ abstract public class Gun : BaseWeapon
     public int BulletCountInMagazine { get { return _bulletCountInMagazine; } set { _bulletCountInMagazine = value; } }
 
     [SerializeField]
-    protected int _possessingBullet = 60;
+    protected int _possessingBullet;
 
     public int PossessingBullet { get { return _possessingBullet; } set { _possessingBullet = value; } }
 
     protected Animator _animator;
     public Animator Animator { get { return _animator; } }
 
-    [SerializeField]
-    protected float reloadFinishTime;
 
     [SerializeField]
-    protected float reloadStateExitTime;
+    protected float _reloadFinishTime;
 
+    [SerializeField]
+    protected float _reloadStateExitTime;
 
-    public override void Initialize(Transform cam, Animator ownerAnimator)
+    protected float _receivedBulletSpreadPower;
+
+    ISubject<float> _bulletSpreadPowerSubject;
+    IObserver<float> _bulletSpreadPowerObserver;
+
+    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(cam, ownerAnimator);
+        base.Initialize(player, cam, ownerAnimator);
 
         _animator = GetComponent<Animator>();
         _bulletCountInMagazine = _maxBulletCountInMagazine;
+
+        _bulletSpreadPowerSubject = _player.GetComponent<ISubject<float>>();
+        _bulletSpreadPowerObserver = GetComponent<IObserver<float>>();
+
         // 여기에서 UI에 이밴트로 연결시키는 방식
     }
 
     public override void OnReload()
     {
-        _animator.Play("Reload");
-        _ownerAnimator.Play(_weaponName + "Reload");
+        _animator.Play("Reload", -1, 0);
+        _ownerAnimator.Play(_weaponName + "Reload", -1, 0);
     }
 
     public override bool CanReload()
@@ -83,16 +93,34 @@ abstract public class Gun : BaseWeapon
             _bulletCountInMagazine += _possessingBullet;
             _possessingBullet = 0;
         }
+
+        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
     }
 
-    public override float ReturnReloadFinishTime() { return reloadFinishTime; }
+    public override float ReturnReloadFinishTime() { return _reloadFinishTime; }
 
-    public override float ReturnReloadStateExitTime() { return reloadStateExitTime; }
+    public override float ReturnReloadStateExitTime() { return _reloadStateExitTime; }
 
     public override void OnEquip()
     {
         base.OnEquip();
-        _animator.Play("Equip");
+        _bulletSpreadPowerSubject.AddObserver(_bulletSpreadPowerObserver);
+
+        _animator.Play("Equip", -1, 0);
+        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+    }
+
+
+    public override void OnUnEquip()
+    {
+        _bulletSpreadPowerSubject.RemoveObserver(_bulletSpreadPowerObserver);
+
+        base.OnUnEquip();
+    }
+
+    public void Notify(float bulletSpreadPower)
+    {
+        _receivedBulletSpreadPower = bulletSpreadPower;
     }
 
     protected override void OnAttack()
@@ -100,15 +128,35 @@ abstract public class Gun : BaseWeapon
         _muzzleFlash.Play();
         _emptyCartridgeSpawner.Play();
         _animator.Play("Fire", -1, 0f);
+
+        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
     }
 
-    protected override void ChainMainAction()
+    protected void PlayMainActionAnimation()
     {
         _ownerAnimator.Play(_weaponName + "MainAction", -1, 0);
     }
 
-    protected override void ChainSubAction()
+    protected void PlaySubActionAnimation()
     {
         _ownerAnimator.Play(_weaponName + "SubAction", -1, 0);
     }
+
+
+    // 마우스에 손을 때는 경우 반동 회복 시퀀스 작동
+    // Create는 이밴트에 따라 작동하는 위치가 다르지만
+    // Recover은 같으므로 여기에 넣자
+    protected override void ChainMainActionEndEvent()
+    {
+        _mainRecoilGenerator.RecoverRecoil();
+    }
+
+    protected override void ChainSubActionEndEvent()
+    {
+        _subRecoilGenerator.RecoverRecoil();
+    }
+
+
+    //protected virtual RecoilStrategy CreateRecoilStrategy(IObserver<Vector2, Vector2> observer, float actionDelay, RecoilMap recoilMap) { return default; }
+    //protected virtual RecoilStrategy CreateRecoilStrategy(IObserver<Vector2, Vector2> observer, float actionDelay, RecoilRange recoilRange) { return default; }
 }

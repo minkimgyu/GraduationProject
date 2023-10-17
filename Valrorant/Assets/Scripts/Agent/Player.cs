@@ -56,18 +56,17 @@ public class Player : MonoBehaviour, IDamageable
         _movementComponent = GetComponent<MovementComponent>();
         _viewComponent = GetComponent<ViewComponent>();
 
+
         _movementFSM = new StateMachine<MovementState>();
         _weaponFSM = new StateMachine<WeaponState>();
         _sitStandFSM = new StateMachine<SitStandState>();
 
-        _weaponHolder.Initialize(_viewComponent.Cam, _animator); // 이건 Awake에서 무기 초기화는 Start에서
+        _weaponHolder.Initialize(gameObject, _viewComponent.FirePoint, _animator); // 이건 Awake에서 무기 초기화는 Start에서
         InitializeFSM();
     }
 
     private void Update()
     {
-        _weaponHolder.DoUpdate();
-
         _movementFSM.DoUpdate();
         _sitStandFSM.DoUpdate();
         _weaponFSM.DoUpdate();
@@ -139,8 +138,12 @@ public class Player : MonoBehaviour, IDamageable
 
         _weaponFSM.Initialize(weaponStates, WeaponState.Equip);
     }
-    public void GetDamage(float damage, Vector3 hitPosition, Vector3 hitNormal)
+    public void GetDamage(float damage)
     {
-        throw new System.NotImplementedException();
+    }
+
+    public Vector3 GetFowardVector()
+    {
+        return transform.forward;
     }
 }

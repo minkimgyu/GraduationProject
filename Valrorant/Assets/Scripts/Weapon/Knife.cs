@@ -37,7 +37,13 @@ public class Knife : BaseWeapon
     [SerializeField]
     DirectionData _subAttackDamageData;
 
-    protected override void ChainMainAction()
+    public override void OnEquip()
+    {
+        base.OnEquip();
+        NotifyToObservers();
+    }
+
+    protected override void ChainMainActionProgressEvent()
     {
         if (stopMainAction) return;
 
@@ -74,7 +80,7 @@ public class Knife : BaseWeapon
         stopSubActionRoutine = StartCoroutine(DelaySubActionRoutine(_subAttackDelay));
     }
 
-    protected override void ChainSubAction()
+    protected override void ChainSubActionProgressEvent()
     {
         if (stopSubAction) return;
 
@@ -118,9 +124,9 @@ public class Knife : BaseWeapon
         stopSubActionRoutine = null;
     }
 
-    public override void Initialize(Transform cam, Animator ownerAnimator)
+    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(cam, ownerAnimator);
+        base.Initialize(player, cam, ownerAnimator);
 
         _mainResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer, _mainAttackDamageData);
         _subResult = new KnifeAttack(_camTransform, _range, _hitEffectName, _targetLayer, _subAttackDamageData);
@@ -128,7 +134,9 @@ public class Knife : BaseWeapon
         _mainAction = new AutoAttackAction(_mainAttackDelay);
         _subAction = new AutoAttackAction(_subAttackDelay);
 
-        _mainAction.OnActionStart = ChainMainAction;
-        _subAction.OnActionStart = ChainSubAction;
+        _mainRecoilGenerator = new NoRecoil();
+        _subRecoilGenerator = new NoRecoil();
+
+        LinkActionStrategy();
     }
 }

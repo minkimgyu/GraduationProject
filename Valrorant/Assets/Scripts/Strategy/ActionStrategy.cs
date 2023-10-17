@@ -6,19 +6,21 @@ using System;
 abstract public class ActionStrategy
 {
     public Action OnActionStart;
+    public Action OnActionProgress;
+    public Action OnActionEnd;
 
-    public virtual void Start() { }
-    public virtual void End() { }
-    public virtual void Progress() { }
+    public abstract void OnMouseClickStart();
+    public abstract void OnMouseClickEnd();
+    public abstract void OnMouseClickProgress();
 
     /// <summary>
     /// Update에서 도는 함수
     /// </summary>
-    public virtual void Tick() { }
+    public abstract void OnUpdate();
 }
 
 /// <summary>
-/// 연발 사격
+/// 자동 액션
 /// </summary>
 public class AutoAttackAction : ActionStrategy
 {
@@ -37,20 +39,26 @@ public class AutoAttackAction : ActionStrategy
         _clickDelay = attackDelay;
     }
 
-    public override void Start() 
+    public override void OnMouseClickStart() 
     {
-        if (_canAttack == false) return;
-
+        OnActionStart();
         _isFirstAttack = true;
-        _canAttack = false;
     }
 
-    public override void End()
+    public override void OnMouseClickEnd()
     {
+        OnActionEnd();
+
         _isFirstAttack = false;
+
+        if(_canAttack == true)
+        {
+            _canAttack = false;
+            _clickStoredDelay = 0;
+        }
     }
 
-    public override void Tick()
+    public override void OnUpdate()
     {
         if (_canAttack == false && _clickStoredDelay < _clickDelay)
         {
@@ -63,8 +71,10 @@ public class AutoAttackAction : ActionStrategy
         }
     }
 
-    public override void Progress()
+    public override void OnMouseClickProgress()
     {
+        if (_canAttack == false) return;
+
         if (_isFirstAttack == false && _storedDelay < _attackDelay)
         {
             _storedDelay += Time.deltaTime;
@@ -72,7 +82,7 @@ public class AutoAttackAction : ActionStrategy
         else
         {
             _storedDelay = 0;
-            OnActionStart();
+            OnActionProgress();
 
             if (_isFirstAttack == true) _isFirstAttack = false;
         }
@@ -80,46 +90,68 @@ public class AutoAttackAction : ActionStrategy
 }
 
 /// <summary>
-/// 단발 사격
+/// 수동 액션
 /// </summary>
-public class SingleAttactAction : ActionStrategy
+abstract public class BaseManualAction : ActionStrategy
 {
-    float _attackDelay;
+    float _actionDelay;
     float _storedDelay = 0;
 
-    bool _canAttack = false;
+    bool _canAction = false;
 
-    public SingleAttactAction(float attackDelay)
+    public BaseManualAction(float attackDelay)
     {
-        _attackDelay = attackDelay;
+        _actionDelay = attackDelay;
     }
 
-    public override void Start()
+    public override void OnMouseClickStart()
     {
-        if (_canAttack == true)
+        if (_canAction == true)
         {
             OnActionStart();
-            _canAttack = false;
+            _canAction = false;
         }
     }
 
-    public override void End()
+    public override void OnMouseClickEnd()
     {
+        OnActionEnd();
     }
 
-    public override void Tick()
+    public override void OnUpdate()
     {
-        if (_canAttack == false && _storedDelay < _attackDelay)
+        if (_canAction == false && _storedDelay < _actionDelay)
         {
             _storedDelay += Time.deltaTime;
         }
         else
         {
             _storedDelay = 0;
-            _canAttack = true;
+            _canAction = true;
         }
     }
+
+    public override void OnMouseClickProgress()
+    {
+        OnActionProgress();
+    }
 }
+
+public class ManualAttackAction : BaseManualAction
+{
+    public ManualAttackAction(float actionDelay) : base(actionDelay)
+    {
+    }
+}
+
+public class ManualAction : BaseManualAction
+{
+    public ManualAction(float actionDelay) : base(actionDelay)
+    {
+    }
+}
+
+
 
 /// <summary>
 /// 점사

@@ -91,6 +91,7 @@ namespace DamageUtility
     public class DirectionBasedDamageConverter : BaseDamageConverter
     {
         DirectionData _directionData;
+        float _backAngle = 60;
 
         public DirectionBasedDamageConverter(DirectionData directionData)
         {
@@ -101,13 +102,13 @@ namespace DamageUtility
         {
             float angle = Vector3.Angle(playerFoward, targetFoward);
 
-            if (Mathf.Abs(angle) < 90)
+            if (Mathf.Abs(angle) < _backAngle) // µÞ °¢
             {
-                return _directionData.FrontAttackDamage;
+                return _directionData.BackAttackDamage;
             }
             else
             {
-                return _directionData.BackAttackDamage;
+                return _directionData.FrontAttackDamage;
             }
         }
     }

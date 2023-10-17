@@ -1,28 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ObserverPattern;
 
-public class ViewComponent : MonoBehaviour
+public class ViewComponent : MonoBehaviour, IObserver<Vector2, Vector2, Vector2>
 {
     [SerializeField] private Transform actorBone;
     [SerializeField] private Transform direction;
 
     [SerializeField] private Transform cameraHolder;
 
-    [SerializeField] private Transform cameraNormalTransform;
-    [SerializeField] private Transform cameraZoomTransform;
-
     [SerializeField] private Transform camPivot;
     [SerializeField] private Transform cam;
-    [SerializeField] private AimEvent aimEvent;
+    [SerializeField] private Transform firePoint;
 
-    public Transform Cam { get { return cam; } }
-
-    [SerializeField]
-    private float _viewXSensitivity = 60;
-
-    [SerializeField]
-    private float _viewYSensitivity = 60;
+    public Transform FirePoint { get { return firePoint; } }
 
     [SerializeField]
     private float _viewClampYMax = 40;
@@ -30,97 +22,48 @@ public class ViewComponent : MonoBehaviour
     [SerializeField]
     private float _viewClampYMin = -40;
 
-    private float rotationX;
-    private float rotationY;
+    [SerializeField]
+    private Vector2 _viewSensitivity;
 
-    Coroutine zoomRoutine;
+    private Vector2 _viewRotation;
 
-    private void Start()
+    [SerializeField]
+    private Vector2 _cameraRotationMultiplier;
+
+    [SerializeField]
+    private Vector2 _firePointRotationMultiplier;
+
+    [SerializeField]
+    private Vector2 _actorBoneRotationMultiplier;
+
+    private Vector2 CameraViewRotation { get { return _viewRotation + _cameraRotationMultiplier; } } // 카메라용
+    private Vector2 ActorBoneViewRotation { get { return _viewRotation + _actorBoneRotationMultiplier; } } // 카메라용
+    private Vector2 FireViewRotation { get { return _viewRotation + _firePointRotationMultiplier; } } // 카메라용
+
+    public void Notify(Vector2 cameraForce, Vector2 recoilForce, Vector2 actorBoneForce)
     {
-        aimEvent.OnAimRequested = SetZoom;
-        aimEvent.OnAimOffInstantlyRequested = SetZoom;
-    }
-
-    void StopZoomRoutine()
-    {
-        if (zoomRoutine != null)
-        {
-            StopCoroutine(zoomRoutine);
-            zoomRoutine = null;
-        }
-    }
-
-    public void SetZoom(GameObject scope, bool nowZoom)
-    {
-        StopZoomRoutine();
-
-        scope.SetActive(nowZoom);
-
-        if (nowZoom) cameraHolder.position = cameraZoomTransform.position;
-        else cameraHolder.position = cameraNormalTransform.position;
-    }
-
-    public void SetZoom(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay)
-    {
-        StopZoomRoutine();
-
-        zoomRoutine = StartCoroutine(ZoomRoutine(scope, nowZoom, zoomDuration, scopeOnDelay));
-    }
-
-    // 코루틴으로 에임 전환 구현
-    IEnumerator ZoomRoutine(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay)
-    {
-        bool activeScope = false;
-        float smoothness = 0.001f;
-
-        float progress = 0; //This float will serve as the 3rd parameter of the lerp function.
-        float increment = smoothness / zoomDuration; //The amount of change to apply.
-        while (progress < 1)
-        {
-            if(nowZoom)
-            {
-                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraZoomTransform.position, progress);
-
-                if (progress > scopeOnDelay && activeScope == false)
-                {
-                    scope.SetActive(nowZoom);
-                    activeScope = true;
-                }
-            }
-            else
-            {
-                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraNormalTransform.position, progress);
-
-                if (activeScope == false)
-                {
-                    scope.SetActive(nowZoom);
-                    activeScope = true;
-                }
-            }
-
-            if (progress > 0.1 && activeScope == false)
-            {
-                scope.SetActive(nowZoom);
-                activeScope = true;
-            }
-
-            progress += increment;
-            yield return new WaitForSeconds(smoothness);
-        }
+        _cameraRotationMultiplier += cameraForce; // 합연산으로 처리 --> 복수의 반동도 제어 가능
+        _firePointRotationMultiplier += recoilForce;
+        _actorBoneRotationMultiplier += actorBoneForce;
     }
 
     public void ResetView()
     {
-        rotationX = Mathf.Lerp(rotationX, Input.GetAxisRaw("Mouse X"), _viewXSensitivity * Time.deltaTime);
-        rotationY = Mathf.Clamp(rotationY - (Input.GetAxisRaw("Mouse Y") * _viewYSensitivity * Time.deltaTime), _viewClampYMin, _viewClampYMax);
+        _viewRotation.x = Mathf.Lerp(_viewRotation.x, Input.GetAxisRaw("Mouse X"), _viewSensitivity.x * Time.smoothDeltaTime);
+        _viewRotation.y = Mathf.Clamp(_viewRotation.y - (Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.smoothDeltaTime), _viewClampYMin, _viewClampYMax);
 
-        direction.Rotate(0, rotationX, 0, Space.World);
-        actorBone.rotation = Quaternion.Euler(rotationY, direction.eulerAngles.y, 0);
+        // Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.smoothDeltaTime를 누적해서 값을 저장하는데 이 값이 min, max 값을 넘으면 안 됨
+        // 그래서 Clamp를 넣어서 이 이상 못 넘게 막아줌
+        // 게임 시작 시, 움직이면 불규칙하게 값이 튐 --> 수정 가능성
+
+        direction.rotation = Quaternion.Euler(0, direction.rotation.eulerAngles.y + CameraViewRotation.x, 0);
+        actorBone.rotation = Quaternion.Euler(ActorBoneViewRotation.y, direction.eulerAngles.y, 0);
     }
 
     public void ResetCamera()
     {
-        cam.rotation = Quaternion.Euler(rotationY, direction.eulerAngles.y, 0);
         camPivot.position = cameraHolder.position;
+        cam.rotation = Quaternion.Euler(CameraViewRotation.y, direction.eulerAngles.y, 0);
+        firePoint.rotation = Quaternion.Euler(FireViewRotation.y, direction.eulerAngles.y, 0);
     }
 }

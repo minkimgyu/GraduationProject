@@ -30,8 +30,6 @@ public class ReloadState : IState
             _storedPlayer.WeaponFSM.RevertToPreviousState(); // 재장전을 할 수 없는 경우, 뒤로 돌아가기
         }
 
-        // 스코프 꺼주고 줌 풀기
-        _storedPlayer.WeaponHolder.NowEquipedWeapon.OffScopeModeInstantly();
         _storedPlayer.WeaponHolder.NowEquipedWeapon.OnReload();
 
         reloadTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadFinishTime()); // 딜레이

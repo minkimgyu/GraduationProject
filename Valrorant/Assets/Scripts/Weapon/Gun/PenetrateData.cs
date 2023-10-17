@@ -4,8 +4,7 @@ using UnityEngine;
 
 public struct PenetrateData
 {
-    const float _airDurability = 3;
-    public float AirDurability { get { return _airDurability; } }
+    public static float AirDurability = 3;
 
     float _distanceFromStartPoint;
     public float DistanceFromStartPoint { get { return _distanceFromStartPoint; } }

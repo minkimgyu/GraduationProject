@@ -33,6 +33,7 @@ public class WalkState : IState
     public void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
+        storedPlayer.MovementComponent.NotifyToObservers(storedPlayer.MovementComponent.velocityLength);
         storedPlayer.ViewComponent.ResetView();
     }
 

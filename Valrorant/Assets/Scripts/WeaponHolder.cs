@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ObserverPattern;
 
 public enum WeaponState
 {
@@ -11,6 +12,8 @@ public enum WeaponState
 
 public class WeaponHolder : MonoBehaviour
 {
+    IObserver<int, int> _bulletShower;
+
     [SerializeField]
     BaseWeapon[] weapons = new BaseWeapon[3]; // rifle, pistol, knife
 
@@ -20,19 +23,14 @@ public class WeaponHolder : MonoBehaviour
     int weaponIndex = 0;
     public int WeaponIndex { get { return weaponIndex; } set { weaponIndex = value; } }
 
-    public void Initialize(Transform camera, Animator ownerAnimator)
+    public void Initialize(GameObject player, Transform camera, Animator ownerAnimator)
     {
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            weapons[i].Initialize(camera, ownerAnimator);
-        }
-    }
+        IObserver<int, int> bulletLeftShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<IObserver<int, int>>();
+        _bulletShower = bulletLeftShower;
 
-    public void DoUpdate()
-    {
         for (int i = 0; i < weapons.Length; i++)
         {
-            weapons[i].OnUpdate();
+            weapons[i].Initialize(player, camera, ownerAnimator);
         }
     }
 
@@ -45,10 +43,17 @@ public class WeaponHolder : MonoBehaviour
             if (i == weaponIndex)
             {
                 nowEquipedWeapon = weapons[weaponIndex];
+
+                ISubject<int, int> subject = nowEquipedWeapon.GetComponent<ISubject<int, int>>();
+                subject.AddObserver(_bulletShower);
+
                 nowEquipedWeapon.OnEquip();
             }
             else
             {
+                ISubject<int, int> subject = weapons[i].GetComponent<ISubject<int, int>>();
+                subject.RemoveObserver(_bulletShower);
+
                 weapons[i].OnUnEquip();
             }
         }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TrajectoryLineEffect : BaseEffect
 {
     Vector3 _hitPosition;
-    RunningRoutine runningRoutine;
+    SmoothLerpRoutine runningRoutine;
 
     private void Awake()
     {

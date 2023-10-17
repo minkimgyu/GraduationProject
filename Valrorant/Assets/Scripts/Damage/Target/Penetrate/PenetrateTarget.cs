@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PenetrateTarget : MonoBehaviour, IPenetrable
+public class PenetrateTarget : MonoBehaviour, IPenetrable, IEffectable
 {
     [SerializeField]
     float durability;
@@ -16,16 +16,16 @@ public class PenetrateTarget : MonoBehaviour, IPenetrable
     [SerializeField]
     string knifeAttackEffectName;
 
-    protected Dictionary<IPenetrable.HitEffectType, string> hitEffect;
+    protected Dictionary<IEffectable.ConditionType, string> hitEffect;
 
     // Start is called before the first frame update
     void Start()
     {
-        hitEffect = new Dictionary<IPenetrable.HitEffectType, string>()
+        hitEffect = new Dictionary<IEffectable.ConditionType, string>()
         {
-            {IPenetrable.HitEffectType.BulletPenetration, bulletPenetrationEffectName },
-            {IPenetrable.HitEffectType.BulletNonPenetration, BulletNonPenetrationEffectName },
-            {IPenetrable.HitEffectType.KnifeAttack, knifeAttackEffectName }
+            {IEffectable.ConditionType.BulletPenetration, bulletPenetrationEffectName },
+            {IEffectable.ConditionType.BulletNonPenetration, BulletNonPenetrationEffectName },
+            {IEffectable.ConditionType.KnifeAttack, knifeAttackEffectName }
         };
     }
 
@@ -34,17 +34,20 @@ public class PenetrateTarget : MonoBehaviour, IPenetrable
         return durability;
     }
 
-    public GameObject ReturnPenetrableTarget()
+    public bool CanReturnHitEffectName(IEffectable.ConditionType effectType)
     {
-        return gameObject;
-    }
-
-    public bool CanReturnHitEffectName(IPenetrable.HitEffectType effectType, out string effectName)
-    {
-        effectName = "";
         if (hitEffect.ContainsKey(effectType) == false) return false;
 
-        effectName = hitEffect[effectType];
         return true;
+    }
+
+    public string ReturnHitEffectName(IEffectable.ConditionType effectType)
+    {
+        return hitEffect[effectType];
+    }
+
+    public GameObject ReturnAttachedObject()
+    {
+        return gameObject;
     }
 }

@@ -2,18 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPenetrable
+public interface IPenetrable : IAttachedObject
 {
-    public enum HitEffectType
+    public float ReturnDurability();
+}
+
+public interface IAttachedObject
+{
+    public GameObject ReturnAttachedObject();
+}
+
+public interface IEffectable
+{
+    public enum ConditionType
     {
         BulletPenetration,
         BulletNonPenetration,
         KnifeAttack
     }
 
-    public float ReturnDurability();
+    public bool CanReturnHitEffectName(ConditionType effectType);
 
-    public GameObject ReturnPenetrableTarget();
-
-    public bool CanReturnHitEffectName(HitEffectType effectType, out string effectName);
+    public string ReturnHitEffectName(ConditionType effectType);
 }
