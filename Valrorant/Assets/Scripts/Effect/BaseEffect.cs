@@ -19,20 +19,3 @@ abstract public class BaseEffect : MonoBehaviour
 
     protected void DisableObject() => gameObject.SetActive(false);
 }
-
-//abstract public class CoroutineEffect : BaseEffect
-//{
-//    [SerializeField]
-//    protected float duration;
-
-//    protected float smoothness = 0.001f;
-
-//    WaitForSeconds waitTime;
-
-//    protected virtual void Awake()
-//    {
-//        waitTime = new WaitForSeconds(smoothness);
-//    }
-
-//    abstract protected IEnumerator Routine();
-//}

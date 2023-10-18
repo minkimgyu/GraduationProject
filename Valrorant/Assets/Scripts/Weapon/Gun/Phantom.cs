@@ -4,6 +4,7 @@ using UnityEngine;
 using DamageUtility;
 using ObserverPattern;
 
+[System.Serializable]
 public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, float, bool>
 {
     [SerializeField]
@@ -81,7 +82,7 @@ public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, flo
 
 
         _mainRecoilGenerator = _storedAutoRecoilGenerator;
-        _subRecoilGenerator = new NoRecoil();
+        _subRecoilGenerator = new NoRecoilGenerator();
 
         //_mainAction.OnStart ---> 여기에서 초기 View 값을 잡아서 나중에 Lerp 시켜줘야함
         _scope.SetActive(false);
@@ -100,24 +101,17 @@ public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, flo
         _subResult.Do(false, true);
     }
 
+    // 수정
     protected override void ChainMainActionProgressEvent()
     {
-        if (_bulletCountInMagazine <= 0) return;
-
+        Fire(_mainResult, _mainRecoilGenerator);
         PlayMainActionAnimation();
-
-        OnAttack();
-
-        // 여기서 총알 감소 부분 추가해주기
-        _bulletCountInMagazine -= mainAttackBulletCount; // 1발 발사
-        _mainResult.Do(_receivedBulletSpreadPower);
-
-        _mainRecoilGenerator.CreateRecoil();
     }
 
     protected override void ChainSubActionStartEvent()
     {
         _subResult.Do();
+        PlaySubActionAnimation();
     }
 
     public void Notify(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)

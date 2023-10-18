@@ -29,8 +29,7 @@ namespace FSM
         IState _currentState;
         IState _previousState;
 
-        //기본 상태를 생성시에 설정하게 생성자 만들기.
-        public void Initialize(Dictionary<T, IState> stateDictionary, T defaultState) // 가상 함수 처리
+        public void Initialize(Dictionary<T, IState> stateDictionary, T defaultState)
         {
             _currentState = null;
             _previousState = null;
@@ -39,26 +38,26 @@ namespace FSM
             SetState(defaultState);
         }
 
-        public void DoCollisionEnter(Collision collision)
+        public void OnCollisionEnter(Collision collision)
         {
             if (_currentState == null) return;
             _currentState.OnStateCollisionEnter(collision);
         }
 
-        public void DoUpdate()
+        public void OnUpdate()
         {
             if (_currentState == null) return;
             _currentState.OnStateUpdate();
             _currentState.CheckStateChange();
         }
 
-        public void DoFixedUpdate()
+        public void OnFixedUpdate()
         {
             if (_currentState == null) return;
             _currentState.OnStateFixedUpdate();
         }
 
-        public void DoLateUpdate()
+        public void OnLateUpdate()
         {
             if (_currentState == null) return;
             _currentState.OnStateLateUpdate();
@@ -69,14 +68,12 @@ namespace FSM
             return SetState(_previousState);
         }
 
-        //외부에서 현재상태를 바꿔주는 부분.
-        public bool SetState(T stateName)//IState<T, W> state) // 추상 함수 처리
+        public bool SetState(T stateName)
         {
             if (_stateDictionary.ContainsKey(stateName) == false) return false;
 
-            if (_currentState == _stateDictionary[stateName]) // 같은 State로 전환되지 못하게 막기
+            if (_currentState == _stateDictionary[stateName]) // 같은 State로 전환하지 못하게 막기
             {
-                Debug.Log("현재 이미 해당 상태입니다.");
                 return false;
             }
 
@@ -85,10 +82,7 @@ namespace FSM
 
             _previousState = _currentState;
 
-            //상태 교체.
             _currentState = _stateDictionary[stateName];
-
-            //Debug.Log(stateName);
 
             if (_currentState != null) //새 상태의 Enter를 호출한다.
                 _currentState.OnStateEnter();
@@ -96,25 +90,22 @@ namespace FSM
             return true;
         }
 
-        bool SetState(IState state)//IState<T, W> state) // 추상 함수 처리
+        bool SetState(IState state)
         {
             if (_stateDictionary.ContainsValue(state) == false) return false;
 
-            if (_currentState == state) // 같은 State로 전환되지 못하게 막기
+            if (_currentState == state) // 같은 State로 전환하지 못하게 막기
             {
-                Debug.Log("현재 이미 해당 상태입니다.");
                 return false;
             }
 
-            if (_currentState != null) //상태가 바뀌기 전에, 이전 상태의 Exit를 호출한다.
+            if (_currentState != null) //상태가 바뀌기 전에, 이전 상태의 Exit를 호출
                 _currentState.OnStateExit();
 
             _previousState = _currentState;
 
-            //상태 교체.
             _currentState = state;
 
-            //Debug.Log(_currentState);
 
             if (_currentState != null) //새 상태의 Enter를 호출한다.
                 _currentState.OnStateEnter();

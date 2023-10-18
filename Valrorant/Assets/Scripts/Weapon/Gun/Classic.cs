@@ -4,13 +4,11 @@ using UnityEngine;
 using DamageUtility;
 using ObserverPattern;
 
+[System.Serializable]
 public class Classic : Gun
 {
     [SerializeField]
-    int mainAttackBulletCount = 1;
-
-    [SerializeField]
-    int _projectileCounts;
+    int _subAttackBulletCounts;
 
     [SerializeField]
     float _spreadOffset;
@@ -48,7 +46,7 @@ public class Classic : Gun
             _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _attackDamageDictionary, _mainWeightApplier);
 
         _subResult = new ScatterProjectileGunAttackWithWeight(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _projectileCounts, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
+            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
        
 
          _mainAction = new ManualAttackAction(_mainActionDelay);
@@ -70,35 +68,16 @@ public class Classic : Gun
         LinkActionStrategy();
     }
 
+    // 수정
     protected override void ChainMainActionStartEvent()
     {
-        if (_bulletCountInMagazine <= 0) return;
-
-        PlayMainActionAnimation();
-
-        OnAttack();
-
-        // 여기서 총알 감소 부분 추가해주기
-        _bulletCountInMagazine -= mainAttackBulletCount; // 1발 발사
-
-        _mainResult.Do(_receivedBulletSpreadPower);
-
-        _mainRecoilGenerator.CreateRecoil();
+        bool canFire = Fire(_mainResult, _mainRecoilGenerator);
+        if(canFire) PlayMainActionAnimation();
     }
 
     protected override void ChainSubActionStartEvent()
     {
-        if (_bulletCountInMagazine <= 0) return;
-
-        PlaySubActionAnimation();
-
-        OnAttack();
-
-        // 여기서 총알 감소 부분 추가해주기
-        _bulletCountInMagazine -= _projectileCounts; // 3발 발사
-
-        _subResult.Do(_receivedBulletSpreadPower);
-
-        _subRecoilGenerator.CreateRecoil();
+        bool canFire = Fire(_subResult, _subRecoilGenerator, _subAttackBulletCounts);
+        if (canFire) PlaySubActionAnimation();
     }
 }

@@ -7,16 +7,40 @@ public class ReloadState : IState
 {
     Player _storedPlayer;
 
-    Timer reloadTimer = new Timer();
-    Timer stateExitTimer = new Timer();
+    Timer _reloadTimer;
+    Timer _stateExitTimer;
 
     public ReloadState(Player player)
     {
         _storedPlayer = player;
+        _reloadTimer = new Timer();
+        _stateExitTimer = new Timer();
     }
 
     public void CheckStateChange()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _storedPlayer.WeaponHolder.WeaponIndex = 0;
+            StopReload();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            _storedPlayer.WeaponHolder.WeaponIndex = 1;
+            StopReload();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            _storedPlayer.WeaponHolder.WeaponIndex = 2;
+            StopReload();
+        }
+    }
+
+    void StopReload()
+    {
+        _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+        _reloadTimer.Stop();
+        _stateExitTimer.Stop();
     }
 
     public void OnStateCollisionEnter(Collision collision)
@@ -25,15 +49,10 @@ public class ReloadState : IState
 
     public void OnStateEnter()
     {
-        if (_storedPlayer.WeaponHolder.NowEquipedWeapon.CanReload() == false)
-        {
-            _storedPlayer.WeaponFSM.RevertToPreviousState(); // 재장전을 할 수 없는 경우, 뒤로 돌아가기
-        }
-
         _storedPlayer.WeaponHolder.NowEquipedWeapon.OnReload();
 
-        reloadTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadFinishTime()); // 딜레이
-        stateExitTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadStateExitTime()); // 딜레이
+        _reloadTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadFinishTime()); // 딜레이
+        _stateExitTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadStateExitTime()); // 딜레이
     }
 
     public void OnStateExit()
@@ -50,14 +69,14 @@ public class ReloadState : IState
 
     public void OnStateUpdate()
     {
-        reloadTimer.Update();
-        if (reloadTimer.IsTimerFinish())
+        _reloadTimer.Update();
+        if (_reloadTimer.IsTimerFinish())
         {
             _storedPlayer.WeaponHolder.NowEquipedWeapon.ReloadAmmo();
         }
 
-        stateExitTimer.Update();
-        if (stateExitTimer.IsTimerFinish())
+        _stateExitTimer.Update();
+        if (_stateExitTimer.IsTimerFinish())
         {
             _storedPlayer.WeaponFSM.RevertToPreviousState();
         }

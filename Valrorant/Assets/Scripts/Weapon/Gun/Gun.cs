@@ -41,7 +41,6 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     protected Animator _animator;
     public Animator Animator { get { return _animator; } }
 
-
     [SerializeField]
     protected float _reloadFinishTime;
 
@@ -61,7 +60,7 @@ abstract public class Gun : BaseWeapon, IObserver<float>
         _bulletCountInMagazine = _maxBulletCountInMagazine;
 
         _bulletSpreadPowerSubject = _player.GetComponent<ISubject<float>>();
-        _bulletSpreadPowerObserver = GetComponent<IObserver<float>>();
+        _bulletSpreadPowerObserver = this;
 
         // 여기에서 UI에 이밴트로 연결시키는 방식
     }
@@ -77,6 +76,61 @@ abstract public class Gun : BaseWeapon, IObserver<float>
         // 현재 보유 중인 탄환이 없거나 탄창의 총알을 소모하지 않은 경우
         if (_maxBulletCountInMagazine == _bulletCountInMagazine || _possessingBullet == 0) return false;
         else return true;
+    }
+
+    protected bool CanFire()
+    {
+        if (_bulletCountInMagazine > 0) return true;
+        else return false;
+    }
+
+    protected int ReturnCanFireCount(int originFireCount)
+    {
+        if(_bulletCountInMagazine - originFireCount < 0)
+        {
+            return _bulletCountInMagazine;
+        }
+
+        return originFireCount;
+    }
+
+    protected void CalculateLeftBulletCount(int canFireCount)
+    {
+        _bulletCountInMagazine -= canFireCount;
+    }
+
+    protected void CalculateLeftBulletCount()
+    {
+        _bulletCountInMagazine -= 1;
+    }
+
+    protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy, int originFireCount)
+    {
+        if (CanFire() == false) return false;
+
+        int canFireCount = ReturnCanFireCount(originFireCount);
+        CalculateLeftBulletCount(canFireCount);
+        OnAttack();
+
+        resultStrategy.Do(_receivedBulletSpreadPower, canFireCount);
+
+        recoilStrategy.CreateRecoil();
+
+        return true;
+    }
+
+    protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy)
+    {
+        if (CanFire() == false) return false;
+
+        CalculateLeftBulletCount();
+        OnAttack();
+
+        resultStrategy.Do(_receivedBulletSpreadPower);
+
+        recoilStrategy.CreateRecoil();
+
+        return true;
     }
 
     public override void ReloadAmmo()
@@ -155,8 +209,4 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     {
         _subRecoilGenerator.RecoverRecoil();
     }
-
-
-    //protected virtual RecoilStrategy CreateRecoilStrategy(IObserver<Vector2, Vector2> observer, float actionDelay, RecoilMap recoilMap) { return default; }
-    //protected virtual RecoilStrategy CreateRecoilStrategy(IObserver<Vector2, Vector2> observer, float actionDelay, RecoilRange recoilRange) { return default; }
 }

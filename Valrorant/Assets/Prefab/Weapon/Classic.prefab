@@ -294,7 +294,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4035419263818893934}
-  - component: {fileID: 3032204464737102680}
+  - component: {fileID: 4906679906921052744}
   - component: {fileID: 7989557967660535828}
   m_Layer: 6
   m_Name: Classic
@@ -324,7 +324,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3032204464737102680
+--- !u!114 &4906679906921052744
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -333,38 +333,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 3696154417213591764}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4e76d746249a41468da3c43940f3d18, type: 3}
+  m_Script: {fileID: 11500000, guid: 3ee15ebdda096a04fba2b992a49f0144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 100
-  _hitEffectName: BulletHoleEffect
-  _weaponName: Classic
-  equipFinishTime: 1
-  _muzzleFlash: {fileID: 4453960129729776034}
-  _emptyCartridgeSpawner: {fileID: 7066971304535707626}
-  _muzzle: {fileID: 2085943881}
-  _trajectoryLineEffect: TrajectoryLineEffect
-  _maxBulletCountInMagazine: 300
-  _nonPenetrateHitEffect: NonPenetrateBulletHoleEffect
-  _bulletCountInMagazine: 0
-  _possessingBullet: 600
-  _reloadFinishTime: 1.04
-  _reloadStateExitTime: 1.8
-  mainAttackBulletCount: 1
-  _projectileCounts: 3
-  _spreadOffset: 0.1
-  _mainActionDelay: 0.1125
-  _subActionDelay: 0.037
-  _mainActionRecoilRange: {fileID: 11400000, guid: e67c3c180a6a5404bb7923dd7a579864, type: 2}
-  _subActionRecoilRange: {fileID: 11400000, guid: a7eb85507d414584eacd7a6f7dbcf641, type: 2}
-  _mainWeightApplier:
-    maxWeight: 0.07
-    weightMultiplier: 0.02
-    weightDecreation: 0.0001
-  _subWeightApplier:
-    maxWeight: 0.025
-    weightMultiplier: 0.005
-    weightDecreation: 0.0001
+  _classic:
+    _range: 100
+    _hitEffectName: BulletHoleEffect
+    _weaponName: 2
+    equipFinishTime: 1
+    _muzzleFlash: {fileID: 4453960129729776034}
+    _emptyCartridgeSpawner: {fileID: 7066971304535707626}
+    _muzzle: {fileID: 2085943881}
+    _trajectoryLineEffect: TrajectoryLineEffect
+    _maxBulletCountInMagazine: 12
+    _nonPenetrateHitEffect: NonPenetrateBulletHoleEffect
+    _bulletCountInMagazine: 0
+    _possessingBullet: 36
+    _reloadFinishTime: 1.04
+    _reloadStateExitTime: 1.8
+    _subAttackBulletCounts: 3
+    _spreadOffset: 0.1
+    _mainActionDelay: 0.1125
+    _subActionDelay: 0.037
+    _mainActionRecoilRange: {fileID: 11400000, guid: e67c3c180a6a5404bb7923dd7a579864, type: 2}
+    _subActionRecoilRange: {fileID: 11400000, guid: a7eb85507d414584eacd7a6f7dbcf641, type: 2}
+    _mainWeightApplier:
+      maxWeight: 0.07
+      weightMultiplier: 0.02
+      weightDecreation: 0.0001
+    _subWeightApplier:
+      maxWeight: 0.025
+      weightMultiplier: 0.005
+      weightDecreation: 0.0001
 --- !u!95 &7989557967660535828
 Animator:
   serializedVersion: 5

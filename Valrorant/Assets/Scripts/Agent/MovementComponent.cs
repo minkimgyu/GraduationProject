@@ -21,13 +21,7 @@ public class MovementComponent : MonoBehaviour, ISubject<float>
 
     bool lockToSitMoveForce = false;
 
-    public bool LockToCrouchForce
-    {
-        set
-        {
-            lockToSitMoveForce = value;
-        }
-    }
+    public bool LockToCrouchForce { set { lockToSitMoveForce = value; } }
 
     public List<IObserver<float>> Observers { get; set; }
 

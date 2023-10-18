@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
 
+[System.Serializable]
 public class Knife : BaseWeapon
 {
     [SerializeField]
@@ -134,8 +135,8 @@ public class Knife : BaseWeapon
         _mainAction = new AutoAttackAction(_mainAttackDelay);
         _subAction = new AutoAttackAction(_subAttackDelay);
 
-        _mainRecoilGenerator = new NoRecoil();
-        _subRecoilGenerator = new NoRecoil();
+        _mainRecoilGenerator = new NoRecoilGenerator();
+        _subRecoilGenerator = new NoRecoilGenerator();
 
         LinkActionStrategy();
     }

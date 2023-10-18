@@ -5,43 +5,43 @@ using FSM;
 
 public class IdleState : IState
 {
-    Player storedPlayer;
+    Player _storedPlayer;
 
     public IdleState(Player player)
     {
-        storedPlayer = player;
+        _storedPlayer = player;
     }
 
     public void CheckStateChange()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            storedPlayer.WeaponHolder.WeaponIndex = 0;
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _storedPlayer.WeaponHolder.WeaponIndex = 0;
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            storedPlayer.WeaponHolder.WeaponIndex = 1;
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _storedPlayer.WeaponHolder.WeaponIndex = 1;
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            storedPlayer.WeaponHolder.WeaponIndex = 2;
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _storedPlayer.WeaponHolder.WeaponIndex = 2;
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.LeftAction);
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.LeftAction);
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.RightAction);
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.RightAction);
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && _storedPlayer.WeaponHolder.NowEquipedWeapon.CanReload())
         {
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
         }
     }
 

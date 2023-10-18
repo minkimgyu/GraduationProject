@@ -409,13 +409,16 @@
 "Assets/Scripts/Strategy/ResultStrategy.cs"
 "Assets/Scripts/Tree.cs"
 "Assets/Scripts/UI/BulletLeftShower.cs"
+"Assets/Scripts/Weapon/AbstractRoutineContainerClass.cs"
+"Assets/Scripts/Weapon/BaseAbstractRoutineClass.cs"
+"Assets/Scripts/Weapon/ClassicContainerClass.cs"
 "Assets/Scripts/Weapon/Gun/Classic.cs"
 "Assets/Scripts/Weapon/Gun/Gun.cs"
 "Assets/Scripts/Weapon/Gun/PenetrateData.cs"
 "Assets/Scripts/Weapon/Gun/Phantom.cs"
 "Assets/Scripts/Weapon/Gun/Recoil/AutoRecoilGenerator.cs"
 "Assets/Scripts/Weapon/Gun/Recoil/ManualRecoilGenerator.cs"
-"Assets/Scripts/Weapon/Gun/Recoil/NoRecoil.cs"
+"Assets/Scripts/Weapon/Gun/Recoil/NoRecoilGenerator.cs"
 "Assets/Scripts/Weapon/Gun/Recoil/RecoilData/RecoilData.cs"
 "Assets/Scripts/Weapon/Gun/Recoil/RecoilData/RecoilMap.cs"
 "Assets/Scripts/Weapon/Gun/Recoil/RecoilData/RecoilRange.cs"
@@ -423,7 +426,9 @@
 "Assets/Scripts/Weapon/Gun/Recoil/ZoomRecoilGenerator.cs"
 "Assets/Scripts/Weapon/Gun/Weight/WeightApplier.cs"
 "Assets/Scripts/Weapon/Knife.cs"
-"Assets/Scripts/WeaponHolder.cs"
+"Assets/Scripts/Weapon/KnifeContainerClass.cs"
+"Assets/Scripts/Weapon/PhantomContainerClass.cs"
+"Assets/Scripts/WeaponHoldComponent.cs"
 -langversion:9.0
 
 /deterministic

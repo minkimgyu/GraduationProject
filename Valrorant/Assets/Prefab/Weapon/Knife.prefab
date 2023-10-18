@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1168759710615887175}
-  - component: {fileID: 1168759710615887168}
+  - component: {fileID: 8218693494237572926}
   m_Layer: 6
   m_Name: Knife
   m_TagString: Untagged
@@ -65,7 +65,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1168759710615887168
+--- !u!114 &8218693494237572926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,27 +74,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 1978087866508249085}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 108048bfdc621ff4185338b6e0d3bdf2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a2a878cb77064f4cb8a60a51648d2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 1.5
-  _hitEffectName: KnifeScratchEffect
-  _weaponName: Knife
-  equipFinishTime: 0.2
-  _mainAttackDelay: 0.8
-  _subAttackDelay: 1.3
-  attackLinkTime: 2.8
-  mainAttackEffectDelayTime:
-  - 0.16
-  - 0.45
-  - 0.16
-  subAttackEffectDelayTime: 0.25
-  _mainAttackDamageData:
-    _backAttackDamage: 100
-    _frontAttackDamage: 50
-  _subAttackDamageData:
-    _backAttackDamage: 150
-    _frontAttackDamage: 75
+  _knife:
+    _range: 1.5
+    _hitEffectName: KnifeScratchEffect
+    _weaponName: Knife
+    equipFinishTime: 0.2
+    _mainAttackDelay: 0.8
+    _subAttackDelay: 1.3
+    attackLinkTime: 2.8
+    mainAttackEffectDelayTime:
+    - 0.16
+    - 0.45
+    - 0.16
+    subAttackEffectDelayTime: 0.25
+    _mainAttackDamageData:
+      _frontAttackDamage: 50
+      _backAttackDamage: 100
+    _subAttackDamageData:
+      _frontAttackDamage: 75
+      _backAttackDamage: 150
 --- !u!1 &5977725173639698776
 GameObject:
   m_ObjectHideFlags: 0

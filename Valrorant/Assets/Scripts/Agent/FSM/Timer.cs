@@ -18,6 +18,12 @@ public class Timer
         isFinish = false;
     }
 
+    public void Stop()
+    {
+        startTimer = false;
+        _storedDelayTime = 0;
+    }
+
     public void Update()
     {
         if (startTimer == false) return;

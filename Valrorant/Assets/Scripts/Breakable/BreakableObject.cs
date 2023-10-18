@@ -6,6 +6,9 @@ using UnityEngine;
 public class BreakableObject : DirectDamageTarget, IDamageable
 {
     [SerializeField]
+    Component component;
+
+    [SerializeField]
     float _hp;
 
     bool breakOnce = true;

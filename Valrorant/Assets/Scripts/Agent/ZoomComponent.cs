@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using ObserverPattern;
 
 public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, float, float, float, bool>
 {
-    [SerializeField] private Camera[] cameras;
+    [SerializeField] private Camera[] _cameras;
+    private GameObject _crosshair;
 
-    [SerializeField] private Transform cameraHolder;
+    [SerializeField] private Transform _cameraHolder;
 
-    [SerializeField] private Transform cameraNormalTransform;
-    [SerializeField] private Transform cameraZoomTransform;
+    [SerializeField] private Transform _cameraNormalTransform;
+    [SerializeField] private Transform _cameraZoomTransform;
 
-    Coroutine zoomRoutine;
+    Coroutine _zoomRoutine;
+
+    void Start()
+    {
+        _crosshair = GameObject.FindWithTag("Crosshair");
+    }
 
     public void Notify(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
     {
@@ -24,18 +31,18 @@ public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, f
 
             if (nowZoom)
             {
-                cameraHolder.position = cameraZoomTransform.position;
-                for (int i = 0; i < cameras.Length; i++)
+                _cameraHolder.position = _cameraZoomTransform.position;
+                for (int i = 0; i < _cameras.Length; i++)
                 {
-                    cameras[i].fieldOfView = zoomFieldOfView;
+                    _cameras[i].fieldOfView = zoomFieldOfView;
                 }
             }
             else
             {
-                cameraHolder.position = cameraNormalTransform.position;
-                for (int i = 0; i < cameras.Length; i++)
+                _cameraHolder.position = _cameraNormalTransform.position;
+                for (int i = 0; i < _cameras.Length; i++)
                 {
-                    cameras[i].fieldOfView = normalFieldOfView;
+                    _cameras[i].fieldOfView = normalFieldOfView;
                 }
             }
         }
@@ -43,7 +50,7 @@ public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, f
         {
             StopZoomRoutine();
 
-            zoomRoutine = StartCoroutine(ZoomRoutine(scope, nowZoom, zoomDuration, scopeOnDelay, normalFieldOfView, zoomFieldOfView));
+            _zoomRoutine = StartCoroutine(ZoomRoutine(scope, nowZoom, zoomDuration, scopeOnDelay, normalFieldOfView, zoomFieldOfView));
         }
     }
 
@@ -59,39 +66,37 @@ public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, f
         {
             if (nowZoom)
             {
-                for (int i = 0; i < cameras.Length; i++)
+                for (int i = 0; i < _cameras.Length; i++)
                 {
-                    cameras[i].fieldOfView = Mathf.Lerp(cameras[i].fieldOfView, zoomFieldOfView, progress);
+                    _cameras[i].fieldOfView = Mathf.Lerp(_cameras[i].fieldOfView, zoomFieldOfView, progress);
                 }
 
-                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraZoomTransform.position, progress);
+                _cameraHolder.position = Vector3.Lerp(_cameraHolder.position, _cameraZoomTransform.position, progress);
 
                 if (progress > scopeOnDelay && activeScope == false)
                 {
+                    _crosshair.SetActive(!nowZoom);
+
                     scope.SetActive(nowZoom);
                     activeScope = true;
                 }
             }
             else
             {
-                for (int i = 0; i < cameras.Length; i++)
+                for (int i = 0; i < _cameras.Length; i++)
                 {
-                    cameras[i].fieldOfView = Mathf.Lerp(cameras[i].fieldOfView, normalFieldOfView, progress);
+                    _cameras[i].fieldOfView = Mathf.Lerp(_cameras[i].fieldOfView, normalFieldOfView, progress);
                 }
 
-                cameraHolder.position = Vector3.Lerp(cameraHolder.position, cameraNormalTransform.position, progress);
+                _cameraHolder.position = Vector3.Lerp(_cameraHolder.position, _cameraNormalTransform.position, progress);
 
                 if (activeScope == false)
                 {
+                    _crosshair.SetActive(!nowZoom);
+
                     scope.SetActive(nowZoom);
                     activeScope = true;
                 }
-            }
-
-            if (progress > 0.1 && activeScope == false)
-            {
-                scope.SetActive(nowZoom);
-                activeScope = true;
             }
 
             progress += increment;
@@ -101,10 +106,10 @@ public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, f
 
     void StopZoomRoutine()
     {
-        if (zoomRoutine != null)
+        if (_zoomRoutine != null)
         {
-            StopCoroutine(zoomRoutine);
-            zoomRoutine = null;
+            StopCoroutine(_zoomRoutine);
+            _zoomRoutine = null;
         }
     }
 }

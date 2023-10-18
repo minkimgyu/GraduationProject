@@ -8,6 +8,7 @@ abstract public class ResultStrategy
 {
     public virtual void Do() { }
     public virtual void Do(float bulletSpreadPower) { }
+    public virtual void Do(float bulletSpreadPower, int fireCount) { }
     public virtual void Do(bool nowZoom, bool useInstantly) { }
 
     protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal) { }
@@ -415,27 +416,24 @@ public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치
 
 public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가중치가 적용되지 않음
 {
-    int _projectileCounts;
-
     float _spreadOffset;
     float bulletSpreadPowerDecreaseRatio = 0.35f;
 
     WeightApplier _weightApplier;
 
     public ScatterProjectileGunAttackWithWeight(Transform camTransform, float range, string hitEffect, int targetLayer, Transform muzzle, float penetratePower,
-       string nonPenetrateHitEffect, string trajectoryLineEffect, int projectileCounts, float spreadOffset, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
+       string nonPenetrateHitEffect, string trajectoryLineEffect, float spreadOffset, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
        : base(camTransform, range, hitEffect, targetLayer, muzzle, penetratePower, nonPenetrateHitEffect, trajectoryLineEffect, damageDictionary)
     {
-        _projectileCounts = projectileCounts;
         _spreadOffset = spreadOffset;
         _weightApplier = weightApplier;
     }
 
-    List<Vector3> ReturnOffsetDistance(float weight)
+    List<Vector3> ReturnOffsetDistance(float weight, int fireCount)
     {
         List<Vector3> offsetDistance = new List<Vector3>();
 
-        for (int i = 0; i < _projectileCounts; i++)
+        for (int i = 0; i < fireCount; i++)
         {
             float x = Random.Range(-_spreadOffset - weight, _spreadOffset + weight);
             float y = Random.Range(-_spreadOffset - weight, _spreadOffset + weight);
@@ -445,9 +443,9 @@ public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가
         return offsetDistance;
     }
 
-    public override void Do(float bulletSpreadPower)
+    public override void Do(float bulletSpreadPower, int fireCount)
     {
-        List<Vector3> offsetDistances = ReturnOffsetDistance(_weightApplier.StoredWeight + bulletSpreadPower * bulletSpreadPowerDecreaseRatio);
+        List<Vector3> offsetDistances = ReturnOffsetDistance(_weightApplier.StoredWeight + bulletSpreadPower * bulletSpreadPowerDecreaseRatio, fireCount);
 
         for (int i = 0; i < offsetDistances.Count; i++)
         {

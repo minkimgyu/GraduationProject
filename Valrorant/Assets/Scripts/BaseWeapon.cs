@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-// 드랍, 무게 등등 다양한 변수 추가
-abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
+abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
 {
-    protected Transform _camTransform;
+    public enum Name
+    {
+        Knife,
+        Phantom,
+        Classic
+    }
 
+    protected Transform _camTransform;
     [SerializeField]
     protected float _range;
     public float Range { get { return _range; } }
@@ -16,9 +21,9 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
     protected string _hitEffectName;
 
     [SerializeField]
-    protected string _weaponName;
+    protected Name _weaponName;
 
-    public string WeaponName { get { return _weaponName; } }
+    public Name WeaponName { get { return _weaponName; } }
 
     protected int _targetLayer;
 
@@ -33,9 +38,11 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
     protected ResultStrategy _subResult;
 
 
-    protected RecoilStrategy _mainRecoilGenerator; // noRecoil 등등 --> 전략 패턴으로 처리
+    protected RecoilStrategy _mainRecoilGenerator;
 
     protected RecoilStrategy _subRecoilGenerator;
+
+    public BaseWeapon Weapon { get { return this; } }
 
 
     [SerializeField]
@@ -47,7 +54,6 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
 
     protected GameObject _player;
     public List<IObserver<int, int>> Observers { get; set; }
-
 
     public void AddObserver(IObserver<int, int> observer)
     {
@@ -67,7 +73,15 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
         }
     }
 
-    protected virtual void Update()
+    protected override void OnAwake()
+    {
+    }
+
+    protected override void OnStart()
+    {
+    }
+
+    protected override void OnUpdate()
     {
         _mainAction.OnUpdate();
         _subAction.OnUpdate();
@@ -79,7 +93,15 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
         _subRecoilGenerator.OnUpdate();
     }
 
-    public virtual void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    protected override void OnFixedUpdate()
+    {
+    }
+
+    protected override void OnLateUpdate()
+    {
+    }
+
+    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
         _player = player;
 
@@ -106,13 +128,13 @@ abstract public class BaseWeapon : MonoBehaviour, ISubject<int, int>
 
     public virtual void OnEquip() 
     {
-        gameObject.SetActive(true);
+        GameObject.SetActive(true);
         _ownerAnimator.Play(_weaponName + "Equip");
     }
 
     public virtual void OnUnEquip()
     {
-        gameObject.SetActive(false);
+        GameObject.SetActive(false);
     }
 
     // 제약조건을 만들어보자

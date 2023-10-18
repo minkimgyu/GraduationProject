@@ -44,15 +44,15 @@ public class Player : MonoBehaviour, IDamageable
     ViewComponent _viewComponent;
     public ViewComponent ViewComponent { get { return _viewComponent; } }
 
-    WeaponHolder _weaponHolder;
-    public WeaponHolder WeaponHolder { get { return _weaponHolder; } }
+    WeaponHoldComponent _weaponHoldComponent;
+    public WeaponHoldComponent WeaponHolder { get { return _weaponHoldComponent; } }
 
     Animator _animator;
 
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
-        _weaponHolder = GetComponent<WeaponHolder>();
+        _weaponHoldComponent = GetComponent<WeaponHoldComponent>();
         _movementComponent = GetComponent<MovementComponent>();
         _viewComponent = GetComponent<ViewComponent>();
 
@@ -61,49 +61,49 @@ public class Player : MonoBehaviour, IDamageable
         _weaponFSM = new StateMachine<WeaponState>();
         _sitStandFSM = new StateMachine<SitStandState>();
 
-        _weaponHolder.Initialize(gameObject, _viewComponent.FirePoint, _animator); // 이건 Awake에서 무기 초기화는 Start에서
+        _weaponHoldComponent.Initialize(gameObject, _viewComponent.FirePoint, _animator);
         InitializeFSM();
     }
 
     private void Update()
     {
-        _movementFSM.DoUpdate();
-        _sitStandFSM.DoUpdate();
-        _weaponFSM.DoUpdate();
+        _movementFSM.OnUpdate();
+        _sitStandFSM.OnUpdate();
+        _weaponFSM.OnUpdate();
     }
 
     private void FixedUpdate()
     {
-        _movementFSM.DoFixedUpdate();
-        _sitStandFSM.DoFixedUpdate();
-        _weaponFSM.DoFixedUpdate();
+        _movementFSM.OnFixedUpdate();
+        _sitStandFSM.OnFixedUpdate();
+        _weaponFSM.OnFixedUpdate();
     }
 
     private void LateUpdate()
     {
-        _movementFSM.DoLateUpdate();
-        _sitStandFSM.DoLateUpdate();
-        _weaponFSM.DoLateUpdate();
+        _movementFSM.OnLateUpdate();
+        _sitStandFSM.OnLateUpdate();
+        _weaponFSM.OnLateUpdate();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        _movementFSM.DoCollisionEnter(collision);
-        _sitStandFSM.DoCollisionEnter(collision);
-        _weaponFSM.DoCollisionEnter(collision);
+        _movementFSM.OnCollisionEnter(collision);
+        _sitStandFSM.OnCollisionEnter(collision);
+        _weaponFSM.OnCollisionEnter(collision);
     }
 
     void InitializeFSM()
     {
-        Dictionary<SitStandState, IState> standCrouchStates = new Dictionary<SitStandState, IState>();
+        Dictionary<SitStandState, IState> sitStandStates = new Dictionary<SitStandState, IState>();
 
         IState sit = new SitState(this);
         IState stand = new StandState(this);
 
-        standCrouchStates.Add(SitStandState.Sit, sit);
-        standCrouchStates.Add(SitStandState.Stand, stand);
+        sitStandStates.Add(SitStandState.Sit, sit);
+        sitStandStates.Add(SitStandState.Stand, stand);
 
-        _sitStandFSM.Initialize(standCrouchStates, SitStandState.Stand);
+        _sitStandFSM.Initialize(sitStandStates, SitStandState.Stand);
 
 
         Dictionary<MovementState, IState> movementStates = new Dictionary<MovementState, IState>();
