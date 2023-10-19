@@ -104,8 +104,9 @@ public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, flo
     // ¼öÁ¤
     protected override void ChainMainActionProgressEvent()
     {
-        Fire(_mainResult, _mainRecoilGenerator);
-        PlayMainActionAnimation();
+        bool canFire = Fire(_mainResult, _mainRecoilGenerator);
+        if (canFire) PlayMainActionAnimation();
+        else _storedAutoRecoilGenerator.RecoverRecoil();
     }
 
     protected override void ChainSubActionStartEvent()

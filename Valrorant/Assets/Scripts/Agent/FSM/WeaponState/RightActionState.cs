@@ -22,6 +22,8 @@ public class RightActionState : IState
 
     public void OnStateEnter()
     {
+        storedPlayer.WeaponHolder.NowEquipedWeapon.StoreCurrentBulletCount();
+
         storedPlayer.WeaponHolder.NowEquipedWeapon.StartSubAction();
     }
 
@@ -41,7 +43,13 @@ public class RightActionState : IState
     public void OnStateUpdate()
     {
         storedPlayer.WeaponHolder.NowEquipedWeapon.ProgressSubAction();
-        if(Input.GetMouseButtonUp(1))
+
+        if (storedPlayer.WeaponHolder.NowEquipedWeapon.IsMagazineEmpty())
+        {
+            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+        }
+
+        if (Input.GetMouseButtonUp(1))
         {
             storedPlayer.WeaponFSM.RevertToPreviousState();
         }

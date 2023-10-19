@@ -52,6 +52,19 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     ISubject<float> _bulletSpreadPowerSubject;
     IObserver<float> _bulletSpreadPowerObserver;
 
+    int bulletCountWhenActionStart;
+
+
+    public override void StoreCurrentBulletCount()
+    {
+        bulletCountWhenActionStart = _bulletCountInMagazine;
+    }
+
+    public override bool IsMagazineEmpty()
+    {
+        return bulletCountWhenActionStart != 0 && _bulletCountInMagazine == 0 && _possessingBullet != 0;
+    }
+
     public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
         base.Initialize(player, cam, ownerAnimator);
@@ -78,7 +91,12 @@ abstract public class Gun : BaseWeapon, IObserver<float>
         else return true;
     }
 
-    protected bool CanFire()
+    public override bool CheckNowReload()
+    {
+        return _bulletCountInMagazine == 0 && _possessingBullet != 0;
+    }
+
+    protected override bool CanAttack()
     {
         if (_bulletCountInMagazine > 0) return true;
         else return false;
@@ -106,7 +124,7 @@ abstract public class Gun : BaseWeapon, IObserver<float>
 
     protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy, int originFireCount)
     {
-        if (CanFire() == false) return false;
+        if (CanAttack() == false) return false;
 
         int canFireCount = ReturnCanFireCount(originFireCount);
         CalculateLeftBulletCount(canFireCount);
@@ -114,21 +132,23 @@ abstract public class Gun : BaseWeapon, IObserver<float>
 
         resultStrategy.Do(_receivedBulletSpreadPower, canFireCount);
 
-        recoilStrategy.CreateRecoil();
+        if (_bulletCountInMagazine == 0) recoilStrategy.RecoverRecoil();
+        else recoilStrategy.CreateRecoil();
 
         return true;
     }
 
     protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy)
     {
-        if (CanFire() == false) return false;
+        if (CanAttack() == false) return false;
 
         CalculateLeftBulletCount();
         OnAttack();
 
         resultStrategy.Do(_receivedBulletSpreadPower);
 
-        recoilStrategy.CreateRecoil();
+        if (_bulletCountInMagazine == 0) recoilStrategy.RecoverRecoil();
+        else recoilStrategy.CreateRecoil();
 
         return true;
     }
@@ -168,7 +188,6 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     public override void OnUnEquip()
     {
         _bulletSpreadPowerSubject.RemoveObserver(_bulletSpreadPowerObserver);
-
         base.OnUnEquip();
     }
 

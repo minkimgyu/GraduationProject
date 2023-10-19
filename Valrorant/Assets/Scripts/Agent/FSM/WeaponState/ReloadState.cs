@@ -38,9 +38,9 @@ public class ReloadState : IState
 
     void StopReload()
     {
-        _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
         _reloadTimer.Stop();
         _stateExitTimer.Stop();
+        _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
     }
 
     public void OnStateCollisionEnter(Collision collision)
@@ -50,13 +50,13 @@ public class ReloadState : IState
     public void OnStateEnter()
     {
         _storedPlayer.WeaponHolder.NowEquipedWeapon.OnReload();
-
         _reloadTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadFinishTime()); // µÙ∑π¿Ã
         _stateExitTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadStateExitTime()); // µÙ∑π¿Ã
     }
 
     public void OnStateExit()
     {
+
     }
 
     public void OnStateFixedUpdate()
@@ -78,7 +78,7 @@ public class ReloadState : IState
         _stateExitTimer.Update();
         if (_stateExitTimer.IsTimerFinish())
         {
-            _storedPlayer.WeaponFSM.RevertToPreviousState();
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
         }
     }
 }

@@ -51,6 +51,10 @@ public class IdleState : IState
 
     public void OnStateEnter()
     {
+        if(_storedPlayer.WeaponHolder.NowEquipedWeapon.CheckNowReload())
+        {
+            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+        }
     }
 
     public void OnStateExit()

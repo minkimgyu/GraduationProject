@@ -22,6 +22,9 @@ public class LeftActionState : IState
 
     public void OnStateEnter()
     {
+        storedPlayer.WeaponHolder.NowEquipedWeapon.StoreCurrentBulletCount();
+
+
         storedPlayer.WeaponHolder.NowEquipedWeapon.StartMainAction();
     }
 
@@ -41,6 +44,15 @@ public class LeftActionState : IState
     public void OnStateUpdate()
     {
         storedPlayer.WeaponHolder.NowEquipedWeapon.ProgressMainAction();
+
+        // 사격 도중 총알이 떨어진 경우, State에 들어왔을 때는 총알이 존재했지만
+        // Update 중 총알이 다 떨어진 경우
+
+        if(storedPlayer.WeaponHolder.NowEquipedWeapon.IsMagazineEmpty())
+        {
+            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+        }
+
         if (Input.GetMouseButtonUp(0))
         {
             storedPlayer.WeaponFSM.RevertToPreviousState();

@@ -53,6 +53,21 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
     public Animator OwnerAnimator { get { return _ownerAnimator; } }
 
     protected GameObject _player;
+
+    public virtual bool CheckNowReload()
+    {
+        return false;
+    }
+
+    public virtual void StoreCurrentBulletCount()
+    {
+    }
+
+    public virtual bool IsMagazineEmpty()
+    {
+        return false;
+    }
+
     public List<IObserver<int, int>> Observers { get; set; }
 
     public void AddObserver(IObserver<int, int> observer)
@@ -71,6 +86,11 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
         {
             Observers[i].Notify(inMagazine, inPossession);
         }
+    }
+
+    protected virtual bool CanAttack()
+    {
+        return true;
     }
 
     protected override void OnAwake()
