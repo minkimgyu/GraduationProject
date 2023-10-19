@@ -5,7 +5,7 @@ using ObserverPattern;
 
 public class WeaponHoldComponent : MonoBehaviour
 {
-    IObserver<int, int> _bulletShower;
+    LeftRoundShower _leftRoundShower;
 
     [SerializeField]
     AbstractRoutineContainerClass[] _weaponsContainers = new AbstractRoutineContainerClass[3];
@@ -19,8 +19,7 @@ public class WeaponHoldComponent : MonoBehaviour
 
     public void Initialize(GameObject player, Transform camera, Animator ownerAnimator)
     {
-        IObserver<int, int> bulletLeftShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<IObserver<int, int>>();
-        _bulletShower = bulletLeftShower;
+        _leftRoundShower = FindObjectOfType<LeftRoundShower>();
 
         for (int i = 0; i < _weaponsContainers.Length; i++)
         {
@@ -39,15 +38,15 @@ public class WeaponHoldComponent : MonoBehaviour
             {
                 _nowEquipedWeapon = _weapons[_weaponIndex];
 
-                ISubject<int, int> subject = _nowEquipedWeapon;
-                subject.AddObserver(_bulletShower);
+                _nowEquipedWeapon.OnRoundChangeRequested += _leftRoundShower.OnBulletCountChange;
+                _nowEquipedWeapon.OnActiveContainerRequested += _leftRoundShower.OnActiveContainer;
 
                 _nowEquipedWeapon.OnEquip();
             }
             else
             {
-                ISubject<int, int> subject = _weapons[i];
-                subject.RemoveObserver(_bulletShower);
+                _weapons[i].OnRoundChangeRequested -= _leftRoundShower.OnBulletCountChange;
+                _weapons[i].OnActiveContainerRequested -= _leftRoundShower.OnActiveContainer;
 
                 _weapons[i].OnUnEquip();
             }

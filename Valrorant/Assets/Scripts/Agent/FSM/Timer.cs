@@ -1,50 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Timer
 {
-    bool isFinish = false;
+    bool _isRunning = false;
+    public bool IsFinish { get { return !_isRunning; } }
+    public bool IsRunning { get { return _isRunning; } }
 
-    bool startTimer = false;
-    float _storedDelayTime = 0;
-    float _delayTime = 0;
+    float _currentTime = 0;
+    float _duration = 0;
 
+    public float Ratio { get { return _currentTime / _duration; } }
 
-    public void Start(float delayTime)
+    public void Start(float duration)
     {
-        _delayTime = delayTime;
-        startTimer = true;
-        isFinish = false;
+        _duration = duration;
+        _isRunning = true;
     }
 
     public void Stop()
     {
-        startTimer = false;
-        _storedDelayTime = 0;
+        _isRunning = false;
+        _currentTime = 0;
     }
 
     public void Update()
     {
-        if (startTimer == false) return;
+        if (_isRunning == false) return;
 
-        _storedDelayTime += Time.deltaTime;
-        if (_storedDelayTime >= _delayTime)
+        _currentTime += Time.smoothDeltaTime;
+        if (_currentTime >= _duration)
         {
-            _storedDelayTime = 0;
-            startTimer = false;
-            isFinish = true;
+            Stop();
         }
-    }
-
-    public bool IsTimerFinish()
-    {
-        if(isFinish == true)
-        {
-            isFinish = false;
-            return true;
-        }
-
-        return false;
     }
 }

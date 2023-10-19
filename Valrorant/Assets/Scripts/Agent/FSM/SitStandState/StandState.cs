@@ -27,7 +27,7 @@ public class StandState : IState
     public void OnStateEnter()
     {
         storedPlayer.MovementComponent.LockToCrouchForce = false;
-        storedPlayer.MovementComponent.Crouch(false);
+        storedPlayer.MovementComponent.ChangePosture(false);
     }
 
     public void OnStateExit()

@@ -24,7 +24,7 @@ public class NoAttack : ResultStrategy
     public override void OnUpdate() { }
 }
 
-public class Zoom : ResultStrategy, ISubject<GameObject, bool, float, float, float, float, bool>
+public class Zoom : ResultStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
 {
     GameObject _scope;
     float _zoomDuration;
@@ -35,6 +35,8 @@ public class Zoom : ResultStrategy, ISubject<GameObject, bool, float, float, flo
 
     bool nowZoom = false;
 
+    public System.Action<GameObject, bool, float, float, float, float, bool> OnZoomRequested;
+
     public Zoom(GameObject scope, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView)
     {
         _scope = scope;
@@ -44,38 +46,38 @@ public class Zoom : ResultStrategy, ISubject<GameObject, bool, float, float, flo
         _normalFieldOfView = normalFieldOfView;
         _zoomFieldOfView = zoomFieldOfView;
 
-        Observers = new List<IObserver<GameObject, bool, float, float, float, float, bool>>();
+        //Observers = new List<IObserver<GameObject, bool, float, float, float, float, bool>>();
     }
 
-    public List<IObserver<GameObject, bool, float, float, float, float, bool>> Observers { get; set; }
+    //public List<IObserver<GameObject, bool, float, float, float, float, bool>> Observers { get; set; }
 
-    public void AddObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
-    {
-        Observers.Add(observer);
-    }
+    //public void AddObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
+    //{
+    //    Observers.Add(observer);
+    //}
 
-    public void RemoveObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
-    {
-        Observers.Remove(observer);
-    }
+    //public void RemoveObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
+    //{
+    //    Observers.Remove(observer);
+    //}
 
-    public void NotifyToObservers(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant = false)
-    {
-        for (int i = 0; i < Observers.Count; i++)
-        {
-            Observers[i].Notify(scope, nowZoom, zoomDuration, scopeOnDelay, normalFieldOfView, zoomFieldOfView, isInstant);
-        }
-    }
+    //public void NotifyToObservers(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant = false)
+    //{
+    //    for (int i = 0; i < Observers.Count; i++)
+    //    {
+    //        Observers[i].Notify(scope, nowZoom, zoomDuration, scopeOnDelay, normalFieldOfView, zoomFieldOfView, isInstant);
+    //    }
+    //}
 
     public override void Do() 
     {
         nowZoom = !nowZoom;
-        NotifyToObservers(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView);
+        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, false);
     }
 
     public override void Do(bool nowZoom, bool useInstantly)
     {
-        NotifyToObservers(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, useInstantly);
+        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, useInstantly);
     }
 
     public override void OnUpdate() { }

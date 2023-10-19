@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-abstract public class Gun : BaseWeapon, IObserver<float>
+abstract public class Gun : BaseWeapon//, IObserver<float>
 {
     [SerializeField]
     ParticleSystem _muzzleFlash;
@@ -47,13 +47,10 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     [SerializeField]
     protected float _reloadStateExitTime;
 
+    [SerializeField]
     protected float _receivedBulletSpreadPower;
 
-    ISubject<float> _bulletSpreadPowerSubject;
-    IObserver<float> _bulletSpreadPowerObserver;
-
     int bulletCountWhenActionStart;
-
 
     public override void StoreCurrentBulletCount()
     {
@@ -72,10 +69,15 @@ abstract public class Gun : BaseWeapon, IObserver<float>
         _animator = GetComponent<Animator>();
         _bulletCountInMagazine = _maxBulletCountInMagazine;
 
-        _bulletSpreadPowerSubject = _player.GetComponent<ISubject<float>>();
-        _bulletSpreadPowerObserver = this;
+        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
+        movementComponent.OnDisplacementRequested += OnDisplacementReceived;
 
         // 여기에서 UI에 이밴트로 연결시키는 방식
+    }
+
+    void OnDisplacementReceived(float displacement)
+    {
+        _receivedBulletSpreadPower = displacement;
     }
 
     public override void OnReload()
@@ -168,7 +170,9 @@ abstract public class Gun : BaseWeapon, IObserver<float>
             _possessingBullet = 0;
         }
 
-        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+        OnRoundChangeRequested(_bulletCountInMagazine, _possessingBullet);
+
+        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
     }
 
     public override float ReturnReloadFinishTime() { return _reloadFinishTime; }
@@ -178,22 +182,20 @@ abstract public class Gun : BaseWeapon, IObserver<float>
     public override void OnEquip()
     {
         base.OnEquip();
-        _bulletSpreadPowerSubject.AddObserver(_bulletSpreadPowerObserver);
+        //_bulletSpreadPowerSubject.AddObserver(_bulletSpreadPowerObserver);
 
         _animator.Play("Equip", -1, 0);
-        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+        OnActiveContainerRequested?.Invoke(true);
+        OnRoundChangeRequested?.Invoke(_bulletCountInMagazine, _possessingBullet);
+
+        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
     }
 
 
     public override void OnUnEquip()
     {
-        _bulletSpreadPowerSubject.RemoveObserver(_bulletSpreadPowerObserver);
+        //_bulletSpreadPowerSubject.RemoveObserver(_bulletSpreadPowerObserver);
         base.OnUnEquip();
-    }
-
-    public void Notify(float bulletSpreadPower)
-    {
-        _receivedBulletSpreadPower = bulletSpreadPower;
     }
 
     protected override void OnAttack()
@@ -202,7 +204,8 @@ abstract public class Gun : BaseWeapon, IObserver<float>
         _emptyCartridgeSpawner.Play();
         _animator.Play("Fire", -1, 0f);
 
-        NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+        OnRoundChangeRequested?.Invoke(_bulletCountInMagazine, _possessingBullet);
     }
 
     protected void PlayMainActionAnimation()

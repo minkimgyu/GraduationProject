@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
+using System;
 
-public class MovementComponent : MonoBehaviour, ISubject<float>
+public class MovementComponent : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     private Vector3 _moveDirection;
 
     private float velocityLengthDecreaseRatio = 0.1f;
-    public float velocityLength { get { return _rigidbody.velocity.magnitude * velocityLengthDecreaseRatio; } }
 
     [SerializeField] Transform direction;
 
@@ -22,8 +22,6 @@ public class MovementComponent : MonoBehaviour, ISubject<float>
     bool lockToSitMoveForce = false;
 
     public bool LockToCrouchForce { set { lockToSitMoveForce = value; } }
-
-    public List<IObserver<float>> Observers { get; set; }
 
     [SerializeField]
     float _crouchDuration;
@@ -40,24 +38,33 @@ public class MovementComponent : MonoBehaviour, ISubject<float>
     [SerializeField]
     Transform holder;
 
-
+    float capsuleStandCenter = 1f;
     float capsuleCrouchHeight = 1.7f;
+
+    float capsuleStandHeight = 2f;
     float capsuleCrouchCenter = 1.15f;
 
 
-    float capsuleStandHeight = 2f;
-    float capsuleStandCenter = 1f;
-
     float standHeight = 0f;
     float crouchHeight = 0f;
-    
+
+    public Action<float> OnDisplacementRequested;
+
+    [SerializeField]
+    SmoothLerpUtility _smoothLerpUtility;
 
     // Start is called before the first frame update
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
         waitTime = new WaitForSeconds(smoothness);
-        Observers = new List<IObserver<float>>();
+
+        _smoothLerpUtility.OnLerpRequested += Stand;
+    }
+
+    public void RaiseDisplacementEvent()
+    {
+        OnDisplacementRequested?.Invoke(_rigidbody.velocity.magnitude * velocityLengthDecreaseRatio);
     }
 
     public void ResetDirection()
@@ -87,54 +94,39 @@ public class MovementComponent : MonoBehaviour, ISubject<float>
         _rigidbody.AddForce(_moveDirection * moveForce, ForceMode.Force);
     }
 
-    public void Crouch(bool nowCrouch)
+    public void ChangePosture(bool nowCrouch)
     {
-        if (_crouchCoroutine != null) StopCoroutine(_crouchCoroutine);
-        _crouchCoroutine = StartCoroutine(CrouchRoutine(nowCrouch));
-    }
-
-    IEnumerator CrouchRoutine(bool nowCrouch)
-    {
-        float progress = 0; //This float will serve as the 3rd parameter of the lerp function.
-        float increment = smoothness / _crouchDuration; //The amount of change to apply.
-        while (progress < 1)
+        if(nowCrouch)
         {
-            if(nowCrouch)
-            {
-                capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, capsuleCrouchHeight, progress);
-                capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, new Vector3(capsuleCollider.center.x, capsuleCrouchCenter, capsuleCollider.center.z), progress);
-
-
-                holder.localPosition = Vector3.Lerp(holder.localPosition, new Vector3(holder.localPosition.x, crouchHeight, holder.localPosition.z), progress);
-            }
-            else
-            {
-                capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, capsuleStandHeight, progress);
-                capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, new Vector3(capsuleCollider.center.x, capsuleStandCenter, capsuleCollider.center.z), progress);
-
-                holder.localPosition = Vector3.Lerp(holder.localPosition, new Vector3(holder.localPosition.x, standHeight, holder.localPosition.z), progress);
-            }
-
-            progress += increment;
-            yield return new WaitForSeconds(smoothness);
+            _smoothLerpUtility.OnLerpRequested -= Stand;
+            _smoothLerpUtility.OnLerpRequested += Crouch;
         }
-    }
-
-    public void AddObserver(IObserver<float> observer)
-    {
-        Observers.Add(observer);
-    }
-
-    public void RemoveObserver(IObserver<float> observer)
-    {
-        Observers.Remove(observer);
-    }
-
-    public void NotifyToObservers(float velocity)
-    {
-        for (int i = 0; i < Observers.Count; i++)
+        else
         {
-            Observers[i].Notify(velocity);
+            _smoothLerpUtility.OnLerpRequested += Stand;
+            _smoothLerpUtility.OnLerpRequested -= Crouch;
         }
+
+        if (_smoothLerpUtility.IsRunning()) _smoothLerpUtility.StopSmoothLerp();
+        _smoothLerpUtility.StartSmoothLerp(_crouchDuration);
+    }
+
+    void Crouch(float ratio)
+    {
+        ChangeColliderSize(ratio, capsuleCrouchHeight, capsuleCrouchCenter, crouchHeight);
+    }
+
+    void Stand(float ratio)
+    {
+        ChangeColliderSize(ratio, capsuleStandHeight, capsuleStandCenter, standHeight);
+    }
+
+    void ChangeColliderSize(float ratio, float capsuleHeight, float capsuleCenter, float holderHeight)
+    {
+        capsuleCollider.height = Mathf.Lerp(capsuleCollider.height, capsuleHeight, ratio);
+        capsuleCollider.center = Vector3.Lerp(capsuleCollider.center, new Vector3(capsuleCollider.center.x, capsuleCenter, capsuleCollider.center.z), ratio);
+
+
+        holder.localPosition = Vector3.Lerp(holder.localPosition, new Vector3(holder.localPosition.x, holderHeight, holder.localPosition.z), ratio);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
+abstract public class BaseWeapon : BaseAbstractRoutineClass//, ISubject<int, int>
 {
     public enum Name
     {
@@ -54,6 +54,9 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
 
     protected GameObject _player;
 
+    public System.Action<int, int> OnRoundChangeRequested;
+    public System.Action<bool> OnActiveContainerRequested;
+
     public virtual bool CheckNowReload()
     {
         return false;
@@ -68,25 +71,25 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
         return false;
     }
 
-    public List<IObserver<int, int>> Observers { get; set; }
+    //public List<IObserver<int, int>> Observers { get; set; }
 
-    public void AddObserver(IObserver<int, int> observer)
-    {
-        Observers.Add(observer);
-    }
+    //public void AddObserver(IObserver<int, int> observer)
+    //{
+    //    Observers.Add(observer);
+    //}
 
-    public void RemoveObserver(IObserver<int, int> observer)
-    {
-        Observers.Remove(observer);
-    }
+    //public void RemoveObserver(IObserver<int, int> observer)
+    //{
+    //    Observers.Remove(observer);
+    //}
 
-    public void NotifyToObservers(int inMagazine = 0, int inPossession = 0)
-    {
-        for (int i = 0; i < Observers.Count; i++)
-        {
-            Observers[i].Notify(inMagazine, inPossession);
-        }
-    }
+    //public void NotifyToObservers(int inMagazine = 0, int inPossession = 0)
+    //{
+    //    for (int i = 0; i < Observers.Count; i++)
+    //    {
+    //        Observers[i].Notify(inMagazine, inPossession);
+    //    }
+    //}
 
     protected virtual bool CanAttack()
     {
@@ -124,13 +127,12 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass, ISubject<int, int>
     public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
         _player = player;
-
         _camTransform = cam;
 
         _ownerAnimator = ownerAnimator;
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
 
-        Observers = new List<IObserver<int, int>>();
+        //Observers = new List<IObserver<int, int>>();
     }
 
     protected void LinkActionStrategy()

@@ -53,14 +53,17 @@ public class Classic : Gun
         _subAction = new ManualAttackAction(_subActionDelay);
 
 
-        IObserver<Vector2, Vector2, Vector2> recoilObserver = player.GetComponent<IObserver<Vector2, Vector2, Vector2>>();
+        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
 
 
         RecoilStrategy mainRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
-        mainRecoilGenerator.AddObserver(recoilObserver);
+        mainRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
 
         RecoilStrategy subRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
-        subRecoilGenerator.AddObserver(recoilObserver);
+        subRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
+
+        mainRecoilGenerator.OnRecoilStartRequested += subRecoilGenerator.StopLerp;
+        subRecoilGenerator.OnRecoilStartRequested += mainRecoilGenerator.StopLerp;
 
         _mainRecoilGenerator = mainRecoilGenerator;
         _subRecoilGenerator = subRecoilGenerator;

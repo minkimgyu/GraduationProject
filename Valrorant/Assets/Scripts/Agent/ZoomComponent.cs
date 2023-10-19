@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ObserverPattern;
 
-public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, float, float, float, bool>
+public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float, float, float, float, bool>
 {
     [SerializeField] private Camera[] _cameras;
     private GameObject _crosshair;
@@ -21,7 +21,7 @@ public class ZoomComponent : MonoBehaviour, IObserver<GameObject, bool, float, f
         _crosshair = GameObject.FindWithTag("Crosshair");
     }
 
-    public void Notify(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
+    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
     {
         StopZoomRoutine();
 

@@ -6,16 +6,17 @@ using FSM;
 public class EquipState : IState
 {
     Player _storedPlayer;
-
-    Timer timer = new Timer();
+    Timer _timer;
 
     public EquipState(Player player)
     {
         _storedPlayer = player;
+        _timer = new Timer();
     }
 
     public void CheckStateChange()
     {
+        if (_timer.IsFinish) _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
     }
 
     public void OnStateCollisionEnter(Collision collision)
@@ -25,7 +26,7 @@ public class EquipState : IState
     public void OnStateEnter()
     {
         _storedPlayer.WeaponHolder.ChangeWeapon();
-        timer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.EquipFinishTime); // µÙ∑π¿Ã
+        _timer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.EquipFinishTime); // µÙ∑π¿Ã
     }
 
     public void OnStateExit()
@@ -43,10 +44,6 @@ public class EquipState : IState
 
     public void OnStateUpdate()
     {
-        timer.Update();
-        if (timer.IsTimerFinish())
-        {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
-        }
+        _timer.Update();
     }
 }

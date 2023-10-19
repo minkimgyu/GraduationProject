@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-abstract public class RecoilStrategy : ISubject<Vector2, Vector2, Vector2>
+abstract public class RecoilStrategy// : ISubject<Vector2, Vector2, Vector2>
 {
-    Vector2 _storedMultiplier;
+    protected Vector2 _lastPosition;
 
     protected Vector2 _viewRotationMultiplier;
     protected Vector2 _pointToMove;
@@ -13,20 +13,20 @@ abstract public class RecoilStrategy : ISubject<Vector2, Vector2, Vector2>
     protected float _shootInterval;
     protected float _recoverDuration;
 
-    private float _storedDuration = 0;
-    private float _FinishDuration = 0;
-
-    protected bool _canRunningLerp = false;
-
     protected float _cameraRecoilMultiplier = 0.5f;
     protected float _firePointRecoilMultiplier = 1f;
     protected float _actorBoneRecoilMultiplier = 0.5f;
+
+    protected Timer _timer;
+
+    public System.Action<Vector2, Vector2, Vector2> OnRecoilProgressRequested;
+    public System.Action OnRecoilStartRequested; // 다른 Recoil을 Cancel해줌
 
     public RecoilStrategy(float shootInterval, float recoverDuration)
     {
         _shootInterval = shootInterval;
         _recoverDuration = recoverDuration;
-        Observers = new List<IObserver<Vector2, Vector2, Vector2>>();
+        _timer = new Timer();
     }
 
     public abstract void CreateRecoil(); // 이거 abstract로 남기기
@@ -36,76 +36,39 @@ abstract public class RecoilStrategy : ISubject<Vector2, Vector2, Vector2>
 
     public virtual void OnUpdate()
     {
+        _timer.Update();
         ApplyMultiplier();
     }
 
     protected void StartLerp(Vector2 pointToMove, float duration)
     {
-        _FinishDuration = duration;
+        OnRecoilStartRequested?.Invoke();
+        _timer.Start(duration);
         _pointToMove = pointToMove;
-        _canRunningLerp = true;
     }
 
-    protected void StopLerp()
+    public void StopLerp()
     {
-        _canRunningLerp = false;
-        _storedDuration = 0;
-        _FinishDuration = 0;
+        _timer.Stop();
     }
 
     protected Vector2 LerpRecoil()
     {
-        _storedDuration += Time.deltaTime;
-        Vector2 tmpValue;
+        if (_timer.IsFinish == true) StopLerp();
+        else _viewRotationMultiplier = Vector2.Lerp(_viewRotationMultiplier, _pointToMove, _timer.Ratio); // 변경되는 값을 넘겨주기
 
-        if (_storedDuration >= _FinishDuration)
-        {
-            _viewRotationMultiplier = _pointToMove;
-            tmpValue = _viewRotationMultiplier - _pointToMove;
-            StopLerp();
-        }
-        else
-        {
-            // 변경되는 값을 넘겨줘서 더하기
-            Vector2 nowValue = Vector2.Lerp(_viewRotationMultiplier, _pointToMove, _storedDuration / _FinishDuration);
+        _lastPosition = _viewRotationMultiplier;
 
-            tmpValue = nowValue - _storedMultiplier;
-
-            _viewRotationMultiplier = nowValue;
-            _storedMultiplier = nowValue;
-        }
-
-        return tmpValue;
+        return _viewRotationMultiplier;
     }
 
     protected virtual void ApplyMultiplier()
     {
-        if (_canRunningLerp == false) return;
+        if (_timer.IsFinish) return;
 
         Vector2 recoilValue = LerpRecoil();
-
-        NotifyToObservers(recoilValue * _cameraRecoilMultiplier, recoilValue * _firePointRecoilMultiplier, recoilValue * _actorBoneRecoilMultiplier);
+        OnRecoilProgressRequested?.Invoke(recoilValue * _cameraRecoilMultiplier, recoilValue * _firePointRecoilMultiplier, recoilValue * _actorBoneRecoilMultiplier);
     }
 
     protected abstract Vector2 ReturnNextRecoilPoint();
-
-    public List<IObserver<Vector2, Vector2, Vector2>> Observers { get; set; }
-
-    public void AddObserver(IObserver<Vector2, Vector2, Vector2> observer)
-    {
-        Observers.Add(observer);
-    }
-
-    public void RemoveObserver(IObserver<Vector2, Vector2, Vector2> observer)
-    {
-        Observers.Remove(observer);
-    }
-
-    public void NotifyToObservers(Vector2 cameraRotationMultiplier, Vector2 firePointRotationMultiplier, Vector2 actorBoneRotationMultiplier)
-    {
-        for (int i = 0; i < Observers.Count; i++)
-        {
-            Observers[i].Notify(cameraRotationMultiplier, firePointRotationMultiplier, actorBoneRotationMultiplier);
-        }
-    }
 }

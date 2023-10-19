@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-public class ViewComponent : MonoBehaviour, IObserver<Vector2, Vector2, Vector2>
+public class ViewComponent : MonoBehaviour//, IObserver<Vector2, Vector2, Vector2>
 {
     [SerializeField] private Transform _actorBone;
     [SerializeField] private Transform _direction;
@@ -26,24 +26,23 @@ public class ViewComponent : MonoBehaviour, IObserver<Vector2, Vector2, Vector2>
     [SerializeField] private Vector2 _firePointRotationMultiplier;
     [SerializeField] private Vector2 _actorBoneRotationMultiplier;
 
-
     private Vector2 CameraViewRotation { get { return _viewRotation + _cameraRotationMultiplier; } } // 카메라 회전 프로퍼티
     private Vector2 ActorBoneViewRotation { get { return _viewRotation + _actorBoneRotationMultiplier; } } // 모델링 회전 프로퍼티
     private Vector2 FireViewRotation { get { return _viewRotation + _firePointRotationMultiplier; } } // 총 발사 시작 지점 회전 값 프로퍼티
 
-    public void Notify(Vector2 cameraForce, Vector2 recoilForce, Vector2 actorBoneForce)
+    public void OnRecoilProgress(Vector2 cameraForce, Vector2 recoilForce, Vector2 actorBoneForce)
     {
-        _cameraRotationMultiplier += cameraForce; // 합연산으로 처리 --> 복수의 반동도 제어 가능
-        _firePointRotationMultiplier += recoilForce;
-        _actorBoneRotationMultiplier += actorBoneForce;
+        _cameraRotationMultiplier = cameraForce;
+        _firePointRotationMultiplier = recoilForce;
+        _actorBoneRotationMultiplier = actorBoneForce;
     }
 
     public void ResetView()
     {
-        _viewRotation.x = Mathf.Lerp(_viewRotation.x, Input.GetAxisRaw("Mouse X"), _viewSensitivity.x * Time.smoothDeltaTime);
+        _viewRotation.x += Mathf.Lerp(_viewRotation.x, Input.GetAxisRaw("Mouse X"), _viewSensitivity.x * Time.smoothDeltaTime);
         _viewRotation.y = Mathf.Clamp(_viewRotation.y - (Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.smoothDeltaTime), _viewClampYMin, _viewClampYMax);
 
-        _direction.rotation = Quaternion.Euler(0, _direction.rotation.eulerAngles.y + CameraViewRotation.x, 0);
+        _direction.rotation = Quaternion.Euler(0, CameraViewRotation.x, 0);
         _actorBone.rotation = Quaternion.Euler(ActorBoneViewRotation.y, _direction.eulerAngles.y, 0);
     }
 

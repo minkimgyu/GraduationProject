@@ -29,7 +29,7 @@ public class ManualRecoilGenerator : RecoilStrategy
     {
         base.OnUpdate();
 
-        if (_nowCreateRecoil == true && _canRunningLerp == false) // 반동을 걸어주고 끝난 경우
+        if (_nowCreateRecoil == true && _timer.IsFinish == true) // 반동을 걸어주고 끝난 경우
         {
             StopLerp();
             StartLerp(Vector2.zero, _recoverDuration); // 이후, 회복시킴

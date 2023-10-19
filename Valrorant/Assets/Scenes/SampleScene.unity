@@ -2186,9 +2186,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc434c666ac1c84da11eacb3894075c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  container: {fileID: 1328269361}
-  bulletCountInMagazine: {fileID: 1352769415}
-  bulletCountInPossession: {fileID: 1548506954}
+  _container: {fileID: 1328269361}
+  _bulletCountInMagazine: {fileID: 1352769415}
+  _bulletCountInPossession: {fileID: 1548506954}
 --- !u!1 &697778374
 GameObject:
   m_ObjectHideFlags: 0
@@ -4810,6 +4810,7 @@ GameObject:
   - component: {fileID: 1418646177}
   - component: {fileID: 1418646178}
   - component: {fileID: 1418646176}
+  - component: {fileID: 1418646183}
   - component: {fileID: 1418646175}
   - component: {fileID: 1418646182}
   m_Layer: 9
@@ -4839,7 +4840,7 @@ MonoBehaviour:
   _firePoint: {fileID: 1208789577}
   _viewClampYMax: 40
   _viewClampYMin: -40
-  _viewSensitivity: {x: 1000, y: 1000}
+  _viewSensitivity: {x: 1500, y: 1500}
   _cameraRotationMultiplier: {x: 0, y: 0}
   _firePointRotationMultiplier: {x: 0, y: 0}
   _actorBoneRotationMultiplier: {x: 0, y: 0}
@@ -4863,6 +4864,7 @@ MonoBehaviour:
   _crouchDuration: 1
   capsuleCollider: {fileID: 1418646180}
   holder: {fileID: 204481005}
+  _smoothLerpUtility: {fileID: 1418646183}
 --- !u!114 &1418646177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4956,6 +4958,18 @@ MonoBehaviour:
   _cameraHolder: {fileID: 1183667469}
   _cameraNormalTransform: {fileID: 226638203}
   _cameraZoomTransform: {fileID: 592466658}
+--- !u!114 &1418646183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1418646174}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cca8a33dc6726f5408975ae5e15a514d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1422302939
 GameObject:
   m_ObjectHideFlags: 0

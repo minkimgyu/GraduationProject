@@ -19,7 +19,7 @@ public class SitState : IState
     public void OnStateEnter()
     {
         storedPlayer.MovementComponent.LockToCrouchForce = true;
-        storedPlayer.MovementComponent.Crouch(true);
+        storedPlayer.MovementComponent.ChangePosture(true);
     }
 
     public void OnStateExit()

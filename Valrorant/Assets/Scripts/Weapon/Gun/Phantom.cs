@@ -5,7 +5,7 @@ using DamageUtility;
 using ObserverPattern;
 
 [System.Serializable]
-public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, float, bool>
+public class Phantom : Gun//, IObserver<GameObject, bool, float, float, float, float, bool>
 {
     [SerializeField]
     int mainAttackBulletCount = 1;
@@ -58,28 +58,26 @@ public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, flo
         _mainResult = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
             _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _damageDictionary);
 
-        Zoom zoom = new Zoom(_scope, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView);
 
-        IObserver<GameObject, bool, float, float, float, float, bool> scopeObserver = player.GetComponent<IObserver<GameObject, bool, float, float, float, float, bool>>();
-        zoom.AddObserver(scopeObserver);
-        zoom.AddObserver(this);
+        Zoom zoom = new Zoom(_scope, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView);
         _subResult = zoom;
 
+        // 무기를 버릴 경우, 제거해야함
+        ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
+        zoom.OnZoomRequested += zoomComponent.OnZoomCalled;
+        zoom.OnZoomRequested += OnZoomCalled;
 
-        IObserver<Vector2, Vector2, Vector2> _recoilObserver = player.GetComponent<IObserver<Vector2, Vector2, Vector2>>();
-
+        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
 
         AutoRecoilGenerator autoRecoilGenerator = new AutoRecoilGenerator(_recoilMap.RecoilRecoverDuration, _mainActionDelay, _recoilMap);
-        autoRecoilGenerator.AddObserver(_recoilObserver);
-
         _storedAutoRecoilGenerator = autoRecoilGenerator;
 
 
         ZoomRecoilGenerator zoomRecoilGenerator = new ZoomRecoilGenerator(_recoilMap.RecoilRecoverDuration, _mainActionDelay, _recoilMap);
-        zoomRecoilGenerator.AddObserver(_recoilObserver);
-
         _storedZoomRecoilGenerator = zoomRecoilGenerator;
 
+        autoRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
+        zoomRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
 
         _mainRecoilGenerator = _storedAutoRecoilGenerator;
         _subRecoilGenerator = new NoRecoilGenerator();
@@ -115,7 +113,7 @@ public class Phantom : Gun, IObserver<GameObject, bool, float, float, float, flo
         PlaySubActionAnimation();
     }
 
-    public void Notify(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
+    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
     {
         if (nowZoom)
         {

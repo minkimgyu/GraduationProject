@@ -42,13 +42,14 @@ public class JumpState : IState
     public void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
-        storedPlayer.MovementComponent.NotifyToObservers(storedPlayer.MovementComponent.velocityLength);
         storedPlayer.ViewComponent.ResetView();
+
+        storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
 
         // Ctrl를 땔 경우 웅크리기 취소
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            storedPlayer.MovementComponent.Crouch(false);
+            storedPlayer.MovementComponent.ChangePosture(false);
         }
     }
 

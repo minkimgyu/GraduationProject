@@ -33,8 +33,9 @@ public class WalkState : IState
     public void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
-        storedPlayer.MovementComponent.NotifyToObservers(storedPlayer.MovementComponent.velocityLength);
         storedPlayer.ViewComponent.ResetView();
+
+        storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
     }
 
     public void CheckStateChange()

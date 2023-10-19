@@ -34,6 +34,9 @@ public class ReloadState : IState
             _storedPlayer.WeaponHolder.WeaponIndex = 2;
             StopReload();
         }
+
+        if (_reloadTimer.IsFinish) _storedPlayer.WeaponHolder.NowEquipedWeapon.ReloadAmmo();
+        if (_stateExitTimer.IsFinish) _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
     }
 
     void StopReload()
@@ -70,15 +73,6 @@ public class ReloadState : IState
     public void OnStateUpdate()
     {
         _reloadTimer.Update();
-        if (_reloadTimer.IsTimerFinish())
-        {
-            _storedPlayer.WeaponHolder.NowEquipedWeapon.ReloadAmmo();
-        }
-
         _stateExitTimer.Update();
-        if (_stateExitTimer.IsTimerFinish())
-        {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
-        }
     }
 }

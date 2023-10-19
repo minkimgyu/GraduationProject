@@ -41,7 +41,7 @@ public class Knife : BaseWeapon
     public override void OnEquip()
     {
         base.OnEquip();
-        NotifyToObservers();
+        OnActiveContainerRequested?.Invoke(false);
     }
 
     protected override void ChainMainActionProgressEvent()
