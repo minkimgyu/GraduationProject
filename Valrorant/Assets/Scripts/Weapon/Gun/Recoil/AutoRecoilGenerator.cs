@@ -9,26 +9,57 @@ public class AutoRecoilGenerator : RecoilStrategy
 
     RecoilMap _recoilMap;
 
-    public AutoRecoilGenerator(float shootInterval, float recoverTime, RecoilMap recoilMap) : base(shootInterval, recoverTime)
+    public AutoRecoilGenerator(float shootInterval, RecoilMap recoilMap)
     {
+        _shootInterval = shootInterval;
+        _timer = new Timer();
+
         _recoilMap = recoilMap;
+        _actorBoneRecoilMultiplier = 1f;
     }
 
-    public override void CreateRecoil()
+    public override void OnEventRequested()
     {
-        StopLerp();
+        StopRecoil();
 
         Vector2 point = ReturnNextRecoilPoint();
         StartLerp(point, _shootInterval);
     }
 
-    public override void RecoverRecoil() // _viewRotationMultiplier 이거를 0으로 만들어주면 됨
+    public override void OnClickEnd() // _viewRotationMultiplier 이거를 0으로 만들어주면 됨
     {
-        StopLerp();
+        StopRecoil();
 
         _indexMultiplier = 1;
         ResetIndex();
-        StartLerp(Vector2.zero, _recoverDuration);
+        StartLerp(Vector2.zero, _recoilMap.RecoilRecoverDuration); // 
+    }
+
+    public override void OnOtherActionEventRequested()
+    { 
+        StopRecoil();
+    }
+
+    public override void OnClickStart()
+    {
+    }
+
+    public override void OnLink(GameObject player)
+    {
+        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
+    }
+
+    public override void OnUnlink(GameObject player)
+    {
+        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        OnRecoilProgressRequested -= viewComponent.OnRecoilProgress;
+    }
+
+    public override void OnInintialize(GameObject player)
+    {
+        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
     }
 
     protected override Vector2 ReturnNextRecoilPoint()
@@ -48,8 +79,21 @@ public class AutoRecoilGenerator : RecoilStrategy
     }
 
 
-    void ResetIndex()
+    void ResetIndex() => _index = -1;
+
+    public override void OnEventFinished()
     {
-        _index = -1;
+    }
+
+    public override void RecoverRecoil()
+    {
+        StopRecoil();
+        StartLerp(Vector2.zero, _recoilMap.RecoilRecoverDuration);
+    }
+
+    public override void ResetRecoil()
+    {
+        _indexMultiplier = 1;
+        ResetIndex();
     }
 }

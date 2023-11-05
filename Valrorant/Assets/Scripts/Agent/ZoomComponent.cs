@@ -21,13 +21,16 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
         _crosshair = GameObject.FindWithTag("Crosshair");
     }
 
-    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
+    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, Vector3 zoomCameraLocalPosition, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
     {
         StopZoomRoutine();
+
+        _cameraZoomTransform.localPosition = zoomCameraLocalPosition;
 
         if (isInstant)
         {
             scope.SetActive(nowZoom);
+            _crosshair.SetActive(!nowZoom);
 
             if (nowZoom)
             {

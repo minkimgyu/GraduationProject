@@ -5,18 +5,18 @@ using FSM;
 
 public class StandState : IState
 {
-    Player storedPlayer;
+    PlayerController _storedPlayer;
 
-    public StandState(Player player)
+    public StandState(PlayerController player)
     {
-        storedPlayer = player;
+        _storedPlayer = player;
     }
 
     public void CheckStateChange()
     {
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            storedPlayer.SitStandFSM.SetState(Player.SitStandState.Sit);
+            _storedPlayer.PostureFSM.SetState(PlayerController.PostureState.Sit);
         }
     }
 
@@ -26,8 +26,8 @@ public class StandState : IState
 
     public void OnStateEnter()
     {
-        storedPlayer.MovementComponent.LockToCrouchForce = false;
-        storedPlayer.MovementComponent.ChangePosture(false);
+        _storedPlayer.MovementComponent.LockToCrouchForce = false;
+        _storedPlayer.MovementComponent.SwitchPosture();
     }
 
     public void OnStateExit()
@@ -44,5 +44,6 @@ public class StandState : IState
 
     public void OnStateUpdate()
     {
+        _storedPlayer.MovementComponent.UpdateStand();
     }
 }

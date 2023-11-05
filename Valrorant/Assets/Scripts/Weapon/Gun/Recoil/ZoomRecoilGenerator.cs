@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class ZoomRecoilGenerator : AutoRecoilGenerator
 {
-    public ZoomRecoilGenerator(float shootInterval, float recoverTime, RecoilMap recoilMap) : base(shootInterval, recoverTime, recoilMap)
+    public ZoomRecoilGenerator(float shootInterval, RecoilMap recoilMap) : base(shootInterval, recoilMap)
     {
-        _actorBoneRecoilMultiplier = 1;
     }
 }

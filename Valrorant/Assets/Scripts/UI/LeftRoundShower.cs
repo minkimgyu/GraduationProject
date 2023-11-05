@@ -4,7 +4,7 @@ using UnityEngine;
 using TMPro;
 using ObserverPattern;
 
-public class LeftRoundShower : MonoBehaviour//, IObserver<int, int>
+public class LeftRoundShower : MonoBehaviour
 {
     [SerializeField]
     GameObject _container;
@@ -15,14 +15,10 @@ public class LeftRoundShower : MonoBehaviour//, IObserver<int, int>
     [SerializeField]
     TMP_Text _bulletCountInPossession;
 
-    public void OnBulletCountChange(int inMagazine, int inPossession)
-    {
-        _bulletCountInMagazine.text = inMagazine.ToString();
-        _bulletCountInPossession.text = inPossession.ToString();
-    }
-
-    public void OnActiveContainer(bool isActive)
+    public void OnRoundCountChange(bool isActive, int inMagazine, int inPossession)
     {
         _container.SetActive(isActive);
+        _bulletCountInMagazine.text = inMagazine.ToString();
+        _bulletCountInPossession.text = inPossession.ToString();
     }
 }

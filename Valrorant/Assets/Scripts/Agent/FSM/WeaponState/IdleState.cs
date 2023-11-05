@@ -5,43 +5,51 @@ using FSM;
 
 public class IdleState : IState
 {
-    Player _storedPlayer;
+    WeaponController _weaponController;
 
-    public IdleState(Player player)
+    public IdleState(WeaponController weaponController)
     {
-        _storedPlayer = player;
+        _weaponController = weaponController;
     }
 
     public void CheckStateChange()
     {
+
+        // 이부분은 타입을 보고 장착하도록 변경해준다.
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 0;
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _weaponController.WeaponIndex = 0;
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 1;
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _weaponController.WeaponIndex = 1;
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 2;
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
+            _weaponController.WeaponIndex = 2;
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Drop);
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.LeftAction);
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.RightAction);
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && _storedPlayer.WeaponHolder.NowEquipedWeapon.CanReload())
+        if (Input.GetKeyDown(KeyCode.R) && _weaponController.NowEquipedWeapon.CanReload())
         {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
     }
 
@@ -51,9 +59,9 @@ public class IdleState : IState
 
     public void OnStateEnter()
     {
-        if(_storedPlayer.WeaponHolder.NowEquipedWeapon.CheckNowReload())
+        if(_weaponController.NowEquipedWeapon.CanAutoReload())
         {
-            _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
     }
 

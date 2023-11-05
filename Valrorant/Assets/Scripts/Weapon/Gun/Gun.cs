@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ObserverPattern;
+using System;
 
-abstract public class Gun : BaseWeapon//, IObserver<float>
+abstract public class Gun : BaseWeapon //, IInteractable
 {
     [SerializeField]
-    ParticleSystem _muzzleFlash;
+    protected ParticleSystem _muzzleFlash;
 
     [SerializeField]
-    ParticleSystem _emptyCartridgeSpawner;
+    protected ParticleSystem _emptyCartridgeSpawner;
 
     protected float _penetratePower = 15;
     protected float _trajectoryLineOffset = 1.3f;
@@ -21,214 +21,92 @@ abstract public class Gun : BaseWeapon//, IObserver<float>
     protected string _trajectoryLineEffect;
 
     [SerializeField]
-    protected int _maxBulletCountInMagazine = 30;
+    protected int _maxAmmoCountInMagazine = 30;
 
     [SerializeField]
-    protected string _nonPenetrateHitEffect;
-
-    public int MaxBulletCountInMagazine { get { return _maxBulletCountInMagazine; } }
+    protected int _ammoCountsInMagazine;
 
     [SerializeField]
-    protected int _bulletCountInMagazine;
-
-    public int BulletCountInMagazine { get { return _bulletCountInMagazine; } set { _bulletCountInMagazine = value; } }
-
-    [SerializeField]
-    protected int _possessingBullet;
-
-    public int PossessingBullet { get { return _possessingBullet; } set { _possessingBullet = value; } }
-
-    protected Animator _animator;
-    public Animator Animator { get { return _animator; } }
+    protected int _ammoCountsInPossession;
 
     [SerializeField]
     protected float _reloadFinishTime;
 
     [SerializeField]
-    protected float _reloadStateExitTime;
+    protected float _reloadExitTime;
 
-    [SerializeField]
-    protected float _receivedBulletSpreadPower;
+    /// AutoReload 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
 
-    int bulletCountWhenActionStart;
-
-    public override void StoreCurrentBulletCount()
+    public override bool CanAutoReload()
     {
-        bulletCountWhenActionStart = _bulletCountInMagazine;
+        return _ammoCountsInMagazine == 0;
     }
 
-    public override bool IsMagazineEmpty()
+    /// Reload 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    public override bool CanReload()
     {
-        return bulletCountWhenActionStart != 0 && _bulletCountInMagazine == 0 && _possessingBullet != 0;
-    }
-
-    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
-    {
-        base.Initialize(player, cam, ownerAnimator);
-
-        _animator = GetComponent<Animator>();
-        _bulletCountInMagazine = _maxBulletCountInMagazine;
-
-        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
-        movementComponent.OnDisplacementRequested += OnDisplacementReceived;
-
-        // 여기에서 UI에 이밴트로 연결시키는 방식
-    }
-
-    void OnDisplacementReceived(float displacement)
-    {
-        _receivedBulletSpreadPower = displacement;
+        // 탄창이 꽉 차거나 소유 중인 총알이 0보다 같거나 작은 경우
+        if (_ammoCountsInPossession <= 0 || _maxAmmoCountInMagazine == _ammoCountsInMagazine) return false;
+        else return true;
     }
 
     public override void OnReload()
     {
-        _animator.Play("Reload", -1, 0);
-        _ownerAnimator.Play(_weaponName + "Reload", -1, 0);
+        _mainResultStrategy.OnReload(); // 에임 해제
+        _subResultStrategy.OnReload();
+        _reloadStrategy.Reload(_ammoCountsInMagazine, _ammoCountsInPossession, _maxAmmoCountInMagazine);
     }
 
-    public override bool CanReload()
+    // 장전이 끝나면 여기 이벤트 호출됨
+    protected void OnReloadRequested(int ammoInMagazine, int ammoInPossession)
     {
-        // 현재 보유 중인 탄환이 없거나 탄창의 총알을 소모하지 않은 경우
-        if (_maxBulletCountInMagazine == _bulletCountInMagazine || _possessingBullet == 0) return false;
-        else return true;
+        _ammoCountsInMagazine = ammoInMagazine;
+        _ammoCountsInPossession = ammoInPossession;
+        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
-    public override bool CheckNowReload()
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
-        return _bulletCountInMagazine == 0 && _possessingBullet != 0;
+        base.Initialize(player, cam, ownerAnimator);
+        _ammoCountsInMagazine = _maxAmmoCountInMagazine;
     }
 
-    protected override bool CanAttack()
+    protected override void OnMainActionEventCallRequsted()
     {
-        if (_bulletCountInMagazine > 0) return true;
-        else return false;
+        _mainResultStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
+
+        base.OnMainActionEventCallRequsted();
+        _ammoCountsInMagazine = _mainResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
+        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
-    protected int ReturnCanFireCount(int originFireCount)
+    protected override void OnSubActionEventCallRequsted()
     {
-        if(_bulletCountInMagazine - originFireCount < 0)
-        {
-            return _bulletCountInMagazine;
-        }
+        _subResultStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
 
-        return originFireCount;
+        base.OnSubActionEventCallRequsted();
+        _ammoCountsInMagazine = _subResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
+        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
-
-    protected void CalculateLeftBulletCount(int canFireCount)
-    {
-        _bulletCountInMagazine -= canFireCount;
-    }
-
-    protected void CalculateLeftBulletCount()
-    {
-        _bulletCountInMagazine -= 1;
-    }
-
-    protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy, int originFireCount)
-    {
-        if (CanAttack() == false) return false;
-
-        int canFireCount = ReturnCanFireCount(originFireCount);
-        CalculateLeftBulletCount(canFireCount);
-        OnAttack();
-
-        resultStrategy.Do(_receivedBulletSpreadPower, canFireCount);
-
-        if (_bulletCountInMagazine == 0) recoilStrategy.RecoverRecoil();
-        else recoilStrategy.CreateRecoil();
-
-        return true;
-    }
-
-    protected bool Fire(ResultStrategy resultStrategy, RecoilStrategy recoilStrategy)
-    {
-        if (CanAttack() == false) return false;
-
-        CalculateLeftBulletCount();
-        OnAttack();
-
-        resultStrategy.Do(_receivedBulletSpreadPower);
-
-        if (_bulletCountInMagazine == 0) recoilStrategy.RecoverRecoil();
-        else recoilStrategy.CreateRecoil();
-
-        return true;
-    }
-
-    public override void ReloadAmmo()
-    {
-        int canLoadBulletCount = _maxBulletCountInMagazine - _bulletCountInMagazine;
-
-        if (_possessingBullet >= canLoadBulletCount)
-        {
-            _bulletCountInMagazine = _maxBulletCountInMagazine;
-            _possessingBullet -= canLoadBulletCount;
-        }
-        else
-        {
-            _bulletCountInMagazine += _possessingBullet;
-            _possessingBullet = 0;
-        }
-
-        OnRoundChangeRequested(_bulletCountInMagazine, _possessingBullet);
-
-        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
-    }
-
-    public override float ReturnReloadFinishTime() { return _reloadFinishTime; }
-
-    public override float ReturnReloadStateExitTime() { return _reloadStateExitTime; }
 
     public override void OnEquip()
     {
         base.OnEquip();
-        //_bulletSpreadPowerSubject.AddObserver(_bulletSpreadPowerObserver);
-
-        _animator.Play("Equip", -1, 0);
-        OnActiveContainerRequested?.Invoke(true);
-        OnRoundChangeRequested?.Invoke(_bulletCountInMagazine, _possessingBullet);
-
-        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
+        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
-
-    public override void OnUnEquip()
+    protected void OnZoomEventCall(bool nowZoom)
     {
-        //_bulletSpreadPowerSubject.RemoveObserver(_bulletSpreadPowerObserver);
-        base.OnUnEquip();
+        if (nowZoom) OnZoomIn();
+        else OnZoomOut();
     }
 
-    protected override void OnAttack()
-    {
-        _muzzleFlash.Play();
-        _emptyCartridgeSpawner.Play();
-        _animator.Play("Fire", -1, 0f);
+    protected virtual void OnZoomIn() { }
 
-        //NotifyToObservers(_bulletCountInMagazine, _possessingBullet);
-        OnRoundChangeRequested?.Invoke(_bulletCountInMagazine, _possessingBullet);
-    }
-
-    protected void PlayMainActionAnimation()
-    {
-        _ownerAnimator.Play(_weaponName + "MainAction", -1, 0);
-    }
-
-    protected void PlaySubActionAnimation()
-    {
-        _ownerAnimator.Play(_weaponName + "SubAction", -1, 0);
-    }
-
-
-    // 마우스에 손을 때는 경우 반동 회복 시퀀스 작동
-    // Create는 이밴트에 따라 작동하는 위치가 다르지만
-    // Recover은 같으므로 여기에 넣자
-    protected override void ChainMainActionEndEvent()
-    {
-        _mainRecoilGenerator.RecoverRecoil();
-    }
-
-    protected override void ChainSubActionEndEvent()
-    {
-        _subRecoilGenerator.RecoverRecoil();
-    }
+    protected virtual void OnZoomOut() { }
 }

@@ -2,14 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClassicContainerClass : AbstractRoutineContainerClass
+public class ClassicContainerClass : AbstractContainer<Classic>
 {
-    [SerializeField]
-    Classic _classic;
+    protected override void SetUp() { _storedRoutine.SetUp(this); }
 
-    protected override void Awake()
-    {
-        _baseAbstractRoutineClass = _classic;
-        base.Awake();
-    }
+    public override BaseWeapon ReturnWeapon() { return _storedRoutine; }
 }

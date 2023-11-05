@@ -5,9 +5,9 @@ using FSM;
 
 public class StopState : IState
 {
-    Player storedPlayer;
+    PlayerController storedPlayer;
 
-    public StopState(Player player)
+    public StopState(PlayerController player)
     {
         storedPlayer = player;
     }
@@ -16,17 +16,17 @@ public class StopState : IState
     {
         if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && Input.GetKeyDown(KeyCode.LeftAlt))
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Creep);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Creep);
         }
 
         if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0))
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Walk);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Walk);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Jump);
         }
     }
 
@@ -50,7 +50,7 @@ public class StopState : IState
     public void OnStateUpdate()
     {
         storedPlayer.ViewComponent.ResetView();
-        storedPlayer.MovementComponent.RaiseDisplacementEvent();
+        storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
     }
 
     public void OnStateCollisionEnter(Collision collision)

@@ -13,9 +13,9 @@ public class SmoothLerpUtility : MonoBehaviour
         _timer = new Timer();
     }
 
-    public bool IsRunning()
+    public bool IsFinish()
     {
-        return _timer.IsRunning;
+        return _timer.IsFinish;
     }
 
     private void Update()
@@ -31,6 +31,6 @@ public class SmoothLerpUtility : MonoBehaviour
 
     public void StopSmoothLerp()
     {
-        _timer.Stop();
+        _timer.Reset();
     }
 }

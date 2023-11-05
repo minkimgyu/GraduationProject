@@ -5,11 +5,11 @@ using FSM;
 
 public class RightActionState : IState
 {
-    Player storedPlayer;
+    WeaponController _storedWeaponController;
 
-    public RightActionState(Player player)
+    public RightActionState(WeaponController player)
     {
-        storedPlayer = player;
+        _storedWeaponController = player;
     }
 
     public void CheckStateChange()
@@ -22,14 +22,12 @@ public class RightActionState : IState
 
     public void OnStateEnter()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.StoreCurrentBulletCount();
-
-        storedPlayer.WeaponHolder.NowEquipedWeapon.StartSubAction();
+        _storedWeaponController.NowEquipedWeapon.OnRightClickStart();
     }
 
     public void OnStateExit()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.EndSubAction();
+        _storedWeaponController.NowEquipedWeapon.OnRightClickEnd();
     }
 
     public void OnStateFixedUpdate()
@@ -42,16 +40,16 @@ public class RightActionState : IState
 
     public void OnStateUpdate()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.ProgressSubAction();
+        _storedWeaponController.NowEquipedWeapon.OnRightClickProgress();
 
-        if (storedPlayer.WeaponHolder.NowEquipedWeapon.IsMagazineEmpty())
+        if (_storedWeaponController.NowEquipedWeapon.CanAutoReload())
         {
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
 
         if (Input.GetMouseButtonUp(1))
         {
-            storedPlayer.WeaponFSM.RevertToPreviousState();
+            _storedWeaponController.WeaponFSM.RevertToPreviousState();
         }
     }
 }

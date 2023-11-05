@@ -9,6 +9,11 @@ abstract public class ActionStrategy
     public Action OnActionProgress;
     public Action OnActionEnd;
 
+    public Action OnEventCallRequsted;
+    public Action OnEventCallFinished;
+
+    public abstract void OnChange();
+
     public abstract void OnMouseClickStart();
     public abstract void OnMouseClickEnd();
     public abstract void OnMouseClickProgress();
@@ -60,14 +65,17 @@ public class AutoAttackAction : ActionStrategy
 
     public override void OnUpdate()
     {
-        if (_canAttack == false && _clickStoredDelay < _clickDelay)
+        if (_canAttack == false)
         {
-            _clickStoredDelay += Time.deltaTime;
-        }
-        else
-        {
-            _clickStoredDelay = 0;
-            _canAttack = true;
+            if (_clickStoredDelay < _clickDelay)
+            {
+                _clickStoredDelay += Time.deltaTime;
+            }
+            else
+            {
+                _clickStoredDelay = 0;
+                _canAttack = true;
+            }
         }
     }
 
@@ -83,9 +91,14 @@ public class AutoAttackAction : ActionStrategy
         {
             _storedDelay = 0;
             OnActionProgress();
+            OnEventCallRequsted();
 
             if (_isFirstAttack == true) _isFirstAttack = false;
         }
+    }
+
+    public override void OnChange()
+    {
     }
 }
 
@@ -97,7 +110,7 @@ abstract public class BaseManualAction : ActionStrategy
     float _actionDelay;
     float _storedDelay = 0;
 
-    bool _canAction = false;
+    bool _canAction = true;
 
     public BaseManualAction(float attackDelay)
     {
@@ -109,6 +122,7 @@ abstract public class BaseManualAction : ActionStrategy
         if (_canAction == true)
         {
             OnActionStart();
+            OnEventCallRequsted();
             _canAction = false;
         }
     }
@@ -120,14 +134,17 @@ abstract public class BaseManualAction : ActionStrategy
 
     public override void OnUpdate()
     {
-        if (_canAction == false && _storedDelay < _actionDelay)
+        if(_canAction == false)
         {
-            _storedDelay += Time.deltaTime;
-        }
-        else
-        {
-            _storedDelay = 0;
-            _canAction = true;
+            if (_storedDelay < _actionDelay)
+            {
+                _storedDelay += Time.deltaTime;
+            }
+            else
+            {
+                _storedDelay = 0;
+                _canAction = true;
+            }
         }
     }
 
@@ -137,9 +154,123 @@ abstract public class BaseManualAction : ActionStrategy
     }
 }
 
+/// <summary>
+/// 수동 액션
+/// </summary>
+public class BurstAttackAction : ActionStrategy
+{
+    float _actionDelay;
+    float _recoilRecoverDuration;
+
+
+    float _storedDelay = 0;
+    float _storedRecoverDuration = 0;
+
+    bool _canRecover = true;
+    bool _canAction = true;
+
+    // 타이머 하나 굴려서 Ratio 마다 발사하게끔 제작
+    // 몇 점사인지에 따라 다르게 제작
+    int _fireCountInOneAction;
+    float _storedRatio;
+
+    // Action을 교체할 때, 이벤트를 호출해서 변수를 초기화 해주는 과정이 필요할 듯
+
+    public BurstAttackAction(float attackDelay, float recoilRecoverDuration, int fireCountInOneAction)
+    {
+        _actionDelay = attackDelay;
+        _recoilRecoverDuration = recoilRecoverDuration;
+        _fireCountInOneAction = fireCountInOneAction;
+    }
+
+    public override void OnMouseClickStart()
+    {
+        if (_canAction == true)
+        {
+            OnActionStart();
+            _canAction = false;
+
+            if(_canRecover == false)
+            {
+                _storedRecoverDuration = 0;
+            }
+            else
+            {
+                _canRecover = false;
+            }
+        }
+    }
+
+    public override void OnMouseClickEnd()
+    {
+        OnActionEnd();
+    }
+
+    void Action()
+    {
+        float ratio = _storedDelay / _actionDelay; // delayRatio
+        if (ratio > 1) return;
+
+        if (_canAction == false && _storedDelay < _actionDelay && _storedRatio < ratio)
+        {
+            OnEventCallRequsted();
+            _storedRatio += 1.0f / _fireCountInOneAction; // burstRatio
+        }
+    }
+
+    public override void OnUpdate()
+    {
+        Action();
+
+        if(_canRecover == false)
+        {
+            if (_storedRecoverDuration < _recoilRecoverDuration)
+            {
+                _storedRecoverDuration += Time.deltaTime;
+            }
+            else
+            {
+                _storedRecoverDuration = 0;
+                _canRecover = true;
+                OnEventCallFinished(); // 반동 회복 호출
+            }
+        }
+
+        if(_canAction == false)
+        {
+            if (_storedDelay < _actionDelay)
+            {
+                _storedDelay += Time.deltaTime;
+            }
+            else
+            {
+                _storedDelay = 0;
+                _storedRatio = 0;
+                _canAction = true;
+            }
+        }
+    }
+
+    public override void OnMouseClickProgress()
+    {
+        OnActionProgress();
+    }
+
+    public override void OnChange()
+    {
+        _storedDelay = 0;
+        _storedRatio = 0;
+        _canAction = true;
+    }
+}
+
 public class ManualAttackAction : BaseManualAction
 {
     public ManualAttackAction(float actionDelay) : base(actionDelay)
+    {
+    }
+
+    public override void OnChange()
     {
     }
 }
@@ -147,6 +278,10 @@ public class ManualAttackAction : BaseManualAction
 public class ManualAction : BaseManualAction
 {
     public ManualAction(float actionDelay) : base(actionDelay)
+    {
+    }
+
+    public override void OnChange()
     {
     }
 }

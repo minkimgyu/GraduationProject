@@ -5,9 +5,9 @@ using FSM;
 
 public class WalkState : IState
 {
-    Player storedPlayer;
+    PlayerController storedPlayer;
 
-    public WalkState(Player player)
+    public WalkState(PlayerController player)
     {
         storedPlayer = player;
     }
@@ -42,17 +42,17 @@ public class WalkState : IState
     {
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Stop);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Stop);
         }
 
         if (((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)) && Input.GetKeyDown(KeyCode.LeftAlt))
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Creep);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Creep);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            storedPlayer.MovementFSM.SetState(Player.MovementState.Jump);
+            storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Jump);
         }
     }
 

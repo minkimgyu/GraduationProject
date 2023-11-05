@@ -77,19 +77,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a2a878cb77064f4cb8a60a51648d2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _knife:
-    _range: 1.5
-    _hitEffectName: KnifeScratchEffect
-    _weaponName: Knife
-    equipFinishTime: 0.2
-    _mainAttackDelay: 0.8
-    _subAttackDelay: 1.3
+  _storedRoutine:
+    _range: 15
+    _weaponName: 0
+    _weaponType: 2
+    equipFinishTime: 0.56
+    _mainAttackDelay: 0.5
+    _subAttackDelay: 0.8
     attackLinkTime: 2.8
     mainAttackEffectDelayTime:
-    - 0.16
-    - 0.45
-    - 0.16
-    subAttackEffectDelayTime: 0.25
+    - 0.4
+    - 0.4
+    - 0.4
+    subAttackEffectDelayTime: 0.65
     _mainAttackDamageData:
       _frontAttackDamage: 50
       _backAttackDamage: 100

@@ -2,14 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
-using ObserverPattern;
 
 [System.Serializable]
-public class Phantom : Gun//, IObserver<GameObject, bool, float, float, float, float, bool>
+public class Phantom : Gun
 {
-    [SerializeField]
-    int mainAttackBulletCount = 1;
-
     [SerializeField]
     float _mainActionDelay;
 
@@ -34,10 +30,8 @@ public class Phantom : Gun//, IObserver<GameObject, bool, float, float, float, f
     [SerializeField]
     float _zoomFieldOfView;
 
-    RecoilStrategy _storedAutoRecoilGenerator;
-
-    RecoilStrategy _storedZoomRecoilGenerator;
-
+    [SerializeField]
+    Vector3 _zoomCameraPosition;
 
     Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
@@ -52,76 +46,21 @@ public class Phantom : Gun//, IObserver<GameObject, bool, float, float, float, f
         base.Initialize(player, cam, ownerAnimator);
 
         // 여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
-        _mainAction = new AutoAttackAction(_mainActionDelay); 
-        _subAction = new ManualAction(_subActionkDelay);
+        _mainActionStrategy = new AutoAttackAction(_mainActionDelay); 
+        _subActionStrategy = new ManualAction(_subActionkDelay);
 
-        _mainResult = new SingleProjectileAttack(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _damageDictionary);
-
-
-        Zoom zoom = new Zoom(_scope, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView);
-        _subResult = zoom;
+        _mainResultStrategy = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, 
+            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _damageDictionary);
 
         // 무기를 버릴 경우, 제거해야함
-        ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
-        zoom.OnZoomRequested += zoomComponent.OnZoomCalled;
-        zoom.OnZoomRequested += OnZoomCalled;
+        _subResultStrategy = new ZoomStrategy(_scope, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall);
 
-        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        _mainRecoilStrategy = new AutoRecoilGenerator(_mainActionDelay, _recoilMap);
+        _subRecoilStrategy = new NoRecoilGenerator();
 
-        AutoRecoilGenerator autoRecoilGenerator = new AutoRecoilGenerator(_recoilMap.RecoilRecoverDuration, _mainActionDelay, _recoilMap);
-        _storedAutoRecoilGenerator = autoRecoilGenerator;
+        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _animator, _ownerAnimator, OnReloadRequested);
 
-
-        ZoomRecoilGenerator zoomRecoilGenerator = new ZoomRecoilGenerator(_recoilMap.RecoilRecoverDuration, _mainActionDelay, _recoilMap);
-        _storedZoomRecoilGenerator = zoomRecoilGenerator;
-
-        autoRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
-        zoomRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
-
-        _mainRecoilGenerator = _storedAutoRecoilGenerator;
-        _subRecoilGenerator = new NoRecoilGenerator();
-
-        //_mainAction.OnStart ---> 여기에서 초기 View 값을 잡아서 나중에 Lerp 시켜줘야함
         _scope.SetActive(false);
-        LinkActionStrategy();
-    }
-
-    public override void OnUnEquip()
-    {
-        base.OnUnEquip();
-        _subResult.Do(false, true);
-    }
-
-    public override void OnReload()
-    {
-        base.OnReload();
-        _subResult.Do(false, true);
-    }
-
-    // 수정
-    protected override void ChainMainActionProgressEvent()
-    {
-        bool canFire = Fire(_mainResult, _mainRecoilGenerator);
-        if (canFire) PlayMainActionAnimation();
-        else _storedAutoRecoilGenerator.RecoverRecoil();
-    }
-
-    protected override void ChainSubActionStartEvent()
-    {
-        _subResult.Do();
-        PlaySubActionAnimation();
-    }
-
-    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant)
-    {
-        if (nowZoom)
-        {
-            _mainRecoilGenerator = _storedZoomRecoilGenerator;
-        }
-        else
-        {
-            _mainRecoilGenerator = _storedAutoRecoilGenerator;
-        }
+        LinkEvent(player);
     }
 }

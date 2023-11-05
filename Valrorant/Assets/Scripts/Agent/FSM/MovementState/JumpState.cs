@@ -5,9 +5,9 @@ using FSM;
 
 public class JumpState : IState
 {
-    Player storedPlayer;
+    PlayerController storedPlayer;
 
-    public JumpState(Player player)
+    public JumpState(PlayerController player)
     {
         storedPlayer = player;
     }
@@ -45,12 +45,6 @@ public class JumpState : IState
         storedPlayer.ViewComponent.ResetView();
 
         storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
-
-        // Ctrl를 땔 경우 웅크리기 취소
-        if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            storedPlayer.MovementComponent.ChangePosture(false);
-        }
     }
 
     public void CheckStateChange()

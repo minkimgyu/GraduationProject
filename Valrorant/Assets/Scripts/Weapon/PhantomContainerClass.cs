@@ -2,14 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhantomContainerClass : AbstractRoutineContainerClass
+public class PhantomContainerClass : AbstractContainer<Phantom>
 {
-    [SerializeField]
-    Phantom _phantom;
+    protected override void SetUp() { _storedRoutine.SetUp(this); }
 
-    protected override void Awake()
-    {
-        _baseAbstractRoutineClass = _phantom;
-        base.Awake();
-    }
+    public override BaseWeapon ReturnWeapon() { return _storedRoutine; }
 }

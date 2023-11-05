@@ -1,78 +1,59 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using FSM;
+using UnityEngine;
 
 public class ReloadState : IState
 {
-    Player _storedPlayer;
+    WeaponController _storedWeaponController;
 
-    Timer _reloadTimer;
-    Timer _stateExitTimer;
-
-    public ReloadState(Player player)
+    public ReloadState(WeaponController player)
     {
-        _storedPlayer = player;
-        _reloadTimer = new Timer();
-        _stateExitTimer = new Timer();
+        _storedWeaponController = player;
     }
 
     public void CheckStateChange()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 0;
-            StopReload();
+            _storedWeaponController.WeaponIndex = 0;
+            CancelReload();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 1;
-            StopReload();
+            _storedWeaponController.WeaponIndex = 1;
+            CancelReload();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _storedPlayer.WeaponHolder.WeaponIndex = 2;
-            StopReload();
+            _storedWeaponController.WeaponIndex = 2;
+            CancelReload();
         }
 
-        if (_reloadTimer.IsFinish) _storedPlayer.WeaponHolder.NowEquipedWeapon.ReloadAmmo();
-        if (_stateExitTimer.IsFinish) _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
+        bool canExit = _storedWeaponController.NowEquipedWeapon.IsReloadFinish();
+        if (canExit)
+        {
+            _storedWeaponController.NowEquipedWeapon.ResetReload();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+        }
     }
 
-    void StopReload()
+    void CancelReload()
     {
-        _reloadTimer.Stop();
-        _stateExitTimer.Stop();
-        _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Equip);
-    }
-
-    public void OnStateCollisionEnter(Collision collision)
-    {
+        _storedWeaponController.NowEquipedWeapon.ResetReload();
+        _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
     }
 
     public void OnStateEnter()
     {
-        _storedPlayer.WeaponHolder.NowEquipedWeapon.OnReload();
-        _reloadTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadFinishTime()); // µÙ∑π¿Ã
-        _stateExitTimer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.ReturnReloadStateExitTime()); // µÙ∑π¿Ã
+        _storedWeaponController.NowEquipedWeapon.OnReload();
     }
 
-    public void OnStateExit()
-    {
+    public void OnStateCollisionEnter(Collision collision) { }
 
-    }
+    public void OnStateExit() { }
 
-    public void OnStateFixedUpdate()
-    {
-    }
+    public void OnStateFixedUpdate() { }
 
-    public void OnStateLateUpdate()
-    {
-    }
+    public void OnStateLateUpdate() { }
 
-    public void OnStateUpdate()
-    {
-        _reloadTimer.Update();
-        _stateExitTimer.Update();
-    }
+    public void OnStateUpdate() { }
 }

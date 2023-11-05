@@ -1,49 +1,60 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using ObserverPattern;
-
-abstract public class BaseWeapon : BaseAbstractRoutineClass//, ISubject<int, int>
+using System;
+abstract public class BaseWeapon : BaseRoutine
 {
     public enum Name
     {
+        AK,
+        AR,
         Knife,
-        Phantom,
-        Classic
+        LMG,
+        Pistol,
+        Shotgun,
+        SMG,
+        Sniper
+    }
+
+    public enum Type
+    {
+       Main,
+       Sub,
+       Melee
     }
 
     protected Transform _camTransform;
-    [SerializeField]
-    protected float _range;
-    public float Range { get { return _range; } }
 
     [SerializeField]
-    protected string _hitEffectName;
+    protected float _range;
 
     [SerializeField]
     protected Name _weaponName;
 
+    [SerializeField]
+    protected Type _weaponType;
+
     public Name WeaponName { get { return _weaponName; } }
+    public Type WeaponType { get { return _weaponType; } }
 
     protected int _targetLayer;
 
 
-    protected ActionStrategy _mainAction;
+    protected ActionStrategy _mainActionStrategy;
 
-    protected ActionStrategy _subAction;
-
-
-    protected ResultStrategy _mainResult;
-
-    protected ResultStrategy _subResult;
+    protected ActionStrategy _subActionStrategy;
 
 
-    protected RecoilStrategy _mainRecoilGenerator;
+    protected ResultStrategy _mainResultStrategy;
 
-    protected RecoilStrategy _subRecoilGenerator;
+    protected ResultStrategy _subResultStrategy;
 
-    public BaseWeapon Weapon { get { return this; } }
 
+    protected RecoilStrategy _mainRecoilStrategy;
+
+    protected RecoilStrategy _subRecoilStrategy;
+
+    protected ReloadStrategy _reloadStrategy;
 
     [SerializeField]
     protected float equipFinishTime;
@@ -52,166 +63,297 @@ abstract public class BaseWeapon : BaseAbstractRoutineClass//, ISubject<int, int
     protected Animator _ownerAnimator;
     public Animator OwnerAnimator { get { return _ownerAnimator; } }
 
+    protected Animator _animator;
+    public Animator Animator { get { return _animator; } }
+
     protected GameObject _player;
 
-    public System.Action<int, int> OnRoundChangeRequested;
-    public System.Action<bool> OnActiveContainerRequested;
+    public Action<bool, int, int> OnRoundChangeRequested;
 
-    public virtual bool CheckNowReload()
+    protected override void OnUpdate() // --> WeaponFSM에 연결시켜주자
     {
-        return false;
+        _mainActionStrategy.OnUpdate();
+        _subActionStrategy.OnUpdate();
+
+        _mainResultStrategy.OnUpdate();
+        _subResultStrategy.OnUpdate();
+
+        _mainRecoilStrategy.OnUpdate();
+        _subRecoilStrategy.OnUpdate();
+
+        _reloadStrategy.OnUpdate();
     }
 
-    public virtual void StoreCurrentBulletCount()
+    //////////////////////////////////////////////////////////////////////////////////////////// 이벤트 모음
+
+    void LinkRoundShower()
     {
+        GameObject gameObject = FindWithTag("BulletLeftShower");
+        LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();
+        if (_leftRoundShower == null) return;
+
+        OnRoundChangeRequested += _leftRoundShower.OnRoundCountChange;
     }
 
-    public virtual bool IsMagazineEmpty()
+    void UnLinkRoundShower()
     {
-        return false;
+        GameObject gameObject = FindWithTag("BulletLeftShower");
+        LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();
+        if (_leftRoundShower == null) return;
+
+        OnRoundChangeRequested -= _leftRoundShower.OnRoundCountChange;
     }
 
-    //public List<IObserver<int, int>> Observers { get; set; }
-
-    //public void AddObserver(IObserver<int, int> observer)
-    //{
-    //    Observers.Add(observer);
-    //}
-
-    //public void RemoveObserver(IObserver<int, int> observer)
-    //{
-    //    Observers.Remove(observer);
-    //}
-
-    //public void NotifyToObservers(int inMagazine = 0, int inPossession = 0)
-    //{
-    //    for (int i = 0; i < Observers.Count; i++)
-    //    {
-    //        Observers[i].Notify(inMagazine, inPossession);
-    //    }
-    //}
-
-    protected virtual bool CanAttack()
-    {
-        return true;
-    }
-
-    protected override void OnAwake()
-    {
-    }
-
-    protected override void OnStart()
-    {
-    }
-
-    protected override void OnUpdate()
-    {
-        _mainAction.OnUpdate();
-        _subAction.OnUpdate();
-
-        _mainResult.OnUpdate();
-        _subResult.OnUpdate();
-
-        _mainRecoilGenerator.OnUpdate();
-        _subRecoilGenerator.OnUpdate();
-    }
-
-    protected override void OnFixedUpdate()
-    {
-    }
-
-    protected override void OnLateUpdate()
-    {
-    }
-
-    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    /// <summary>
+    /// 무기가 생성되면 Initialize 최초 1번 실행됨
+    /// </summary>
+    public virtual void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
     {
         _player = player;
         _camTransform = cam;
-
         _ownerAnimator = ownerAnimator;
+        _animator = GetComponent<Animator>();
+
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
-
-        //Observers = new List<IObserver<int, int>>();
+        LinkRoundShower();
     }
 
-    protected void LinkActionStrategy()
+    /// <summary>
+    /// 여기에서 무기 해제 시, 필요 없는 변수나 이벤트를 해제해준다.
+    /// </summary>
+    public virtual void OnDrop(GameObject player)
     {
-        _mainAction.OnActionStart = ChainMainActionStartEvent;
-        _mainAction.OnActionProgress = ChainMainActionProgressEvent;
-        _mainAction.OnActionEnd = ChainMainActionEndEvent;
+        _player = null;
+        _camTransform = null;
+        _ownerAnimator = null;
 
-        _subAction.OnActionStart = ChainSubActionStartEvent;
-        _subAction.OnActionProgress = ChainSubActionProgressEvent;
-        _subAction.OnActionEnd = ChainSubActionEndEvent;
+        UnLinkRoundShower();
+
+        _mainRecoilStrategy.OnUnlink(player);
+        _mainResultStrategy.OnUnLink(player);
+
+        _subRecoilStrategy.OnUnlink(player);
+        _subResultStrategy.OnUnLink(player);
+
+        _reloadStrategy.OnUnlink();
     }
 
-    protected virtual void OnAttack() { }
-
-    public virtual void OnEquip() 
+    /// <summary>
+    /// 무기 장착 시 초기화 진행. 버린 무기를 주웠을 때 실행
+    /// </summary>
+    public virtual void OnRooting(GameObject player, Transform cam, Animator ownerAnimator)  // 
     {
-        GameObject.SetActive(true);
+        _player = player;
+        _camTransform = cam;
+        _ownerAnimator = ownerAnimator;
+
+        LinkRoundShower();
+
+        _mainRecoilStrategy.OnLink(player);
+        _mainResultStrategy.OnUnLink(player);
+
+        _subRecoilStrategy.OnLink(player);
+        _subResultStrategy.OnUnLink(player);
+
+        _reloadStrategy.OnLink();
+    }
+
+    /// 장착, 해제 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    public virtual void OnEquip()
+    {
+        gameObject.SetActive(true);
         _ownerAnimator.Play(_weaponName + "Equip");
+        _animator.Play("Equip");
     }
 
     public virtual void OnUnEquip()
     {
-        GameObject.SetActive(false);
+        _mainResultStrategy.OnReload();
+        _subResultStrategy.OnReload();
+        gameObject.SetActive(false);
     }
 
-    // 제약조건을 만들어보자
-    // --> 총알이 다 떨어졌을 경우
-    // --> 특정 상황에서 공격을 하지 못하는 경우
+    /// AutoReload 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
 
-    public void StartMainAction()
+    public virtual bool CanAutoReload() { return false; }
+
+    public virtual bool IsMagazineEmptyWhenProcessingAction() { return false; } // 액션 도중에 탄이 비워진 경우
+
+    /// ReloadStrategy 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    
+    public bool IsReloadFinish() // 재장전이 끝난 경우
     {
-        _mainAction.OnMouseClickStart();
+        return _reloadStrategy.IsReloadFinish();
     }
 
-    public void ProgressMainAction()
+    public void ResetReload() // 재장전을 취소할 경우
     {
-        _mainAction.OnMouseClickProgress();
+        _reloadStrategy.OnResetReload();
     }
 
-    public void EndMainAction()
-    {
-        _mainAction.OnMouseClickEnd();
-    }
-
-    public void StartSubAction() 
-    {
-        _subAction.OnMouseClickStart();
-    }
-
-    public void ProgressSubAction()
-    {
-        _subAction.OnMouseClickProgress();
-    }
-
-    public void EndSubAction() 
-    {
-        _subAction.OnMouseClickEnd(); 
-    }
+    /// Reload 이벤트 --> ReloadStrategy 제외한 총알 계산 관련 함수
+    ////////////////////////////////////////////////////////////////////////////////////
 
     public virtual bool CanReload() { return false; }
-
     public virtual void OnReload() { }
 
-    public virtual void ReloadAmmo() { }
+    /// ActionStrategy 이벤트
+    ////////////////////////////////////////////////////////////////////////////////////
 
-    public virtual float ReturnReloadFinishTime() { return default; }
+    protected virtual void OnMainActionEventCallRequsted()
+    {
+        if (_mainResultStrategy.CanDo() == false) return; // ResultStrategy에서 진행 가능하다면
 
-    public virtual float ReturnReloadStateExitTime() { return default; }
+        _mainRecoilStrategy.OnEventRequested();
+        _subRecoilStrategy.OnOtherActionEventRequested();
 
+        _mainResultStrategy.Do(); // --> 여기서 사용가능한지 체크
+        _subResultStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
+    }
 
-    // 여기에 넣어서 처리하자
+    protected virtual void OnSubActionEventCallRequsted()
+    {
+        if (_subResultStrategy.CanDo() == false) return; // ResultStrategy에서 진행 가능하다면
 
-    protected virtual void ChainMainActionStartEvent() { }
-    protected virtual void ChainMainActionProgressEvent() { }
-    protected virtual void ChainMainActionEndEvent() { }
+        _subRecoilStrategy.OnEventRequested();
+        _mainRecoilStrategy.OnOtherActionEventRequested();
 
+        _subResultStrategy.Do();
+        _mainResultStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
+    }
 
-    protected virtual void ChainSubActionStartEvent() { }
-    protected virtual void ChainSubActionProgressEvent() { }
-    protected virtual void ChainSubActionEndEvent() { }
+    protected virtual void OnMainActionEventCallFinished()
+    {
+        _mainRecoilStrategy.OnEventFinished();
+    }
+
+    protected virtual void OnSubActionEventCallFinished()
+    {
+        _subRecoilStrategy.OnEventFinished();
+    }
+
+    protected virtual void OnMainActionClickStart() { }
+
+    protected virtual void OnMainActionClickProgress() { }
+
+    protected virtual void OnMainActionClickEnd() 
+    {
+        _mainRecoilStrategy.OnClickEnd();
+    }
+
+    protected virtual void OnSubActionClickStart() { }
+
+    protected virtual void OnSubActionClickProgress() { }
+
+    protected virtual void OnSubActionClickEnd() 
+    {
+        _subRecoilStrategy.OnClickEnd();
+    }
+
+    /// 이벤트 연결
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void OnLeftClickStart()
+    {
+        _mainActionStrategy.OnMouseClickStart();
+    }
+
+    public void OnLeftClickProgress()
+    {
+        _mainActionStrategy.OnMouseClickProgress();
+    }
+
+    public void OnLeftClickEnd()
+    {
+        _mainActionStrategy.OnMouseClickEnd();
+    }
+
+    public void OnRightClickStart()
+    {
+        _subActionStrategy.OnMouseClickStart();
+    }
+
+    public void OnRightClickProgress()
+    {
+        _subActionStrategy.OnMouseClickProgress();
+    }
+
+    public void OnRightClickEnd()
+    {
+        _subActionStrategy.OnMouseClickEnd();
+    }
+
+    protected virtual void LinkEvent(GameObject player)
+    {
+
+    }
+
+    protected void LinkActionEvent(bool isMain, bool nowLink)
+    {
+        if(isMain)
+        {
+            if(nowLink)
+            {
+                _mainActionStrategy.OnActionStart += OnMainActionClickStart;
+                _mainActionStrategy.OnActionProgress += OnMainActionClickProgress;
+                _mainActionStrategy.OnActionEnd += OnMainActionClickEnd;
+                _mainActionStrategy.OnEventCallRequsted += OnMainActionEventCallRequsted;
+                _mainActionStrategy.OnEventCallFinished += OnMainActionEventCallFinished;
+            }
+            else
+            {
+                _mainActionStrategy.OnActionStart -= OnMainActionClickStart;
+                _mainActionStrategy.OnActionProgress -= OnMainActionClickProgress;
+                _mainActionStrategy.OnActionEnd -= OnMainActionClickEnd;
+                _mainActionStrategy.OnEventCallRequsted -= OnMainActionEventCallRequsted;
+                _mainActionStrategy.OnEventCallFinished -= OnMainActionEventCallFinished;
+            }
+        }
+        else
+        {
+            if (nowLink)
+            {
+                _subActionStrategy.OnActionStart += OnSubActionClickStart;
+                _subActionStrategy.OnActionProgress += OnSubActionClickProgress;
+                _subActionStrategy.OnActionEnd += OnSubActionClickEnd;
+                _subActionStrategy.OnEventCallRequsted += OnSubActionEventCallRequsted;
+                _subActionStrategy.OnEventCallFinished += OnSubActionEventCallFinished;
+            }
+            else
+            {
+                _subActionStrategy.OnActionStart -= OnSubActionClickStart;
+                _subActionStrategy.OnActionProgress -= OnSubActionClickProgress;
+                _subActionStrategy.OnActionEnd -= OnSubActionClickEnd;
+                _subActionStrategy.OnEventCallRequsted -= OnSubActionEventCallRequsted;
+                _subActionStrategy.OnEventCallFinished -= OnSubActionEventCallFinished;
+            }
+        }
+    }
 }
+
+//_mainActionStrategy.OnActionStart = OnMainActionClickStart;
+//_mainActionStrategy.OnActionProgress = OnMainActionClickProgress;
+//_mainActionStrategy.OnActionEnd = OnMainActionClickEnd;
+
+//_mainActionStrategy.OnEventCallRequsted = OnMainActionEventCallRequsted;
+//_subActionStrategy.OnEventCallRequsted = OnSubActionEventCallRequsted;
+
+//_subActionStrategy.OnActionStart = OnSubActionClickStart;
+//_subActionStrategy.OnActionProgress = OnSubActionClickProgress;
+//_subActionStrategy.OnActionEnd = OnSubActionClickEnd;
+
+//_mainActionStrategy.OnEventCallFinished = OnMainActionEventCallFinished;
+//_subActionStrategy.OnEventCallFinished = OnSubActionEventCallFinished;
+
+//_mainResultStrategy.OnInintialize(player);
+//_subResultStrategy.OnInintialize(player);
+
+//_mainRecoilStrategy.OnInintialize(player);
+//_subRecoilStrategy.OnInintialize(player);
+
+//_reloadStrategy.OnInintialize();

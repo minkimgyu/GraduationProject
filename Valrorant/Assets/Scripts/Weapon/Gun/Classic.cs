@@ -2,10 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
-using ObserverPattern;
 
 [System.Serializable]
-public class Classic : Gun
+public class Classic : NoVariationGun
 {
     [SerializeField]
     int _subAttackBulletCounts;
@@ -42,45 +41,21 @@ public class Classic : Gun
     {
         base.Initialize(player, cam, ownerAnimator);
 
-        _mainResult = new SingleProjectileAttackWithWeight(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _attackDamageDictionary, _mainWeightApplier);
+        _mainResultStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
+            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _attackDamageDictionary, _mainWeightApplier);
 
-        _subResult = new ScatterProjectileGunAttackWithWeight(_camTransform, _range, _hitEffectName,
-            _targetLayer, _muzzle, _penetratePower, _nonPenetrateHitEffect, _trajectoryLineEffect, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
-       
-
-         _mainAction = new ManualAttackAction(_mainActionDelay);
-        _subAction = new ManualAttackAction(_subActionDelay);
+        _subResultStrategy = new ScatterProjectileGunAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
+            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
 
 
-        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        _mainActionStrategy = new ManualAttackAction(_mainActionDelay);
+        _subActionStrategy = new ManualAttackAction(_subActionDelay);
 
+        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
+        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
 
-        RecoilStrategy mainRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
-        mainRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
+        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _animator, _ownerAnimator, OnReloadRequested);
 
-        RecoilStrategy subRecoilGenerator = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
-        subRecoilGenerator.OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
-
-        mainRecoilGenerator.OnRecoilStartRequested += subRecoilGenerator.StopLerp;
-        subRecoilGenerator.OnRecoilStartRequested += mainRecoilGenerator.StopLerp;
-
-        _mainRecoilGenerator = mainRecoilGenerator;
-        _subRecoilGenerator = subRecoilGenerator;
-
-        LinkActionStrategy();
-    }
-
-    // ¼öÁ¤
-    protected override void ChainMainActionStartEvent()
-    {
-        bool canFire = Fire(_mainResult, _mainRecoilGenerator);
-        if(canFire) PlayMainActionAnimation();
-    }
-
-    protected override void ChainSubActionStartEvent()
-    {
-        bool canFire = Fire(_subResult, _subRecoilGenerator, _subAttackBulletCounts);
-        if (canFire) PlaySubActionAnimation();
+        LinkEvent(player);
     }
 }

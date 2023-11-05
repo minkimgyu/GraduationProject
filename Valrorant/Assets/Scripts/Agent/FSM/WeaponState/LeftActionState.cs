@@ -5,11 +5,11 @@ using FSM;
 
 public class LeftActionState : IState
 {
-    Player storedPlayer;
+    WeaponController _storedWeaponController;
 
-    public LeftActionState(Player player)
+    public LeftActionState(WeaponController storedWeaponController)
     {
-        storedPlayer = player;
+        _storedWeaponController = storedWeaponController;
     }
 
     public void CheckStateChange()
@@ -22,15 +22,12 @@ public class LeftActionState : IState
 
     public void OnStateEnter()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.StoreCurrentBulletCount();
-
-
-        storedPlayer.WeaponHolder.NowEquipedWeapon.StartMainAction();
+        _storedWeaponController.NowEquipedWeapon.OnLeftClickStart();
     }
 
     public void OnStateExit()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.EndMainAction();
+        _storedWeaponController.NowEquipedWeapon.OnLeftClickEnd();
     }
 
     public void OnStateFixedUpdate()
@@ -43,19 +40,19 @@ public class LeftActionState : IState
 
     public void OnStateUpdate()
     {
-        storedPlayer.WeaponHolder.NowEquipedWeapon.ProgressMainAction();
+        _storedWeaponController.NowEquipedWeapon.OnLeftClickProgress();
 
         // 사격 도중 총알이 떨어진 경우, State에 들어왔을 때는 총알이 존재했지만
         // Update 중 총알이 다 떨어진 경우
 
-        if(storedPlayer.WeaponHolder.NowEquipedWeapon.IsMagazineEmpty())
+        if(_storedWeaponController.NowEquipedWeapon.CanAutoReload())
         {
-            storedPlayer.WeaponFSM.SetState(Player.WeaponState.Reload);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            storedPlayer.WeaponFSM.RevertToPreviousState();
+            _storedWeaponController.WeaponFSM.RevertToPreviousState();
         }
     }
 }

@@ -5,28 +5,46 @@ using FSM;
 
 public class EquipState : IState
 {
-    Player _storedPlayer;
+    WeaponController _storedWeaponController;
     Timer _timer;
 
-    public EquipState(Player player)
+    public EquipState(WeaponController weaponController)
     {
-        _storedPlayer = player;
+        _storedWeaponController = weaponController;
         _timer = new Timer();
     }
 
     public void CheckStateChange()
     {
-        if (_timer.IsFinish) _storedPlayer.WeaponFSM.SetState(Player.WeaponState.Idle);
+        if (_timer.IsFinish) _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
     }
 
     public void OnStateCollisionEnter(Collision collision)
     {
     }
 
+    void ChangeWeapon()
+    {
+        for (int i = 0; i < _storedWeaponController.WeaponsContainers.Count; i++)
+        {
+            if (i == _storedWeaponController.WeaponIndex)
+            {
+                _storedWeaponController.NowEquipedWeapon = _storedWeaponController.WeaponsContainers[_storedWeaponController.WeaponIndex].ReturnWeapon();
+                _storedWeaponController.NowEquipedWeapon.OnEquip();
+                // 장착이 되었을 때만 연결시켜준다.
+            }
+            else
+            {
+                _storedWeaponController.WeaponsContainers[i].ReturnWeapon().OnUnEquip();
+                // 이때는 해제시켜준다.
+            }
+        }
+    }
+
     public void OnStateEnter()
     {
-        _storedPlayer.WeaponHolder.ChangeWeapon();
-        _timer.Start(_storedPlayer.WeaponHolder.NowEquipedWeapon.EquipFinishTime); // 딜레이
+        ChangeWeapon();
+        _timer.Start(_storedWeaponController.NowEquipedWeapon.EquipFinishTime); // 딜레이
     }
 
     public void OnStateExit()

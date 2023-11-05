@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ObserverPattern;
 
-public class ViewComponent : MonoBehaviour//, IObserver<Vector2, Vector2, Vector2>
+public class ViewComponent : MonoBehaviour
 {
     [SerializeField] private Transform _actorBone;
     [SerializeField] private Transform _direction;

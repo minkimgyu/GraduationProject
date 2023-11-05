@@ -6,25 +6,55 @@ using ObserverPattern;
 
 abstract public class ResultStrategy
 {
-    public virtual void Do() { }
-    public virtual void Do(float bulletSpreadPower) { }
-    public virtual void Do(float bulletSpreadPower, int fireCount) { }
-    public virtual void Do(bool nowZoom, bool useInstantly) { }
+    public abstract void CheckBulletLeftCount(int leftBulletCount);
 
-    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal) { }
-    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked) { }
+    public abstract bool CanDo();
+
+    public abstract void Do();
+
+    // 이벤트를 받는 함수는 abstract 이용해서 함수를 받으면 어떤 기능을 하는지 확실히 보여주기
+    public abstract void OnLink(GameObject player);
+
+    public abstract void OnUnLink(GameObject player);
+
+    public abstract int DecreaseBullet(int ammoCountsInMagazine);
+
+    public abstract void OnReload();
+
+    public abstract void OnUnEquip();
 
     public abstract void OnUpdate();
+
+    public abstract void OnOtherActionEventRequested();
+    public abstract int ReturnFireCountInOneShoot();
 }
 
-public class NoAttack : ResultStrategy
+public class NoResult : ResultStrategy
 {
     public override void Do() { }
 
+    public override void OnUnLink(GameObject player) { }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine) { return ammoCountsInMagazine; }
+
+    public override void OnReload() { }
+
+    public override void OnUnEquip() { }
+
     public override void OnUpdate() { }
+
+    public override void OnOtherActionEventRequested() { }
+
+    public override int ReturnFireCountInOneShoot() { return 0; }
+
+    public override void OnLink(GameObject player) { }
+
+    public override bool CanDo() { return false; }
+
+    public override void CheckBulletLeftCount(int leftBullet) { }
 }
 
-public class Zoom : ResultStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
+public class ZoomStrategy : ResultStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
 {
     GameObject _scope;
     float _zoomDuration;
@@ -35,52 +65,71 @@ public class Zoom : ResultStrategy//, ISubject<GameObject, bool, float, float, f
 
     bool nowZoom = false;
 
-    public System.Action<GameObject, bool, float, float, float, float, bool> OnZoomRequested;
+    Vector3 _zoomCameraPosition;
 
-    public Zoom(GameObject scope, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView)
+    public System.Action<GameObject, bool, float, Vector3, float, float, float, bool> OnZoomRequested;
+    public System.Action<bool> OnZoomEventCall;
+
+    public ZoomStrategy(GameObject scope, Vector3 zoomCameraPosition, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView,
+        System.Action<bool> onZoom)
     {
         _scope = scope;
+        _scope.SetActive(false);
+
         _zoomDuration = zoomDuration;
         _scopeOnDelay = scopeOnDuration;
+
+        _zoomCameraPosition = zoomCameraPosition;
 
         _normalFieldOfView = normalFieldOfView;
         _zoomFieldOfView = zoomFieldOfView;
 
-        //Observers = new List<IObserver<GameObject, bool, float, float, float, float, bool>>();
+        OnZoomEventCall += onZoom;
     }
-
-    //public List<IObserver<GameObject, bool, float, float, float, float, bool>> Observers { get; set; }
-
-    //public void AddObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
-    //{
-    //    Observers.Add(observer);
-    //}
-
-    //public void RemoveObserver(IObserver<GameObject, bool, float, float, float, float, bool> observer)
-    //{
-    //    Observers.Remove(observer);
-    //}
-
-    //public void NotifyToObservers(GameObject scope, bool nowZoom, float zoomDuration, float scopeOnDelay, float normalFieldOfView, float zoomFieldOfView, bool isInstant = false)
-    //{
-    //    for (int i = 0; i < Observers.Count; i++)
-    //    {
-    //        Observers[i].Notify(scope, nowZoom, zoomDuration, scopeOnDelay, normalFieldOfView, zoomFieldOfView, isInstant);
-    //    }
-    //}
 
     public override void Do() 
     {
         nowZoom = !nowZoom;
-        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, false);
+        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, false);
+        OnZoomEventCall?.Invoke(nowZoom);
     }
 
-    public override void Do(bool nowZoom, bool useInstantly)
+    void TurnOffZoomDirectly()
     {
-        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, useInstantly);
+        if (nowZoom == false) return;
+        nowZoom = false;
+
+        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, true);
+        OnZoomEventCall?.Invoke(nowZoom);
+    }
+
+    public override void OnReload() => TurnOffZoomDirectly();
+
+    public override void OnUnEquip() => TurnOffZoomDirectly();
+
+    public override void OnLink(GameObject player)
+    {
+        ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
+        OnZoomRequested += zoomComponent.OnZoomCalled;
+    }
+
+    public override void OnUnLink(GameObject player)
+    {
+        ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
+        OnZoomRequested -= zoomComponent.OnZoomCalled;
     }
 
     public override void OnUpdate() { }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine) { return ammoCountsInMagazine; }
+
+    public override void OnOtherActionEventRequested() { }
+
+    public override int ReturnFireCountInOneShoot() { return 0; }
+
+    public override bool CanDo() { return true; }
+
+    public override void CheckBulletLeftCount(int leftBulletCount) { }
 }
 
 
@@ -89,17 +138,47 @@ abstract public class ApplyAttack : ResultStrategy
     protected Transform _camTransform;
 
     protected float _range;
-    protected string _hitEffect;
     protected int _targetLayer;
     protected BaseDamageConverter _damageConverter;
 
-    public ApplyAttack(Transform camTransform, float range, string hitEffect, int targetLayer)
+    Animator _ownerAnimator;
+    Animator _weaponAnimator;
+    bool _isMainAction;
+    string _weaponName;
+
+    public ApplyAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator, Animator weaponAnimator, bool isMainAction, string weaponName)
     {
         _camTransform = camTransform;
         _range = range;
-        _hitEffect = hitEffect;
         _targetLayer = targetLayer;
+
+        _ownerAnimator = ownerAnimator;
+        _weaponAnimator = weaponAnimator;
+
+        _isMainAction = isMainAction;
+        _weaponName = weaponName;
     }
+
+    protected void PlayOwnerAnimation()
+    {
+        string actionType;
+        if (_isMainAction) actionType = "MainAction";
+        else actionType = "SubAction";
+
+        _ownerAnimator.Play(_weaponName + actionType, -1, 0);
+        _weaponAnimator.Play(actionType, -1, 0);
+    }
+
+    protected void PlayAnimation(int index)
+    {
+        string actionType;
+        if (_isMainAction) actionType = "MainAction";
+        else actionType = "SubAction";
+
+        _ownerAnimator.Play(_weaponName + actionType + index, -1, 0);
+        _weaponAnimator.Play(actionType + index, -1, 0);
+    }
+
 
     // 데미지를 적용하는 함수는 여기에 만들어주기 ex) 총기형 데미지 함수, 칼 데미지 함수
     protected virtual float CalculateDamage(IHitable hitable, PenetrateData data, float decreaseRatio) { return default; }
@@ -120,9 +199,16 @@ abstract public class ApplyAttack : ResultStrategy
 
         Debug.DrawRay(_camTransform.position, direction * diatance, Color.green, 10); // 디버그 레이를 카메라가 바라보고 있는 방향으로 발사한다.
     }
+    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal) { }
+    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked) { }
+
+
+    public override void OnUnEquip() { }
+
+    public override void OnReload() { }
 }
 
-abstract public class PenetrateAttack : ApplyAttack
+abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 {
     protected Transform _muzzle;
 
@@ -131,17 +217,33 @@ abstract public class PenetrateAttack : ApplyAttack
     protected float _minDecreaseRatio = 0.05f;
     protected float _trajectoryLineOffset = 1.3f;
 
-    protected string _nonPenetrateHitEffect;
     protected string _trajectoryLineEffect;
 
-    public PenetrateAttack(Transform camTransform, float range, string hitEffect, int targetLayer, Transform muzzle, float penetratePower,
-        string nonPenetrateHitEffect, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary) : base(camTransform, range, hitEffect, targetLayer)
+    protected int _fireCountsInOneShoot;
+
+    public float DisplacementWeight { get; set; }
+
+    ParticleSystem _muzzleFlash;
+    ParticleSystem _emptyCartridgeSpawner;
+    bool _canSpawnMuzzleFlash;
+
+    int _leftBulletCount; // 발사 전 남은 총알 체크
+
+    public PenetrateAttack(Transform camTransform, float range, int targetLayer, int fireCountsInOneShoot, Animator ownerAnimator, Animator weaponAnimator, 
+        ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner, bool isMainAction, string weaponName, 
+        Transform muzzle, float penetratePower, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary) 
+        : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, isMainAction, weaponName)
     {
         _muzzle = muzzle;
         _penetratePower = penetratePower;
 
-        _nonPenetrateHitEffect = nonPenetrateHitEffect;
         _trajectoryLineEffect = trajectoryLineEffect;
+        _fireCountsInOneShoot = fireCountsInOneShoot;
+
+        _muzzleFlash = muzzleFlashSpawner;
+        _emptyCartridgeSpawner = emptyCartridgeSpawner;
+
+        _canSpawnMuzzleFlash = canSpawnMuzzleFlash;
 
         _damageConverter = new DistanceAreaBasedDamageConverter(damageDictionary);
     }
@@ -362,15 +464,70 @@ abstract public class PenetrateAttack : ApplyAttack
         trajectoryLineEffect.Initialize(hitPosition, _muzzle.position);
         trajectoryLineEffect.PlayEffect();
     }
+
+    void PlayEffect()
+    {
+        if(_canSpawnMuzzleFlash) _muzzleFlash.Play();
+        _emptyCartridgeSpawner.Play();
+    }
+
+    public override void OnOtherActionEventRequested() { }
+
+    public override void Do()
+    {
+        PlayOwnerAnimation();
+        PlayEffect();
+    }
+
+    public override int ReturnFireCountInOneShoot() { return _fireCountsInOneShoot; }
+
+    public override void OnUnLink(GameObject player)
+    {
+        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
+        movementComponent.OnDisplacementRequested -= OnDisplacementWeightReceived;
+    }
+
+    public override void OnLink(GameObject player)
+    {
+        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
+        movementComponent.OnDisplacementRequested += OnDisplacementWeightReceived;
+    }
+
+    public void OnDisplacementWeightReceived(float displacement)
+    {
+        DisplacementWeight = displacement;
+    }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine)
+    {
+        ammoCountsInMagazine -= _fireCountsInOneShoot;
+        if (ammoCountsInMagazine < 0) ammoCountsInMagazine = 0;
+
+        return ammoCountsInMagazine;
+    }
+
+    public override void CheckBulletLeftCount(int leftBulletCount) { _leftBulletCount = leftBulletCount; }
+
+    public override bool CanDo() { return _leftBulletCount > 0; }
 }
 
+// WithWeight는 속도 백터의 길이를 받아서 적용시켜주는 인터페이스
+public interface IDisplacement
+{
+    float DisplacementWeight { get; set; }
+
+    void OnDisplacementWeightReceived(float displacement);
+}
+
+
+// 연사가능한 총에는 탄퍼짐이 없어야함 --> 반동으로 처리하기 때문에
 public class SingleProjectileAttack : PenetrateAttack
 {
-    // NormalGun, ScatterGun 버리고 여기에 공격 함수 구현
-
-    public SingleProjectileAttack(Transform camTransform, float range, string hitEffect, int targetLayer, Transform muzzle, float penetratePower,
-        string nonPenetrateHitEffect, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
-        : base(camTransform, range, hitEffect, targetLayer, muzzle, penetratePower, nonPenetrateHitEffect, trajectoryLineEffect, damageDictionary)
+    public SingleProjectileAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator,
+        Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner, 
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
+        : base(camTransform, range, targetLayer, 1, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
+            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
     {
     }
 
@@ -382,10 +539,11 @@ public class SingleProjectileAttack : PenetrateAttack
         return new Vector3(0, y, x);
     }
 
-    public override void Do(float bulletSpreadPower)
+    public override void Do()
     {
-        Vector3 offset = ReturnOffset(bulletSpreadPower);
-        Shoot(offset);
+        base.Do();
+        Vector3 multifliedOffset = ReturnOffset(DisplacementWeight);
+        Shoot(multifliedOffset);
     }
 
     public override void OnUpdate()
@@ -393,20 +551,30 @@ public class SingleProjectileAttack : PenetrateAttack
     }
 }
 
+// 점사 가능한 총에는 탄 퍼짐 추가
+
+// WithWeight는 탄 퍼짐을 의미함
 public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치가 적용되는 공격
 {
     WeightApplier _weightApplier;
 
-    public SingleProjectileAttackWithWeight(Transform camTransform, float range, string hitEffect, int targetLayer, Transform muzzle, float penetratePower,
-        string nonPenetrateHitEffect, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
-        : base(camTransform, range, hitEffect, targetLayer, muzzle, penetratePower, nonPenetrateHitEffect, trajectoryLineEffect, damageDictionary)
+    public SingleProjectileAttackWithWeight(Transform camTransform, float range, int targetLayer, Animator ownerAnimator,
+        Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, 
+        Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
+        : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
+            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
     {
         _weightApplier = weightApplier;
     }
 
-    public override void Do(float bulletSpreadPower)
+    public override void Do()
     {
-        base.Do(_weightApplier.StoredWeight + bulletSpreadPower);
+        DisplacementWeight += _weightApplier.StoredWeight; // 가중치 추가 적용
+
+        Debug.Log(DisplacementWeight);
+        Debug.Log(_weightApplier.StoredWeight);
+        base.Do();
         _weightApplier.MultiplyWeight();
     }
 
@@ -421,14 +589,20 @@ public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가
     float _spreadOffset;
     float bulletSpreadPowerDecreaseRatio = 0.35f;
 
+    int _nextFireCount;
+
     WeightApplier _weightApplier;
 
-    public ScatterProjectileGunAttackWithWeight(Transform camTransform, float range, string hitEffect, int targetLayer, Transform muzzle, float penetratePower,
-       string nonPenetrateHitEffect, string trajectoryLineEffect, float spreadOffset, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
-       : base(camTransform, range, hitEffect, targetLayer, muzzle, penetratePower, nonPenetrateHitEffect, trajectoryLineEffect, damageDictionary)
+    public ScatterProjectileGunAttackWithWeight(Transform camTransform, float range, int targetLayer, int bulletCountsInOneShoot, Animator ownerAnimator,
+        Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower,
+       string trajectoryLineEffect, float spreadOffset, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
+       : base(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
+           isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
     {
         _spreadOffset = spreadOffset;
         _weightApplier = weightApplier;
+        _nextFireCount = _fireCountsInOneShoot; // 초기 발사 카운트는 _fireCountsInOneShoot를 대입해준다.
     }
 
     List<Vector3> ReturnOffsetDistance(float weight, int fireCount)
@@ -445,9 +619,11 @@ public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가
         return offsetDistance;
     }
 
-    public override void Do(float bulletSpreadPower, int fireCount)
+    public override void Do()
     {
-        List<Vector3> offsetDistances = ReturnOffsetDistance(_weightApplier.StoredWeight + bulletSpreadPower * bulletSpreadPowerDecreaseRatio, fireCount);
+        base.Do();
+
+        List<Vector3> offsetDistances = ReturnOffsetDistance(_weightApplier.StoredWeight + DisplacementWeight * bulletSpreadPowerDecreaseRatio, _nextFireCount);
 
         for (int i = 0; i < offsetDistances.Count; i++)
         {
@@ -460,14 +636,32 @@ public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가
     {
         _weightApplier.OnUpdate();
     }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine)
+    {
+        // 다음 발사할 카운트보다 현재 카운트가 적다면 현재 카운트를 넣어준다.
+        if (ammoCountsInMagazine < _nextFireCount) _nextFireCount = ammoCountsInMagazine; 
+        else _nextFireCount = _fireCountsInOneShoot; 
+        // 아니면 그대로 진행
+
+        return base.DecreaseBullet(ammoCountsInMagazine);
+    }
 }
 
-public class KnifeAttack : ApplyAttack
+// 칼 공격은 여기서 구현
+abstract public class BaseKnifeAttack : ApplyAttack
 {
-    // 칼 공격은 여기서 구현
-    public KnifeAttack(Transform camTransform, float range, string hitEffect, int targetLayer, DirectionData directionData) : base(camTransform, range, hitEffect, targetLayer)
+    protected Timer _waitTimer; // 반대편 마우스 클릭 시 작동
+    float _waitDuration; // 반대편 마우스 클릭 시 작동 기간
+
+    public BaseKnifeAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator, Animator weaponAnimator, bool isMainAction, string weaponName, float waitDuration, DirectionData directionData) 
+        : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, isMainAction, weaponName)
     {
         _damageConverter = new DirectionBasedDamageConverter(directionData);
+        _waitTimer = new Timer();
+        
+
+        _waitDuration = waitDuration;
     }
 
     protected override float CalculateDamage(IHitable hitable)
@@ -481,7 +675,8 @@ public class KnifeAttack : ApplyAttack
         hitable.OnHit(damage, hit.point, hit.normal);
     }
 
-    void CheckRaycastHit()
+    protected abstract void PlayAnimation();
+    protected void CheckRaycastHit()
     {
         RaycastHit hit;
         Physics.Raycast(_camTransform.position, _camTransform.forward, out hit, _range, _targetLayer);
@@ -510,11 +705,6 @@ public class KnifeAttack : ApplyAttack
         }
     }
 
-    public override void Do()
-    {
-        CheckRaycastHit();
-    }
-
     protected override void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal)
     {
         BaseEffect bulletHoleEffect;
@@ -524,7 +714,149 @@ public class KnifeAttack : ApplyAttack
         bulletHoleEffect.PlayEffect();
     }
 
+    public override void OnUpdate() 
+    {
+        _waitTimer.Update();
+        if(_waitTimer.IsFinish)
+        {
+            _waitTimer.Reset();
+        }
+    }
+
+    public override void OnUnLink(GameObject player) { }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine) { return ammoCountsInMagazine; }
+
+    public override void OnReload() { }
+
+    public override void OnLink(GameObject player) { }
+
+    public override void OnOtherActionEventRequested()
+    {
+        _waitTimer.Start(_waitDuration);
+    }
+
+    public override int ReturnFireCountInOneShoot() { return 0; }
+
+
+    public override void Do()
+    {
+        if (_waitTimer.CanStart() == false) return;
+        PlayAnimation();
+    }
+}
+
+public class RightKnifeAttack : BaseKnifeAttack
+{
+    float _delayDuration;
+    Timer _delayTimer; // 공격 시 작동
+
+    public RightKnifeAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator, Animator weaponAnimator, bool isMainAction, string weaponName, float delayDuration, float waitDuration, DirectionData directionData)
+        : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, isMainAction, weaponName, waitDuration, directionData)
+    {
+        _delayDuration = delayDuration;
+        _delayTimer = new Timer();
+    }
+
+    public override bool CanDo() { return true; }
+
+    public override void CheckBulletLeftCount(int leftBulletCount) { }
+
+    public override void Do()
+    {
+        base.Do();
+        _delayTimer.Start(_delayDuration);
+    }
+
     public override void OnUpdate()
     {
+        base.OnUpdate();
+
+        _delayTimer.Update();
+        if (_delayTimer.IsFinish)
+        {
+            _delayTimer.Reset();
+            CheckRaycastHit();
+        }
+    }
+
+    protected override void PlayAnimation() => PlayOwnerAnimation();
+}
+
+public class LeftKnifeAttack : BaseKnifeAttack
+{
+    float _attackLinkDuration = 2.8f;
+    float _attackTime = 0;
+    int _actionIndex = 0;
+
+    float[] _delayDurations;
+    Timer[] _delayTimers; // 공격 시 작동
+
+    public LeftKnifeAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator, Animator weaponAnimator, bool isMainAction, string weaponName, 
+        float[] delayDurations, float waitDuration, float attackLinkDuration, DirectionData directionData) 
+        : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, isMainAction, weaponName, waitDuration, directionData)
+    {
+        _delayDurations = delayDurations;
+        _attackLinkDuration = attackLinkDuration;
+
+        _delayTimers = new Timer[_delayDurations.Length]; // 개수만큼 타이머 만들기
+        for (int i = 0; i < _delayTimers.Length; i++)
+        {
+            _delayTimers[i] = new Timer();
+        }
+    }
+
+    public override bool CanDo() { return true; }
+
+    public override void CheckBulletLeftCount(int leftBulletCount) { }
+
+    public override void Do()
+    {
+        base.Do();
+        _delayTimers[_actionIndex].Start(_delayDurations[_actionIndex]);
+    }
+
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        for (int i = 0; i < _delayTimers.Length; i++)
+        {
+            _delayTimers[i].Update();
+            if (_delayTimers[i].IsFinish)
+            {
+                _delayTimers[i].Reset();
+                CheckRaycastHit();
+            }
+        }
+    }
+
+    protected override void PlayAnimation()
+    {
+        if(_actionIndex == 0 && _attackTime == 0) // 첫 공격의 경우
+        {
+            UpdateAnimationValue();
+        }
+        else // 콤보 공격인 경우
+        {
+            if (Time.time - _attackTime < _attackLinkDuration)
+            {
+                UpdateAnimationValue();
+                if (_actionIndex > _delayDurations.Length - 1) _actionIndex = 0;
+            }
+            else
+            {
+                // 연계 실패
+                _actionIndex = 0;
+                UpdateAnimationValue();
+            }
+        }
+    }
+
+    void UpdateAnimationValue()
+    {
+        PlayAnimation(_actionIndex);
+        _actionIndex++;
+        _attackTime = Time.time;
     }
 }

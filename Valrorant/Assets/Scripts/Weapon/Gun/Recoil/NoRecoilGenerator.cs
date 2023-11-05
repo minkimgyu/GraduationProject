@@ -4,11 +4,23 @@ using UnityEngine;
 
 public class NoRecoilGenerator : RecoilStrategy
 {
-    public NoRecoilGenerator(float shootInterval = 0, float recoverTime = 0) : base(shootInterval, recoverTime)
-    {
-    }
+    public override void OnClickStart() { }
 
-    public override void CreateRecoil()
+    public override void OnClickEnd() { }
+
+    public override void OnEventRequested() { }
+
+    public override void OnOtherActionEventRequested() { }
+
+    protected override Vector2 ReturnNextRecoilPoint() { return default(Vector2); }
+
+    public override void OnLink(GameObject player) { }
+
+    public override void OnUnlink(GameObject player) { }
+
+    public override void OnInintialize(GameObject player) { }
+
+    public override void OnEventFinished()
     {
     }
 
@@ -16,8 +28,7 @@ public class NoRecoilGenerator : RecoilStrategy
     {
     }
 
-    protected override Vector2 ReturnNextRecoilPoint()
+    public override void ResetRecoil()
     {
-        return default;
     }
 }

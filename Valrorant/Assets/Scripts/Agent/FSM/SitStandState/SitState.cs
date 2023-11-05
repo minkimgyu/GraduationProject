@@ -5,11 +5,11 @@ using FSM;
 
 public class SitState : IState
 {
-    Player storedPlayer;
+    PlayerController _storedPlayer;
 
-    public SitState(Player player)
+    public SitState(PlayerController player)
     {
-        storedPlayer = player;
+        _storedPlayer = player;
     }
 
     public void OnStateCollisionEnter(Collision collision)
@@ -18,8 +18,8 @@ public class SitState : IState
 
     public void OnStateEnter()
     {
-        storedPlayer.MovementComponent.LockToCrouchForce = true;
-        storedPlayer.MovementComponent.ChangePosture(true);
+        _storedPlayer.MovementComponent.LockToCrouchForce = true;
+        _storedPlayer.MovementComponent.SwitchPosture();
     }
 
     public void OnStateExit()
@@ -36,13 +36,14 @@ public class SitState : IState
 
     public void OnStateUpdate()
     {
+        _storedPlayer.MovementComponent.UpdateCrouch();
     }
 
     public void CheckStateChange()
     {
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
-            storedPlayer.SitStandFSM.SetState(Player.SitStandState.Stand);
+            _storedPlayer.PostureFSM.SetState(PlayerController.PostureState.Stand);
         }
     }
 }

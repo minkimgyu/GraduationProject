@@ -2,14 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KnifeContainerClass : AbstractRoutineContainerClass
+public class KnifeContainerClass : AbstractContainer<Knife>
 {
-    [SerializeField]
-    Knife _knife;
+    protected override void SetUp() { _storedRoutine.SetUp(this); }
 
-    protected override void Awake()
-    {
-        _baseAbstractRoutineClass = _knife;
-        base.Awake();
-    }
+    public override BaseWeapon ReturnWeapon() { return _storedRoutine; }
 }
