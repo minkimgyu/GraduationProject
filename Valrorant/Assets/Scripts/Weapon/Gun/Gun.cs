@@ -40,7 +40,7 @@ abstract public class Gun : BaseWeapon //, IInteractable
 
     public override bool CanAutoReload()
     {
-        return _ammoCountsInMagazine == 0;
+        return _ammoCountsInMagazine == 0 && _ammoCountsInPossession > 0;
     }
 
     /// Reload 이벤트
@@ -57,7 +57,7 @@ abstract public class Gun : BaseWeapon //, IInteractable
     {
         _mainResultStrategy.OnReload(); // 에임 해제
         _subResultStrategy.OnReload();
-        _reloadStrategy.Reload(_ammoCountsInMagazine, _ammoCountsInPossession, _maxAmmoCountInMagazine);
+        _reloadStrategy.Reload(_ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
     // 장전이 끝나면 여기 이벤트 호출됨
@@ -69,10 +69,9 @@ abstract public class Gun : BaseWeapon //, IInteractable
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
-
-    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(player, cam, ownerAnimator);
+        base.Initialize(player, armMesh, cam, ownerAnimator);
         _ammoCountsInMagazine = _maxAmmoCountInMagazine;
     }
 
@@ -83,6 +82,8 @@ abstract public class Gun : BaseWeapon //, IInteractable
         base.OnMainActionEventCallRequsted();
         _ammoCountsInMagazine = _mainResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
         OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+
+        _subResultStrategy.OnMainActionFireEventRequested(); // 발사 후 줌 해제 적용
     }
 
     protected override void OnSubActionEventCallRequsted()

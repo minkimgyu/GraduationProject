@@ -33,9 +33,9 @@ public class Knife : NoVariationWeapon
         OnRoundChangeRequested?.Invoke(false, 0, 0);
     }
 
-    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(player, cam, ownerAnimator);
+        base.Initialize(player, armMesh, cam, ownerAnimator);
 
         _mainResultStrategy = new LeftKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, true, WeaponName.ToString(), 
             mainAttackEffectDelayTime, _subAttackDelay, attackLinkTime, _mainAttackDamageData);

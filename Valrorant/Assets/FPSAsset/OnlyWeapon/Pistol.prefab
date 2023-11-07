@@ -353,7 +353,8 @@ MonoBehaviour:
     _range: 100
     _weaponName: 4
     _weaponType: 1
-    equipFinishTime: 0.51
+    _equipFinishTime: 1.3
+    _weaponWeight: 1.25
     _muzzleFlash: {fileID: 6364400081208561612}
     _emptyCartridgeSpawner: {fileID: 8226941431467877151}
     _muzzle: {fileID: 9140548145209603052}
@@ -367,13 +368,17 @@ MonoBehaviour:
     _spreadOffset: 0.05
     _mainActionDelay: 0.1125
     _subActionDelay: 0.037
+    _bulletSpreadPowerRatio: 1
+    _bulletSpreadPowerDecreaseRatio: 0.5
     _mainActionRecoilRange: {fileID: 11400000, guid: e67c3c180a6a5404bb7923dd7a579864, type: 2}
     _subActionRecoilRange: {fileID: 11400000, guid: a7eb85507d414584eacd7a6f7dbcf641, type: 2}
     _mainWeightApplier:
-      maxWeight: 0.025
-      weightMultiplier: 0.005
+      storedWeight: 0
+      maxWeight: 0.05
+      weightMultiplier: 0.01
       weightDecreation: 0.0001
     _subWeightApplier:
+      storedWeight: 0
       maxWeight: 0.05
       weightMultiplier: 0.01
       weightDecreation: 0.0001

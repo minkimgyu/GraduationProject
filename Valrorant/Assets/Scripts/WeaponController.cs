@@ -10,6 +10,9 @@ public class WeaponController : MonoBehaviour
     Transform _cameraHolder;
 
     [SerializeField]
+    GameObject armMesh;
+
+    [SerializeField]
     GameObject[] _weapons;
 
     List<IWeaponContainer> _weaponsContainers = new List<IWeaponContainer>();
@@ -44,7 +47,7 @@ public class WeaponController : MonoBehaviour
             _weaponsContainers.Add(_weapons[i].GetComponent<IWeaponContainer>());
 
             if(i == 0) _nowEquipedWeapon = _weaponsContainers[i].ReturnWeapon();
-            _weaponsContainers[i].ReturnWeapon().Initialize(gameObject, _cameraHolder, _ownerAnimator);
+            _weaponsContainers[i].ReturnWeapon().Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
         }
 
 

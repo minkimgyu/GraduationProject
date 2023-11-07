@@ -17,16 +17,24 @@ public interface IRoutine
 
     T GetComponentInRoutineClass<T>();
 
+    T GetComponentInChildrenInRoutineClass<T>();
+
     Action OnUpdate { get; set; }
+    Action OnDisableGameObject { get; set; }
 }
 
 
-public interface IWeaponContainer : IRoutine
+public interface IWeaponContainer
 {
     BaseWeapon ReturnWeapon();
 }
 
-public class AbstractContainer<W> : MonoBehaviour, IWeaponContainer
+public interface IEffectContainer
+{
+    BaseEffect ReturnEffect();
+}
+
+public class AbstractContainer<W> : MonoBehaviour, IRoutine
 {
     [SerializeField]
     protected W _storedRoutine;
@@ -34,10 +42,13 @@ public class AbstractContainer<W> : MonoBehaviour, IWeaponContainer
     public W StoredRoutine { get { return _storedRoutine; } }
 
     public Action OnUpdate { get; set; }
+    public Action OnDisableGameObject { get; set; }
 
     private void Awake() => SetUp();
 
     private void Update() => OnUpdate();
+
+    private void OnDisable() => OnDisableGameObject();
 
     protected virtual void SetUp() { }
 
@@ -61,7 +72,10 @@ public class AbstractContainer<W> : MonoBehaviour, IWeaponContainer
         return GetComponent<T>();
     }
 
-    public virtual BaseWeapon ReturnWeapon() { return null; }
+    public T GetComponentInChildrenInRoutineClass<T>()
+    {
+        return GetComponentInChildren<T>();
+    }
 
     public GameObject ReturnGameObject() { return gameObject;  }
 

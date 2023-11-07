@@ -1103,25 +1103,30 @@ MonoBehaviour:
     _range: 100
     _weaponName: 3
     _weaponType: 0
-    equipFinishTime: 0.56
+    _equipFinishTime: 1.3
+    _weaponWeight: 2
     _muzzleFlash: {fileID: 5255593086744488486}
     _emptyCartridgeSpawner: {fileID: 7250574307706272129}
     _muzzle: {fileID: 6988928518693068645}
     _trajectoryLineEffect: TrajectoryLineEffect
-    _maxAmmoCountInMagazine: 30
+    _maxAmmoCountInMagazine: 100
     _ammoCountsInMagazine: 0
-    _ammoCountsInPossession: 60
+    _ammoCountsInPossession: 200
     _reloadFinishTime: 1.56
     _reloadExitTime: 2.56
-    _mainActionDelay: 0.18333334
-    _subActionkDelay: 0.165
+    _mainActionDelayWhenZoomIn: 0.0641025
+    _mainActionDelayWhenZoomOut: 0.083333
+    _recoilRatioWhenZoomIn: 0.5
+    _recoilRatioWhenZoomOut: 1
+    _subActionDelay: 0.1
     _scope: {fileID: 4937485226082675212}
+    _displacementSpreadMultiplyRatio: 1
     _zoomDuration: 0.5
-    _scopeOnDelay: 0.1
+    _delayUntilScopeActivated: 0.05
     _recoilMap: {fileID: 11400000, guid: d051e6e7b26b5b945aa8706c42a3eff4, type: 2}
     _normalFieldOfView: 60
     _zoomFieldOfView: 45
-    _zoomCameraPosition: {x: 0.0975, y: 0.185, z: 0}
+    _cameraPositionWhenZoom: {x: 0.097500145, y: 0.1852, z: 0.06699994}
 --- !u!1 &3311523396274447731
 GameObject:
   m_ObjectHideFlags: 0

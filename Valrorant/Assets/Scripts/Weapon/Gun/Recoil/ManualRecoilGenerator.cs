@@ -9,7 +9,7 @@ public class ManualRecoilGenerator : RecoilStrategy
 
     Vector2 _recoilDirection;
 
-    public ManualRecoilGenerator(float shootInterval, float recoverDuration, RecoilRange recoilRange)
+    public ManualRecoilGenerator(float shootInterval, RecoilRange recoilRange)
     {
         _shootInterval = shootInterval;
         _timer = new Timer();
@@ -86,7 +86,7 @@ public class ManualRecoilGenerator : RecoilStrategy
         StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration);
     }
 
-    public override void ResetRecoil()
+    public override void ResetValues()
     {
         _nowCreateRecoil = false;
         _timer.Reset();

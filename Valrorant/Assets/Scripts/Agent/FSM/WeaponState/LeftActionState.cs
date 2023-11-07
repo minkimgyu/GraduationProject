@@ -52,7 +52,7 @@ public class LeftActionState : IState
 
         if (Input.GetMouseButtonUp(0))
         {
-            _storedWeaponController.WeaponFSM.RevertToPreviousState();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
         }
     }
 }

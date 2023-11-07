@@ -57,8 +57,8 @@ abstract public class BaseWeapon : BaseRoutine
     protected ReloadStrategy _reloadStrategy;
 
     [SerializeField]
-    protected float equipFinishTime;
-    public float EquipFinishTime { get { return equipFinishTime; } }
+    protected float _equipFinishTime;
+    public float EquipFinishTime { get { return _equipFinishTime; } }
 
     protected Animator _ownerAnimator;
     public Animator OwnerAnimator { get { return _ownerAnimator; } }
@@ -69,6 +69,9 @@ abstract public class BaseWeapon : BaseRoutine
     protected GameObject _player;
 
     public Action<bool, int, int> OnRoundChangeRequested;
+
+    [SerializeField] float _weaponWeight = 1;
+    public float SlowDownRatioByWeaponWeight { get { return 1.0f /_weaponWeight; } }
 
     protected override void OnUpdate() // --> WeaponFSM에 연결시켜주자
     {
@@ -83,6 +86,8 @@ abstract public class BaseWeapon : BaseRoutine
 
         _reloadStrategy.OnUpdate();
     }
+
+    protected override void OnDisableGameObject() { }
 
     //////////////////////////////////////////////////////////////////////////////////////////// 이벤트 모음
 
@@ -107,7 +112,7 @@ abstract public class BaseWeapon : BaseRoutine
     /// <summary>
     /// 무기가 생성되면 Initialize 최초 1번 실행됨
     /// </summary>
-    public virtual void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    public virtual void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {
         _player = player;
         _camTransform = cam;
@@ -198,6 +203,16 @@ abstract public class BaseWeapon : BaseRoutine
 
     /// Reload 이벤트 --> ReloadStrategy 제외한 총알 계산 관련 함수
     ////////////////////////////////////////////////////////////////////////////////////
+
+    public bool CancelReloadAndGoToMainAction() 
+    {
+        return _reloadStrategy.CancelReloadAndGoToMainAction(); 
+    }
+
+    public bool CancelReloadAndGoToSubAction()
+    {
+        return _reloadStrategy.CancelReloadAndGoToSubAction();
+    }
 
     public virtual bool CanReload() { return false; }
     public virtual void OnReload() { }

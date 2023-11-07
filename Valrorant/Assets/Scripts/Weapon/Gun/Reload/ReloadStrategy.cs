@@ -6,15 +6,16 @@ using System;
 // 장전 테스크 적용
 abstract public class ReloadStrategy
 {
-    public abstract void Reload(int ammoCountInMagazine, int ammoCountInPossession, int maxAmmoCountInMagazine);
+    public abstract void Reload(int ammoCountInMagazine, int ammoCountInPossession);
 
     public abstract void OnUpdate();
 
     /// <summary>
     /// 특수한 방법으로 Reload에서 탈출 가능한 경우
     /// </summary>
-    public abstract bool CanReloadExit();
+    public abstract bool CancelReloadAndGoToMainAction();
 
+    public abstract bool CancelReloadAndGoToSubAction();
 
     /// <summary>
     /// 리로드가 끝난 경우 해당 State에서 탈출
@@ -37,11 +38,13 @@ abstract public class ReloadStrategy
 
 public class NoReload : ReloadStrategy
 {
-    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession, int maxAmmoCountInMagazine) { }
+    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession) { }
 
     public override void OnUpdate() { }
    
-    public override bool CanReloadExit() { return false; }
+    public override bool CancelReloadAndGoToMainAction() { return false; }
+    public override bool CancelReloadAndGoToSubAction() { return false; }
+
 
     protected override void CalculateAmmoWhenReload() { } // 총알 계산
    
@@ -75,9 +78,11 @@ public class MagazineReload : ReloadStrategy
 
     Action<int, int> OnReloadRequested;
 
-    public MagazineReload(float reloadDuration, float reloadExitDuration, string weaponName, Animator weaponAnimator,
-        Animator ownerAnimator, Action<int, int> onReloadRequested)
+    public MagazineReload(float reloadDuration, float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
+        Animator weaponAnimator, Animator ownerAnimator, Action<int, int> onReloadRequested)
     {
+        _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
+
         _reloadTimer = new Timer();
         _reloadDuration = reloadDuration;
 
@@ -97,14 +102,11 @@ public class MagazineReload : ReloadStrategy
         return _reloadExitTimer.IsFinish;
     }
 
-    public override bool CanReloadExit()
-    {
-        return false;
-    }
+    public override bool CancelReloadAndGoToMainAction() { return false; }
+    public override bool CancelReloadAndGoToSubAction() { return false; }
 
-    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession, int maxAmmoCountInMagazine) 
+    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession) 
     {
-        _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
         _ammoCountInMagazine = ammoCountInMagazine;
         _ammoCountsInPossession = ammoCountInPossession;
 
@@ -173,8 +175,11 @@ public class MagazineReload : ReloadStrategy
 //// 한 발씩 장전하는 경우
 public class RoundByRoundReload : ReloadStrategy
 {
+    Timer _reloadBeforeTimer;
+    float _reloadBeforeDuration;
+
     Timer _reloadTimer;
-    float _reloadDuration;
+    float _reloadDurationPerRound;
 
     Timer _reloadExitTimer;
     float _reloadExitDuration;
@@ -190,12 +195,18 @@ public class RoundByRoundReload : ReloadStrategy
     Action<int, int> OnReloadRequested;
 
     float _storedReloadRatio;
+    float _reloadRatio;
 
-    public RoundByRoundReload(float reloadDuration, float reloadExitDuration, string weaponName, Animator weaponAnimator,
-        Animator ownerAnimator, Action<int, int> onReloadRequested)
+    public RoundByRoundReload(float reloadBeforeDuration, float reloadDurationPerRound, float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
+        Animator weaponAnimator, Animator ownerAnimator, Action<int, int> onReloadRequested)
     {
+        _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
+
+        _reloadBeforeDuration = reloadBeforeDuration;
+        _reloadBeforeTimer = new Timer();
+
         _reloadTimer = new Timer();
-        _reloadDuration = reloadDuration;
+        _reloadDurationPerRound = reloadDurationPerRound;
 
         _reloadExitTimer = new Timer();
         _reloadExitDuration = reloadExitDuration;
@@ -206,6 +217,7 @@ public class RoundByRoundReload : ReloadStrategy
         _ownerAnimator = ownerAnimator;
 
         OnReloadRequested = onReloadRequested;
+
         _storedReloadRatio = 0;
     }
 
@@ -214,65 +226,94 @@ public class RoundByRoundReload : ReloadStrategy
         return _reloadExitTimer.IsFinish;
     }
 
-    public override bool CanReloadExit()
-    {
-        return Input.GetMouseButtonDown(0); // 마우스 버튼이 눌러졌을 경우 Reload State에서 탈출
-    }
+    public override bool CancelReloadAndGoToMainAction() { return Input.GetMouseButtonDown(0); }
+    public override bool CancelReloadAndGoToSubAction() { return Input.GetMouseButtonDown(1); }
 
-    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession, int maxAmmoCountInMagazine)
+    public override void Reload(int ammoCountInMagazine, int ammoCountInPossession) // maxAmmoCountInMagazine 이건 생성자에서 받기
     {
-        _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
         _ammoCountInMagazine = ammoCountInMagazine;
         _ammoCountsInPossession = ammoCountInPossession;
 
-        _reloadTimer.Start(_reloadDuration);
-        _reloadExitTimer.Start(_reloadExitDuration);
+        int roundCount = ReturnCanReloadRoundCount();
+        _reloadRatio = 1.0f / roundCount;
 
-        _weaponAnimator.Play("Reload", -1, 0);
-        _ownerAnimator.Play(_weaponName + "Reload", -1, 0);
+        _reloadBeforeTimer.Start(_reloadBeforeDuration);
+    }
+
+    int ReturnCanReloadRoundCount()
+    {
+        int canReloadRoundCount = _maxAmmoCountInMagazine - _ammoCountInMagazine;
+        int reloadRoundCount;
+
+        if (canReloadRoundCount > _ammoCountsInPossession) reloadRoundCount = _ammoCountsInPossession;
+        else reloadRoundCount = canReloadRoundCount;
+
+        return reloadRoundCount;
     }
 
     public override void OnUpdate()
     {
+        _reloadBeforeTimer.Update();
+        _reloadExitTimer.Update();
         _reloadTimer.Update();
 
-        _reloadTimer.Ratio
-
-
-
-        if (_reloadTimer.Ratio > ) // --> Ratio로 구분해서 7발을 장전해야하는 경우 1 / 7 마다 1발씩 추가해줌
+        if (_reloadBeforeTimer.IsFinish)
         {
-            CalculateAmmoWhenReload();
-            _storedReloadRatio +
+            float reloadDuration = ReturnCanReloadRoundCount() * _reloadDurationPerRound;
+
+            _reloadTimer.Start(reloadDuration);
+            _reloadExitTimer.Start(reloadDuration + 0.16f);
+
+            _weaponAnimator.Play("FirstReload", -1, 0);
+            _ownerAnimator.Play(_weaponName + "FirstReload", -1, 0);
+            _reloadBeforeTimer.Reset();
         }
 
-        _reloadExitTimer.Update();
+        if (_reloadBeforeTimer.IsRunning) return;
+
+        if (_reloadTimer.IsFinish)
+        {
+            _weaponAnimator.Play("EndReload", -1, 0);
+            _ownerAnimator.Play(_weaponName + "EndReload", -1, 0);
+            _storedReloadRatio = 0; // 끝날 때, 초기화 시켜주자
+            _reloadTimer.Reset();
+        }
+
+        if(_reloadTimer.IsRunning)
+        {
+            // --> Ratio로 구분해서 7발을 장전해야하는 경우 1 / 7 마다 1발씩 추가해줌
+            if (_storedReloadRatio < _reloadTimer.Ratio)
+            {
+                CalculateAmmoWhenReload();
+                _storedReloadRatio += _reloadRatio;
+
+                _weaponAnimator.Play("AfterReload", -1, 0);
+                _ownerAnimator.Play(_weaponName + "AfterReload", -1, 0);
+            }
+        }
     }
 
     public override void OnResetReload()
     {
+        _storedReloadRatio = 0;
+        _reloadBeforeTimer.Reset();
         _reloadTimer.Reset();
         _reloadExitTimer.Reset();
     }
 
     protected override void CalculateAmmoWhenReload()
     {
-        int canLoadBulletCount = _maxAmmoCountInMagazine - _ammoCountInMagazine;
+        _ammoCountsInPossession -= 1;
+        _ammoCountInMagazine += 1;
 
-        if(canLoadBulletCount > _ammoCountInMagazine)
-        {
-            _ammoCountsInPossession -= 1;
-            _ammoCountInMagazine += 1;
-
-            OnReloadRequested?.Invoke(_ammoCountInMagazine, _ammoCountsInPossession);
-        }
+        OnReloadRequested?.Invoke(_ammoCountInMagazine, _ammoCountsInPossession);
     }
 
     // 획득하면 연결시켜주고 해제하면 연결을 끊어줌
     public override void OnUnlink()
     {
         //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested -= _leftRoundShower.OnBulletCountChange;
+        //OnReloadRequested -= _leftRoundShower.OnRoundCountChange;
     }
 
     public override void OnLink()

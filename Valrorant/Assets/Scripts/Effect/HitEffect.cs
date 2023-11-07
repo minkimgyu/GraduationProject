@@ -2,23 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class HitEffect : BaseEffect
 {
-    ParticleSystem _objectBurstEffect;
-
     float spaceBetweenWall = 0.001f;
 
-    protected SmoothLerpRoutine runningRoutine;
+    [SerializeField]
+    ParticleSystem _objectBurstEffect;
 
-    protected virtual void Awake()
+    public override void Initialize(Vector3 hitPosition)
     {
-        _objectBurstEffect = GetComponentInChildren<ParticleSystem>();
-        TryGetComponent(out runningRoutine);
-
-        if (runningRoutine == null) return;
-
-        runningRoutine.Initialize();
-        runningRoutine.RoutineEnd += DisableObject;
+        transform.position = hitPosition;
     }
 
     public override void Initialize(Vector3 hitPosition, Vector3 hitNormal, Quaternion holeRotation)
@@ -30,8 +24,16 @@ public class HitEffect : BaseEffect
     public override void PlayEffect()
     {
         _objectBurstEffect.Play();
+        _timer.Start(_duration);
+    }
 
-        if (runningRoutine == null) return;
-        runningRoutine.StartRoutine();
+    protected override void OnUpdate()
+    {
+        _timer.Update();
+
+        if (_timer.IsFinish)
+        {
+            DisableObject();
+        }
     }
 }

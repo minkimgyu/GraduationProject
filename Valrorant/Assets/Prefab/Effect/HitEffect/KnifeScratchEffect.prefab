@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2890295068406785577}
   - component: {fileID: 2890295068406785582}
   m_Layer: 0
-  m_Name: BulletHole
+  m_Name: KnifeScratch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,8 +93,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2890295069855686851}
-  - component: {fileID: 2890295069855686848}
-  - component: {fileID: -3855501385470137519}
+  - component: {fileID: 6182573086628233447}
   m_Layer: 0
   m_Name: KnifeScratchEffect
   m_TagString: Untagged
@@ -119,7 +118,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2890295069855686848
+--- !u!114 &6182573086628233447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,26 +127,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2890295069855686850}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1a3a15a2c9421e4eb6a4d59605af525, type: 3}
+  m_Script: {fileID: 11500000, guid: 2a3899c6b2687f845985668587bd7914, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startColor: {r: 1, g: 1, b: 1, a: 1}
-  endColor: {r: 1, g: 1, b: 1, a: 0}
-  waitForFade: 5
---- !u!114 &-3855501385470137519
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2890295069855686850}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dea13b8d979b5cb42b81cd7e3b76fc5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  predelay: 5
-  duration: 3
+  _storedRoutine:
+    _duration: 5
+    _objectBurstEffect: {fileID: 6121715241792529879}
+    startColor: {r: 1, g: 1, b: 1, a: 1}
+    endColor: {r: 1, g: 1, b: 1, a: 0}
+    _holeRenderer: {fileID: 2890295068406785582}
 --- !u!1 &6121715241774283959
 GameObject:
   m_ObjectHideFlags: 0

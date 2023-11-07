@@ -81,7 +81,7 @@ public class BurstRecoilGenerator : RecoilStrategy
         StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration);
     }
 
-    public override void ResetRecoil()
+    public override void ResetValues()
     {
         StopRecoil();
         _upPoint = 0; // √ ±‚»≠

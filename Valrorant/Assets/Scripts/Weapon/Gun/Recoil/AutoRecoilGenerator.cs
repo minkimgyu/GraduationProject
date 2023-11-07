@@ -7,13 +7,16 @@ public class AutoRecoilGenerator : RecoilStrategy
     int _index = -1;
     int _indexMultiplier = 1;
 
+    float _recoilRatio;
+
     RecoilMap _recoilMap;
 
-    public AutoRecoilGenerator(float shootInterval, RecoilMap recoilMap)
+    public AutoRecoilGenerator(float shootInterval, float recoilRatio, RecoilMap recoilMap)
     {
         _shootInterval = shootInterval;
         _timer = new Timer();
 
+        _recoilRatio = recoilRatio;
         _recoilMap = recoilMap;
         _actorBoneRecoilMultiplier = 1f;
     }
@@ -22,7 +25,7 @@ public class AutoRecoilGenerator : RecoilStrategy
     {
         StopRecoil();
 
-        Vector2 point = ReturnNextRecoilPoint();
+        Vector2 point = ReturnNextRecoilPoint() * _recoilRatio;
         StartLerp(point, _shootInterval);
     }
 
@@ -91,7 +94,7 @@ public class AutoRecoilGenerator : RecoilStrategy
         StartLerp(Vector2.zero, _recoilMap.RecoilRecoverDuration);
     }
 
-    public override void ResetRecoil()
+    public override void ResetValues()
     {
         _indexMultiplier = 1;
         ResetIndex();

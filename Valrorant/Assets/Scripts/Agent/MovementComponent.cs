@@ -13,6 +13,8 @@ public class MovementComponent : MonoBehaviour
 
     [SerializeField] Transform _direction;
 
+    [SerializeField] float _slowDownRatioByWeaponWeight = 1;
+
     [SerializeField] float _moveForce;
     [SerializeField] float _altMoveForce;
     [SerializeField] float _sitMoveForce;
@@ -46,6 +48,13 @@ public class MovementComponent : MonoBehaviour
 
     Timer _postureTimer;
     public Timer PostureTimer { get { return _postureTimer; } }
+
+
+    public void OnWeaponChangeRequested(float slowDownRatio)
+    {
+        _slowDownRatioByWeaponWeight = slowDownRatio;
+        Debug.Log(_slowDownRatioByWeaponWeight);
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -82,6 +91,8 @@ public class MovementComponent : MonoBehaviour
             if (pressAlt) moveForce = _altMoveForce;
             else moveForce = _moveForce;
         }
+
+        moveForce *= _slowDownRatioByWeaponWeight;
 
         _rigidbody.AddForce(_moveDirection * moveForce, ForceMode.Force);
     }

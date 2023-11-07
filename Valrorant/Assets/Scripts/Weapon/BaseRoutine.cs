@@ -3,29 +3,24 @@ using UnityEngine;
 
 abstract public class BaseRoutine
 {
-    IWeaponContainer _iContainer;
+    IRoutine _iRoutine;
 
-    public GameObject gameObject { get { return _iContainer.ReturnGameObject(); } }
-    public Transform transform { get { return _iContainer.ReturnTransform(); } }
+    public GameObject gameObject { get { return _iRoutine.ReturnGameObject(); } }
+    public Transform transform { get { return _iRoutine.ReturnTransform(); } }
 
     public Coroutine StartCoroutine(IEnumerator enumerator)
     {
-        return _iContainer.StartCoroutineInRoutineClass(enumerator);
-    }
-
-    public void StopCoroutine(IEnumerator enumerator)
-    {
-        _iContainer.StopCoroutineInRoutineClass(enumerator);
-    }
-
-    public void StopCoroutine(Coroutine routine)
-    {
-        _iContainer.StopCoroutineInRoutineClass(routine);
+        return _iRoutine.StartCoroutineInRoutineClass(enumerator);
     }
 
     public T GetComponent<T>()
     {
-        return _iContainer.GetComponentInRoutineClass<T>();
+        return _iRoutine.GetComponentInRoutineClass<T>();
+    }
+
+    public T GetComponentInChildren<T>()
+    {
+        return _iRoutine.GetComponentInChildrenInRoutineClass<T>();
     }
 
     public GameObject FindWithTag(string tag)
@@ -35,9 +30,12 @@ abstract public class BaseRoutine
 
     protected abstract void OnUpdate();
 
-    public void SetUp(IWeaponContainer iHoldWeapon)
+    protected abstract void OnDisableGameObject();
+
+    public void SetUp(IRoutine iRoutine)
     {
-        _iContainer = iHoldWeapon;
-        _iContainer.OnUpdate = OnUpdate;
+        _iRoutine = iRoutine;
+        _iRoutine.OnUpdate = OnUpdate;
+        _iRoutine.OnDisableGameObject = OnDisableGameObject;
     }
 }

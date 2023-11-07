@@ -28,7 +28,7 @@ public class NoRecoilGenerator : RecoilStrategy
     {
     }
 
-    public override void ResetRecoil()
+    public override void ResetValues()
     {
     }
 }

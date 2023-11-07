@@ -27,7 +27,7 @@ abstract public class RecoilStrategy
 
     public abstract void RecoverRecoil();
 
-    public abstract void ResetRecoil();
+    public abstract void ResetValues();
 
     public abstract void OnLink(GameObject player);
 

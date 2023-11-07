@@ -26,7 +26,8 @@ abstract public class ResultStrategy
     public abstract void OnUpdate();
 
     public abstract void OnOtherActionEventRequested();
-    public abstract int ReturnFireCountInOneShoot();
+
+    public abstract void OnMainActionFireEventRequested();
 }
 
 public class NoResult : ResultStrategy
@@ -45,29 +46,31 @@ public class NoResult : ResultStrategy
 
     public override void OnOtherActionEventRequested() { }
 
-    public override int ReturnFireCountInOneShoot() { return 0; }
+    //public override int ReturnFireCountInOneShoot() { return 0; }
 
     public override void OnLink(GameObject player) { }
 
     public override bool CanDo() { return false; }
 
     public override void CheckBulletLeftCount(int leftBullet) { }
+
+    public override void OnMainActionFireEventRequested() { }
 }
 
-public class ZoomStrategy : ResultStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
+public class ZoomStrategy : ResultStrategy
 {
-    GameObject _scope;
+    protected GameObject _scope;
+    protected bool _nowZoom;
+
     float _zoomDuration;
     float _scopeOnDelay;
 
     float _normalFieldOfView;
-    float _zoomFieldOfView;
-
-    bool nowZoom = false;
+    protected float _zoomFieldOfView;
 
     Vector3 _zoomCameraPosition;
 
-    public System.Action<GameObject, bool, float, Vector3, float, float, float, bool> OnZoomRequested;
+    public System.Action<GameObject, bool, float, Vector3, float, float, bool> OnZoomRequested;
     public System.Action<bool> OnZoomEventCall;
 
     public ZoomStrategy(GameObject scope, Vector3 zoomCameraPosition, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView,
@@ -87,20 +90,34 @@ public class ZoomStrategy : ResultStrategy//, ISubject<GameObject, bool, float, 
         OnZoomEventCall += onZoom;
     }
 
-    public override void Do() 
+    protected void InvokeZoomEventOtherComponent(bool isInstance)
     {
-        nowZoom = !nowZoom;
-        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, false);
-        OnZoomEventCall?.Invoke(nowZoom);
+        if (_nowZoom) OnZoomRequested?.Invoke(_scope, _nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _zoomFieldOfView, isInstance);
+        else OnZoomRequested?.Invoke(_scope, _nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _normalFieldOfView, isInstance);
     }
 
-    void TurnOffZoomDirectly()
+    protected void InvokeZoomEventOtherComponent(float fieldOfView, bool isInstance)
     {
-        if (nowZoom == false) return;
-        nowZoom = false;
+        OnZoomRequested?.Invoke(_scope, _nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, fieldOfView, isInstance);
+    }
 
-        OnZoomRequested?.Invoke(_scope, nowZoom, _zoomDuration, _zoomCameraPosition, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, true);
-        OnZoomEventCall?.Invoke(nowZoom);
+    void Zoom(bool isInstance)
+    {
+        InvokeZoomEventOtherComponent(isInstance);
+        OnZoomEventCall?.Invoke(_nowZoom); // 총 이벤트 호출
+    }
+
+    public override void Do() 
+    {
+        _nowZoom = !_nowZoom;
+        Zoom(false);
+    }
+
+    protected virtual void TurnOffZoomDirectly()
+    {
+        if (_nowZoom == false) return;
+        _nowZoom = false;
+        Zoom(true);
     }
 
     public override void OnReload() => TurnOffZoomDirectly();
@@ -125,11 +142,72 @@ public class ZoomStrategy : ResultStrategy//, ISubject<GameObject, bool, float, 
 
     public override void OnOtherActionEventRequested() { }
 
-    public override int ReturnFireCountInOneShoot() { return 0; }
-
     public override bool CanDo() { return true; }
 
     public override void CheckBulletLeftCount(int leftBulletCount) { }
+
+    public override void OnMainActionFireEventRequested() { }
+}
+
+public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
+{
+    GameObject _armMesh;
+    GameObject _gunMesh;
+    //scope는 Find로 찾아서 사용 --> 캔버스 안에 있음
+
+    bool nowDoubleZoom;
+    float _doubleZoomFieldOfView;
+
+    public DoubleZoomStrategy(GameObject scope, GameObject armMesh, GameObject gunMesh, Vector3 zoomCameraPosition, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView,
+        float doubleZoomFieldOfView, System.Action<bool> onZoom) : base(scope, zoomCameraPosition, zoomDuration, scopeOnDuration, normalFieldOfView, zoomFieldOfView, onZoom)
+    {
+        _scope = scope;
+        _scope.SetActive(false);
+
+        _gunMesh = gunMesh;
+        _doubleZoomFieldOfView = doubleZoomFieldOfView;
+        _armMesh = armMesh;
+    }
+
+    public override void OnMainActionFireEventRequested() 
+    {
+        TurnOffZoomDirectly();
+    }
+
+    protected override void TurnOffZoomDirectly()
+    {
+        base.TurnOffZoomDirectly();
+        nowDoubleZoom = false;
+        ActivateMesh(true); // 메쉬 활성화
+    }
+
+    void ActivateMesh(bool nowActivate)
+    {
+        _gunMesh.SetActive(nowActivate);
+        _armMesh.SetActive(nowActivate);
+    }
+
+    public override void Do()
+    {
+        if(_nowZoom == true && nowDoubleZoom == false)
+        {
+            ActivateMesh(false);
+            // 더블 줌으로 들어감
+            nowDoubleZoom = true;
+            InvokeZoomEventOtherComponent(_doubleZoomFieldOfView, true);
+        }
+        else if(_nowZoom == true && nowDoubleZoom == true)
+        {
+            ActivateMesh(true);
+            nowDoubleZoom = false;
+            base.Do(); // 노멀로 들어감
+        }
+        else if (_nowZoom == false)
+        {
+            ActivateMesh(false);
+            base.Do(); // 줌으로 들어감
+        }
+    }
 }
 
 
@@ -159,7 +237,7 @@ abstract public class ApplyAttack : ResultStrategy
         _weaponName = weaponName;
     }
 
-    protected void PlayOwnerAnimation()
+    protected void PlayAnimation()
     {
         string actionType;
         if (_isMainAction) actionType = "MainAction";
@@ -185,22 +263,13 @@ abstract public class ApplyAttack : ResultStrategy
 
     protected virtual float CalculateDamage(IHitable hitable) { return default; }
 
-
-
     protected virtual void ApplyDamage(IHitable hitable, RaycastHit hit) { }
 
     protected virtual void ApplyDamage(IHitable hitable, PenetrateData data, float decreaseRatio) { }
 
-
-    protected void DrawPenetrateLine(Vector3 hitPoint)
-    {
-        float diatance = Vector3.Distance(_camTransform.position, hitPoint);
-        Vector3 direction = (hitPoint - _camTransform.position).normalized;
-
-        Debug.DrawRay(_camTransform.position, direction * diatance, Color.green, 10); // 디버그 레이를 카메라가 바라보고 있는 방향으로 발사한다.
-    }
-    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal) { }
-    protected virtual void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked) { }
+    protected virtual void SpawnEffect(string name, Vector3 position) { }
+    protected virtual void SpawnEffect(string name, Vector3 position, Vector3 normal) { }
+    protected virtual void SpawnEffect(string name, Vector3 position, Vector3 normal, bool isBlocked) { }
 
 
     public override void OnUnEquip() { }
@@ -222,6 +291,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
     protected int _fireCountsInOneShoot;
 
     public float DisplacementWeight { get; set; }
+    public float DisplacementDecreaseRatio { get; set; }
 
     ParticleSystem _muzzleFlash;
     ParticleSystem _emptyCartridgeSpawner;
@@ -231,7 +301,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     public PenetrateAttack(Transform camTransform, float range, int targetLayer, int fireCountsInOneShoot, Animator ownerAnimator, Animator weaponAnimator, 
         ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner, bool isMainAction, string weaponName, 
-        Transform muzzle, float penetratePower, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary) 
+        Transform muzzle, float penetratePower, string trajectoryLineEffect, float displacementDecreaseRatio, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary) 
         : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, isMainAction, weaponName)
     {
         _muzzle = muzzle;
@@ -245,7 +315,19 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
         _canSpawnMuzzleFlash = canSpawnMuzzleFlash;
 
+        DisplacementDecreaseRatio = displacementDecreaseRatio;
+
         _damageConverter = new DistanceAreaBasedDamageConverter(damageDictionary);
+    }
+
+    //public override int ReturnFireCountInOneShoot() { return _fireCountsInOneShoot; }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine)
+    {
+        ammoCountsInMagazine -= _fireCountsInOneShoot;
+        if (ammoCountsInMagazine < 0) ammoCountsInMagazine = 0;
+
+        return ammoCountsInMagazine;
     }
 
     RaycastHit[] DetectCollider(Vector3 origin, Vector3 direction, float maxDistance, int layer)
@@ -258,15 +340,15 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
         return hits;
     }
 
-    protected List<PenetrateData> ReturnPenetrateData(Vector3 offset = default(Vector3))
+    protected List<PenetrateData> ReturnPenetrateData(Vector3 directionOffset = default(Vector3), Vector3 positionOffset = default(Vector3))
     {
-        RaycastHit[] entryHits = DetectCollider(_camTransform.position, _camTransform.forward + offset, _range, _targetLayer);
+        RaycastHit[] entryHits = DetectCollider(_camTransform.position, _camTransform.forward + directionOffset, _range, _targetLayer);
 
         if (entryHits.Length == 0) return null; // 만약 아무도 맞지 않았다면 리턴
 
-        Vector3 endPoint = _camTransform.position + (_camTransform.forward + offset) * _range; // 레이캐스트가 닫는 가장 마지막 위치
+        Vector3 endPoint = _camTransform.position + (_camTransform.forward + directionOffset) * _range; // 레이캐스트가 닫는 가장 마지막 위치
 
-        RaycastHit[] exitHits = DetectCollider(endPoint, -(_camTransform.forward + offset), _range, _targetLayer);
+        RaycastHit[] exitHits = DetectCollider(endPoint, -(_camTransform.forward + directionOffset), _range, _targetLayer);
 
         List<PenetrateData> penetrateDatas = new List<PenetrateData>();
 
@@ -322,6 +404,14 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
         }
     }
 
+    void DrawPenetrateLine(Vector3 hitPoint)
+    {
+        float diatance = Vector3.Distance(_camTransform.position, hitPoint);
+        Vector3 direction = (hitPoint - _camTransform.position).normalized;
+
+        Debug.DrawRay(_camTransform.position, direction * diatance, Color.green, 10); // 디버그 레이를 카메라가 바라보고 있는 방향으로 발사한다.
+    }
+
     void DrawPenetrateLineUntilExitPoint(PenetrateData penetrateData)
     {
         Vector3 offsetDir = (penetrateData.ExitPoint - _muzzle.position).normalized * _trajectoryLineOffset;
@@ -342,8 +432,8 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
         {
             string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.BulletPenetration);
 
-            SpawnHitEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, false);
-            SpawnHitEffect(effectName, penetrateData.ExitPoint, penetrateData.ExitNormal, false);
+            SpawnEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, false);
+            SpawnEffect(effectName, penetrateData.ExitPoint, penetrateData.ExitNormal, false);
             // 이 경우, 진입, 퇴장 포인트 모두에 관통 이미지 추가
         }
     }
@@ -353,7 +443,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
         bool canReturnEffectName = effectableTarget.CanReturnHitEffectName(IEffectable.ConditionType.BulletNonPenetration);
         string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.BulletNonPenetration);
 
-        if (canReturnEffectName) SpawnHitEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, true);
+        if (canReturnEffectName) SpawnEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, true);
     }
 
 
@@ -441,26 +531,35 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
         }
     }
 
-    protected void Shoot(Vector3 offset = default(Vector3))
+    protected void Shoot(Vector3 directionOffset = default(Vector3), Vector3 positionOffset = default(Vector3))
     {
-        List<PenetrateData> penetrateDatas = ReturnPenetrateData(offset);
+        List<PenetrateData> penetrateDatas = ReturnPenetrateData(directionOffset, positionOffset);
         if (penetrateDatas == null) return;
 
         ProgressPenetrateSequence(penetrateDatas);
     }
 
-    protected override void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked)
+    protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
+        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
 
         bulletHoleEffect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         bulletHoleEffect.PlayEffect();
     }
 
+    protected override void SpawnEffect(string name, Vector3 hitPosition)
+    {
+        BaseEffect bulletHoleEffect;
+        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
+
+        bulletHoleEffect.Initialize(hitPosition);
+        bulletHoleEffect.PlayEffect();
+    }
+
     void DrawTrajectoryLine(Vector3 hitPosition)
     {
-        TrajectoryLineEffect trajectoryLineEffect = ObjectPooler.SpawnFromPool<TrajectoryLineEffect>(_trajectoryLineEffect);
+        BaseEffect trajectoryLineEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(_trajectoryLineEffect).ReturnEffect();
         trajectoryLineEffect.Initialize(hitPosition, _muzzle.position);
         trajectoryLineEffect.PlayEffect();
     }
@@ -475,11 +574,9 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     public override void Do()
     {
-        PlayOwnerAnimation();
+        PlayAnimation();
         PlayEffect();
     }
-
-    public override int ReturnFireCountInOneShoot() { return _fireCountsInOneShoot; }
 
     public override void OnUnLink(GameObject player)
     {
@@ -495,20 +592,14 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     public void OnDisplacementWeightReceived(float displacement)
     {
-        DisplacementWeight = displacement;
-    }
-
-    public override int DecreaseBullet(int ammoCountsInMagazine)
-    {
-        ammoCountsInMagazine -= _fireCountsInOneShoot;
-        if (ammoCountsInMagazine < 0) ammoCountsInMagazine = 0;
-
-        return ammoCountsInMagazine;
+        DisplacementWeight = displacement * DisplacementDecreaseRatio;
     }
 
     public override void CheckBulletLeftCount(int leftBulletCount) { _leftBulletCount = leftBulletCount; }
 
     public override bool CanDo() { return _leftBulletCount > 0; }
+
+    public override void OnMainActionFireEventRequested() { }
 }
 
 // WithWeight는 속도 백터의 길이를 받아서 적용시켜주는 인터페이스
@@ -516,18 +607,116 @@ public interface IDisplacement
 {
     float DisplacementWeight { get; set; }
 
+    float DisplacementDecreaseRatio { get; set; }
+
     void OnDisplacementWeightReceived(float displacement);
 }
 
+public class SingleAndExplosionScatterAttackCombination : ResultStrategy // Attack이 아니라 다른 방식으로 명명해야할 듯
+{
+    SingleProjectileAttack singleProjectileAttack;
+    ScatterProjectileAttack scatterProjectileGunAttack;
+    // 이 두 개를 생성자에서 초기화
+    // 이후, 타입에 맞게 실행
 
-// 연사가능한 총에는 탄퍼짐이 없어야함 --> 반동으로 처리하기 때문에
+    Transform _camTransform;
+    int _targetLayer;
+
+    float _findRange;
+    bool _isInFront;
+
+    public SingleAndExplosionScatterAttackCombination(Transform camTransform, float range, int targetLayer, Animator ownerAnimator, Animator weaponAnimator,
+        ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner, bool isMainAction, string weaponName, Transform muzzle, 
+        string trajectoryLineEffect, float findRange,
+
+        float singlePenetratePower, int bulletCountsInOneShoot, float singleBulletSpreadPowerDecreaseRatio, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> scatterDamageDictionary,
+        Vector3 frontPosition, string explosionEffectName, float scatterPenetratePower, float spreadOffset, int pelletCount, float scatterBulletSpreadPowerDecreaseRatio, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> singleDamageDictionary)
+    {
+        _camTransform = camTransform;
+        _targetLayer = targetLayer;
+        _findRange = findRange;
+
+        singleProjectileAttack = new SingleProjectileAttack(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, isMainAction,
+            weaponName, muzzle, singlePenetratePower, trajectoryLineEffect, singleBulletSpreadPowerDecreaseRatio, singleDamageDictionary);
+
+        scatterProjectileGunAttack = new ExplosionScatterProjectileAttack(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash,
+            emptyCartridgeSpawner, isMainAction, weaponName, muzzle, scatterPenetratePower, trajectoryLineEffect, spreadOffset, pelletCount, scatterBulletSpreadPowerDecreaseRatio,
+            frontPosition, explosionEffectName, scatterDamageDictionary);
+    }
+
+    public override void CheckBulletLeftCount(int leftBulletCount) 
+    {
+        singleProjectileAttack.CheckBulletLeftCount(leftBulletCount);
+        scatterProjectileGunAttack.CheckBulletLeftCount(leftBulletCount);
+    }
+
+    public override bool CanDo() { return singleProjectileAttack.CanDo() && scatterProjectileGunAttack.CanDo(); }
+
+    protected bool IsTargetPlacedInFront()
+    {
+        RaycastHit hit;
+        Physics.Raycast(_camTransform.position, _camTransform.forward, out hit, _findRange, _targetLayer);
+        if (hit.collider == null) return false;
+
+        return true;
+    }
+
+    public override void OnMainActionFireEventRequested() { }
+
+    public override void Do()
+    {
+        _isInFront = IsTargetPlacedInFront();
+        if (_isInFront)
+        {
+            // 상황에 따라 다르게
+            singleProjectileAttack.Do();
+        }
+        else
+        {
+            scatterProjectileGunAttack.Do();
+        }
+    }
+
+    public override void OnLink(GameObject player)
+    {
+        singleProjectileAttack.OnLink(player);
+        scatterProjectileGunAttack.OnLink(player);
+    }
+
+    public override void OnUnLink(GameObject player)
+    {
+        singleProjectileAttack.OnUnLink(player);
+        scatterProjectileGunAttack.OnUnLink(player);
+    }
+
+    public override void OnUpdate()
+    {
+        singleProjectileAttack.OnUpdate();
+        scatterProjectileGunAttack.OnUpdate();
+    }
+
+    public override void OnOtherActionEventRequested() { }
+
+    public override void OnReload() { }
+
+    public override void OnUnEquip() { }
+
+    public override int DecreaseBullet(int ammoCountsInMagazine)
+    {
+        //bool --> 누구 공격인지 명시, 이걸로 구분해서 리턴값을 나눠줌
+        if(_isInFront) return singleProjectileAttack.DecreaseBullet(ammoCountsInMagazine);
+        else return scatterProjectileGunAttack.DecreaseBullet(ammoCountsInMagazine);
+    }
+}
+
+    // 연사가능한 총에는 탄퍼짐이 없어야함 --> 반동으로 처리하기 때문에
 public class SingleProjectileAttack : PenetrateAttack
 {
     public SingleProjectileAttack(Transform camTransform, float range, int targetLayer, Animator ownerAnimator,
         Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner, 
-        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, float bulletSpreadPowerDecreaseRatio, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
         : base(camTransform, range, targetLayer, 1, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
-            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
+            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, bulletSpreadPowerDecreaseRatio, damageDictionary)
     {
     }
 
@@ -560,10 +749,10 @@ public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치
 
     public SingleProjectileAttackWithWeight(Transform camTransform, float range, int targetLayer, Animator ownerAnimator,
         Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
-        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, 
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower, string trajectoryLineEffect, float bulletSpreadPowerDecreaseRatio,
         Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
         : base(camTransform, range, targetLayer, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
-            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
+            isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, bulletSpreadPowerDecreaseRatio, damageDictionary)
     {
         _weightApplier = weightApplier;
     }
@@ -571,9 +760,6 @@ public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치
     public override void Do()
     {
         DisplacementWeight += _weightApplier.StoredWeight; // 가중치 추가 적용
-
-        Debug.Log(DisplacementWeight);
-        Debug.Log(_weightApplier.StoredWeight);
         base.Do();
         _weightApplier.MultiplyWeight();
     }
@@ -584,24 +770,24 @@ public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치
     }
 }
 
-public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가중치가 적용되지 않음
+public class ScatterProjectileAttack : PenetrateAttack // 산탄은 가중치가 적용되지 않음
 {
     float _spreadOffset;
-    float bulletSpreadPowerDecreaseRatio = 0.35f;
 
     int _nextFireCount;
+    int _pelletCount;
 
-    WeightApplier _weightApplier;
+    protected Vector3 _frontPosition = Vector3.zero;
 
-    public ScatterProjectileGunAttackWithWeight(Transform camTransform, float range, int targetLayer, int bulletCountsInOneShoot, Animator ownerAnimator,
+    public ScatterProjectileAttack(Transform camTransform, float range, int targetLayer, int bulletCountsInOneShoot, Animator ownerAnimator,
         Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
         bool isMainAction, string weaponName, Transform muzzle, float penetratePower,
-       string trajectoryLineEffect, float spreadOffset, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
-       : base(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
-           isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, damageDictionary)
+       string trajectoryLineEffect, float spreadOffset, int pelletCount, float bulletSpreadPowerDecreaseRatio, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
+       : base(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner,
+           isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, bulletSpreadPowerDecreaseRatio, damageDictionary)
     {
+        _pelletCount = pelletCount;
         _spreadOffset = spreadOffset;
-        _weightApplier = weightApplier;
         _nextFireCount = _fireCountsInOneShoot; // 초기 발사 카운트는 _fireCountsInOneShoot를 대입해준다.
     }
 
@@ -623,28 +809,75 @@ public class ScatterProjectileGunAttackWithWeight : PenetrateAttack // 산탄은 가
     {
         base.Do();
 
-        List<Vector3> offsetDistances = ReturnOffsetDistance(_weightApplier.StoredWeight + DisplacementWeight * bulletSpreadPowerDecreaseRatio, _nextFireCount);
-
+        List<Vector3> offsetDistances = ReturnOffsetDistance(DisplacementWeight, _pelletCount);
         for (int i = 0; i < offsetDistances.Count; i++)
         {
-            Shoot(offsetDistances[i]);
-            _weightApplier.MultiplyWeight();
+            Shoot(offsetDistances[i], _frontPosition);
         }
     }
 
     public override void OnUpdate()
     {
-        _weightApplier.OnUpdate();
     }
 
     public override int DecreaseBullet(int ammoCountsInMagazine)
     {
         // 다음 발사할 카운트보다 현재 카운트가 적다면 현재 카운트를 넣어준다.
-        if (ammoCountsInMagazine < _nextFireCount) _nextFireCount = ammoCountsInMagazine; 
-        else _nextFireCount = _fireCountsInOneShoot; 
+        if (ammoCountsInMagazine < _nextFireCount) _nextFireCount = ammoCountsInMagazine;
+        else _nextFireCount = _fireCountsInOneShoot;
         // 아니면 그대로 진행
 
         return base.DecreaseBullet(ammoCountsInMagazine);
+    }
+}
+
+public class ExplosionScatterProjectileAttack : ScatterProjectileAttack // 산탄은 가중치가 적용되지 않음
+{
+    string _explosionEffectName;
+
+    public ExplosionScatterProjectileAttack(Transform camTransform, float range, int targetLayer, int bulletCountsInOneShoot, Animator ownerAnimator,
+        Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower,
+       string trajectoryLineEffect, float spreadOffset, int pelletCount, float bulletSpreadPowerDecreaseRatio, Vector3 frontPosition, string explosionEffectName, Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
+       : base(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner,
+           isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, spreadOffset, pelletCount, bulletSpreadPowerDecreaseRatio, damageDictionary)
+    {
+        _frontPosition = _camTransform.forward * frontPosition.z;
+        _explosionEffectName = explosionEffectName;
+    }
+
+    public override void Do()
+    {
+        //여기에 이팩트 생성
+        SpawnEffect(_explosionEffectName, _camTransform.position + (_camTransform.forward * _frontPosition.z));
+        base.Do();
+    }
+}
+
+public class ScatterProjectileAttackWithWeight : ScatterProjectileAttack
+{
+    WeightApplier _weightApplier;
+
+    public ScatterProjectileAttackWithWeight(Transform camTransform, float range, int targetLayer, int bulletCountsInOneShoot, Animator ownerAnimator,
+        Animator weaponAnimator, ParticleSystem muzzleFlashSpawner, bool canSpawnMuzzleFlash, ParticleSystem emptyCartridgeSpawner,
+        bool isMainAction, string weaponName, Transform muzzle, float penetratePower,
+       string trajectoryLineEffect, float spreadOffset, int pelletCount, float bulletSpreadPowerDecreaseRatio,  Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary, WeightApplier weightApplier)
+       : base(camTransform, range, targetLayer, bulletCountsInOneShoot, ownerAnimator, weaponAnimator, muzzleFlashSpawner, canSpawnMuzzleFlash, emptyCartridgeSpawner, 
+           isMainAction, weaponName, muzzle, penetratePower, trajectoryLineEffect, spreadOffset, pelletCount, bulletSpreadPowerDecreaseRatio, damageDictionary)
+    {
+        _weightApplier = weightApplier;
+    }
+
+    public override void Do()
+    {
+        DisplacementWeight += _weightApplier.StoredWeight;
+        base.Do();
+        _weightApplier.MultiplyWeight();
+    }
+
+    public override void OnUpdate()
+    {
+        _weightApplier.OnUpdate();
     }
 }
 
@@ -675,7 +908,8 @@ abstract public class BaseKnifeAttack : ApplyAttack
         hitable.OnHit(damage, hit.point, hit.normal);
     }
 
-    protected abstract void PlayAnimation();
+    protected abstract void PlayWeaponAnimation();
+
     protected void CheckRaycastHit()
     {
         RaycastHit hit;
@@ -701,14 +935,14 @@ abstract public class BaseKnifeAttack : ApplyAttack
         if (canReturnEffectName)
         {
             string effectName = effectable.ReturnHitEffectName(IEffectable.ConditionType.KnifeAttack);
-            SpawnHitEffect(effectName, hit.point, hit.normal);
+            SpawnEffect(effectName, hit.point, hit.normal);
         }
     }
 
-    protected override void SpawnHitEffect(string name, Vector3 hitPosition, Vector3 hitNormal)
+    protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
+        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
 
         bulletHoleEffect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         bulletHoleEffect.PlayEffect();
@@ -736,13 +970,12 @@ abstract public class BaseKnifeAttack : ApplyAttack
         _waitTimer.Start(_waitDuration);
     }
 
-    public override int ReturnFireCountInOneShoot() { return 0; }
-
+    public override void OnMainActionFireEventRequested() { }
 
     public override void Do()
     {
         if (_waitTimer.CanStart() == false) return;
-        PlayAnimation();
+        PlayWeaponAnimation();
     }
 }
 
@@ -780,7 +1013,7 @@ public class RightKnifeAttack : BaseKnifeAttack
         }
     }
 
-    protected override void PlayAnimation() => PlayOwnerAnimation();
+    protected override void PlayWeaponAnimation() => PlayAnimation();
 }
 
 public class LeftKnifeAttack : BaseKnifeAttack
@@ -831,7 +1064,7 @@ public class LeftKnifeAttack : BaseKnifeAttack
         }
     }
 
-    protected override void PlayAnimation()
+    protected override void PlayWeaponAnimation()
     {
         if(_actionIndex == 0 && _attackTime == 0) // 첫 공격의 경우
         {

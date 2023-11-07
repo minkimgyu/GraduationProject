@@ -2,21 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class TrajectoryLineEffect : BaseEffect
 {
     Vector3 _hitPosition;
-    SmoothLerpRoutine runningRoutine;
-
-    private void Awake()
-    {
-        TryGetComponent(out runningRoutine);
-
-        if (runningRoutine == null) return;
-
-        runningRoutine.Initialize();
-        runningRoutine.RoutineAction += MoveTo;
-        runningRoutine.RoutineEnd += DisableObject;
-    }
 
     public override void Initialize(Vector3 hitPosition, Vector3 shootPosition)
     {
@@ -26,12 +15,27 @@ public class TrajectoryLineEffect : BaseEffect
 
     public override void PlayEffect()
     {
-        if (runningRoutine == null) return;
-        runningRoutine.StartRoutine();
+        _timer.Start(_duration);
     }
 
     void MoveTo(float progress)
     {
         transform.position = Vector3.Lerp(transform.position, _hitPosition, progress);
+    }
+
+    protected override void OnUpdate()
+    {
+        _timer.Update();
+
+        if(_timer.IsRunning)
+        {
+            MoveTo(_timer.Ratio);
+            return;
+        }
+
+        if(_timer.IsFinish)
+        {
+            DisableObject();
+        }
     }
 }

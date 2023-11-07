@@ -2,14 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FSM;
+using System;
 
 public class EquipState : IState
 {
     WeaponController _storedWeaponController;
     Timer _timer;
 
+    public Action<float> OnWeaponChangeRequested;
+
     public EquipState(WeaponController weaponController)
     {
+        MovementComponent movementComponent = weaponController.GetComponent<MovementComponent>();
+        OnWeaponChangeRequested = movementComponent.OnWeaponChangeRequested; // 할당
+
         _storedWeaponController = weaponController;
         _timer = new Timer();
     }
@@ -32,6 +38,8 @@ public class EquipState : IState
                 _storedWeaponController.NowEquipedWeapon = _storedWeaponController.WeaponsContainers[_storedWeaponController.WeaponIndex].ReturnWeapon();
                 _storedWeaponController.NowEquipedWeapon.OnEquip();
                 // 장착이 되었을 때만 연결시켜준다.
+
+                OnWeaponChangeRequested?.Invoke(_storedWeaponController.NowEquipedWeapon.SlowDownRatioByWeaponWeight);
             }
             else
             {

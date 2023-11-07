@@ -49,7 +49,7 @@ public class RightActionState : IState
 
         if (Input.GetMouseButtonUp(1))
         {
-            _storedWeaponController.WeaponFSM.RevertToPreviousState();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
         }
     }
 }

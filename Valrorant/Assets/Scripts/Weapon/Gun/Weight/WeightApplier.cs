@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class WeightApplier
 {
+    [SerializeField]
     float storedWeight;
 
     public float StoredWeight { get { return storedWeight; } }

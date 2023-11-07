@@ -3,28 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
+[System.Serializable]
 public class DamageTxtEffect : BaseEffect
 {
-    protected SmoothLerpRoutine runningRoutine;
-
     Vector3 finalPoint;
 
     [SerializeField]
-    float upPoint = 15;
+    float upPoint = 5;
 
+    [SerializeField]
     TMP_Text _text;
-
-    protected virtual void Awake()
-    {
-        _text = GetComponentInChildren<TMP_Text>();
-        TryGetComponent(out runningRoutine);
-
-        if (runningRoutine == null) return;
-
-        runningRoutine.Initialize();
-        runningRoutine.RoutineEnd += DisableObject;
-        runningRoutine.RoutineAction += Ascend;
-    }
 
     public override void Initialize(Vector3 hitPosition, Vector3 hitNormal, Quaternion holeRotation, float damage)
     {
@@ -37,8 +25,23 @@ public class DamageTxtEffect : BaseEffect
 
     public override void PlayEffect()
     {
-        if (runningRoutine == null) return;
-        runningRoutine.StartRoutine();
+        _timer.Start(_duration);
+    }
+
+    protected override void OnUpdate()
+    {
+        _timer.Update();
+
+        if (_timer.IsRunning)
+        {
+            Ascend(_timer.Ratio);
+            return;
+        }
+
+        if (_timer.IsFinish)
+        {
+            DisableObject();
+        }
     }
 
     void Ascend(float progress)

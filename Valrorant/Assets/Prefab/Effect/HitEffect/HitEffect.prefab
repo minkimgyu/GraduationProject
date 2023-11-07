@@ -9450,8 +9450,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7822548912446641590}
-  - component: {fileID: 4450494284935866845}
-  - component: {fileID: 4450494284935866844}
+  - component: {fileID: 4397113408626487220}
   m_Layer: 0
   m_Name: HitEffect
   m_TagString: Untagged
@@ -9475,7 +9474,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4450494284935866845
+--- !u!114 &4397113408626487220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9484,20 +9483,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7822548912446641591}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfb0e8fc0592de74d9d875315575265a, type: 3}
+  m_Script: {fileID: 11500000, guid: 01c6db06e69bc8d4a9ce232f02673a9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &4450494284935866844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7822548912446641591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dea13b8d979b5cb42b81cd7e3b76fc5b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  predelay: 5
-  duration: 3
+  _storedRoutine:
+    _duration: 1
+    _objectBurstEffect: {fileID: 690587509334825667}

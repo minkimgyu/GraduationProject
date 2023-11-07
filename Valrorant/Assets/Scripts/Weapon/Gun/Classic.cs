@@ -19,6 +19,12 @@ public class Classic : NoVariationGun
     float _subActionDelay;
 
     [SerializeField]
+    float _bulletSpreadPowerRatio;
+
+    [SerializeField]
+    float _bulletSpreadPowerDecreaseRatio;
+
+    [SerializeField]
     RecoilRange _mainActionRecoilRange;
 
     [SerializeField]
@@ -37,24 +43,24 @@ public class Classic : NoVariationGun
         { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 22), new DistanceAreaData(30, 50, 18) } },
     };
 
-    public override void Initialize(GameObject player, Transform cam, Animator ownerAnimator)
+    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {
-        base.Initialize(player, cam, ownerAnimator);
+        base.Initialize(player, armMesh, cam, ownerAnimator);
 
         _mainResultStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _attackDamageDictionary, _mainWeightApplier);
+            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _attackDamageDictionary, _mainWeightApplier);
 
-        _subResultStrategy = new ScatterProjectileGunAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _attackDamageDictionary, _subWeightApplier);
+        _subResultStrategy = new ScatterProjectileAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
+            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _subAttackBulletCounts, _bulletSpreadPowerRatio, _attackDamageDictionary, _subWeightApplier);
 
 
         _mainActionStrategy = new ManualAttackAction(_mainActionDelay);
         _subActionStrategy = new ManualAttackAction(_subActionDelay);
 
-        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
-        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange.RecoilRecoverDuration, _mainActionRecoilRange);
+        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange);
+        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange);
 
-        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _animator, _ownerAnimator, OnReloadRequested);
+        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
 
         LinkEvent(player);
     }

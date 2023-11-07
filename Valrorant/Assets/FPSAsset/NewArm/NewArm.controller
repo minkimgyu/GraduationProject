@@ -52,6 +52,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &-8107025497659279022
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SniperMainAction
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: 0d6bfbb3d0296154b9a21f0a9cf8dde3, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &-6460115594443121376
 AnimatorState:
   serializedVersion: 6
@@ -319,7 +345,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sniper_Reload
+  m_Name: SniperReload
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -371,7 +397,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_Idle
+  m_Name: ShotgunIdle
   m_Speed: 0.1
   m_CycleOffset: 0
   m_Transitions: []
@@ -497,7 +523,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_Fire
+  m_Name: ShotgunMainAction
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -575,7 +601,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_AfterReload
+  m_Name: ShotgunAfterReload
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -706,7 +732,7 @@ AnimatorStateMachine:
     m_Position: {x: 830, y: 590, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 9169239369669807023}
-    m_Position: {x: 1130, y: 280, z: 0}
+    m_Position: {x: 1130, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5001792803715455866}
     m_Position: {x: 1130, y: 340, z: 0}
@@ -730,10 +756,10 @@ AnimatorStateMachine:
     m_Position: {x: 1400, y: 450, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8465088534314866373}
-    m_Position: {x: 1400, y: 510, z: 0}
+    m_Position: {x: 1400, y: 580, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1179384952943858499}
-    m_Position: {x: 1400, y: 570, z: 0}
+    m_Position: {x: 1400, y: 640, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 8571787015645048893}
     m_Position: {x: 1670, y: 280, z: 0}
@@ -761,6 +787,12 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 5466446600682246866}
     m_Position: {x: -340, y: 570, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 6359625795837883926}
+    m_Position: {x: 1400, y: 510, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: -8107025497659279022}
+    m_Position: {x: 1130, y: 280, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -830,7 +862,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_Equip
+  m_Name: ShotgunEquip
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -960,7 +992,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sniper_Fire
+  m_Name: SniperSubAction
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1083,6 +1115,32 @@ AnimatorState:
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
   m_TimeParameter: 
+--- !u!1102 &6359625795837883926
+AnimatorState:
+  serializedVersion: 6
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ShotgunSubAction
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_SpeedParameterActive: 0
+  m_MirrorParameterActive: 0
+  m_CycleOffsetParameterActive: 0
+  m_TimeParameterActive: 0
+  m_Motion: {fileID: 7400000, guid: b869c329b1bc2f44b8e499b8d847cdf8, type: 2}
+  m_Tag: 
+  m_SpeedParameter: 
+  m_MirrorParameter: 
+  m_CycleOffsetParameter: 
+  m_TimeParameter: 
 --- !u!1102 &6501333141737130139
 AnimatorState:
   serializedVersion: 6
@@ -1142,7 +1200,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_EndReload
+  m_Name: ShotgunEndReload
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1194,7 +1252,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sniper_Idle
+  m_Name: SniperIdle
   m_Speed: 0.1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1246,7 +1304,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shotgun_FirstReload
+  m_Name: ShotgunFirstReload
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1298,7 +1356,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sniper_Equip
+  m_Name: SniperEquip
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []

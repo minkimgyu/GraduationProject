@@ -75,7 +75,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
         if (canSpawnDamageTxt == false) return;
 
         BaseEffect effect;
-        effect = ObjectPooler.SpawnFromPool<BaseEffect>("DamageTxt");
+        effect = ObjectPooler.SpawnFromPool<IEffectContainer>("DamageTxt").ReturnEffect();
 
         effect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal), damage);
         effect.PlayEffect();

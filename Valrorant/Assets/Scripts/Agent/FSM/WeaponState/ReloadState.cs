@@ -28,6 +28,20 @@ public class ReloadState : IState
             CancelReload();
         }
 
+        bool nowCancelMainAction = _storedWeaponController.NowEquipedWeapon.CancelReloadAndGoToMainAction();
+        if (nowCancelMainAction)
+        {
+            _storedWeaponController.NowEquipedWeapon.ResetReload();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
+        }
+
+        bool nowCancelSubAction = _storedWeaponController.NowEquipedWeapon.CancelReloadAndGoToSubAction();
+        if (nowCancelSubAction)
+        {
+            _storedWeaponController.NowEquipedWeapon.ResetReload();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
+        }
+
         bool canExit = _storedWeaponController.NowEquipedWeapon.IsReloadFinish();
         if (canExit)
         {
