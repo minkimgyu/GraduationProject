@@ -5,51 +5,55 @@ using FSM;
 
 public class IdleState : IState
 {
-    WeaponController _weaponController;
+    WeaponController _storedWeaponController;
 
     public IdleState(WeaponController weaponController)
     {
-        _weaponController = weaponController;
+        _storedWeaponController = weaponController;
+    }
+
+    void GoToEquipStateUsingType(BaseWeapon.Type weaponType)
+    {
+        bool nowContain = _storedWeaponController.CanChangeWeapon(weaponType);
+        if (nowContain == false) return;
+
+        _storedWeaponController.NowEquipedweaponType = weaponType;
+        _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
     }
 
     public void CheckStateChange()
     {
-
         // 이부분은 타입을 보고 장착하도록 변경해준다.
-
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _weaponController.WeaponIndex = 0;
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+            GoToEquipStateUsingType(BaseWeapon.Type.Main);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _weaponController.WeaponIndex = 1;
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+            GoToEquipStateUsingType(BaseWeapon.Type.Sub);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _weaponController.WeaponIndex = 2;
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+            GoToEquipStateUsingType(BaseWeapon.Type.Melee);
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Drop);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Drop);
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && _weaponController.NowEquipedWeapon.CanReload())
+        if (Input.GetKeyDown(KeyCode.R) && _storedWeaponController.NowEquipedWeapon.CanReload())
         {
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
     }
 
@@ -59,9 +63,9 @@ public class IdleState : IState
 
     public void OnStateEnter()
     {
-        if(_weaponController.NowEquipedWeapon.CanAutoReload())
+        if(_storedWeaponController.NowEquipedWeapon.CanAutoReload())
         {
-            _weaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
     }
 
@@ -76,6 +80,10 @@ public class IdleState : IState
     public void OnStateLateUpdate()
     {
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 
     public void OnStateUpdate()
     {

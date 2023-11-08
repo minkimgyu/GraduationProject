@@ -15,6 +15,8 @@ abstract public class BaseVariationGun : Gun
 
     protected virtual void LinkEventWhenZoom(ActionStrategy actionStrategy, RecoilStrategy recoilStrategy) { }
 
+    protected virtual void LinkEventWhenZoom(RecoilStrategy recoilStrategy) { }
+
     protected void ChangeActionStrategy(ActionStrategy actionStrategy)
     {
         if (_mainActionStrategy != null)
@@ -93,7 +95,6 @@ abstract public class AllVariationGun : BaseVariationGun
         LinkActionEvent(false, true); // subAction Link
         _subResultStrategy.OnLink(player); // subResult
         _subRecoilStrategy.OnLink(player); // subRecoil
-        _reloadStrategy.OnLink();
     }
 }
 
@@ -129,11 +130,48 @@ abstract public class ActionAndRecoilVariationGun : BaseVariationGun
         OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
 
         LinkActionEvent(false, true); // subAction
+
+        _mainResultStrategy.OnLink(player);
         _subResultStrategy.OnLink(player); // subResult
 
-        _mainRecoilStrategy.OnLink(player);
         _subRecoilStrategy.OnLink(player);
-        _reloadStrategy.OnLink();
+    }
+}
+
+/// <summary>
+/// 탄 퍼짐, 연사 속도의 변화가 있는 경우
+/// </summary>
+abstract public class RecoilVariationGun : BaseVariationGun
+{
+    protected RecoilStrategy _storedMainRecoilWhenZoomIn;
+    protected RecoilStrategy _storedMainRecoilWhenZoomOut;
+
+    protected override void LinkEventWhenZoom(RecoilStrategy recoilStrategy)
+    {
+        ChangeRecoilStrategy(recoilStrategy);
+    }
+
+    protected override void OnZoomIn()
+    {
+        LinkEventWhenZoom(_storedMainRecoilWhenZoomIn);
+    }
+
+    protected override void OnZoomOut() // --> Initialize에서는 이거 사용
+    {
+        LinkEventWhenZoom(_storedMainRecoilWhenZoomOut);
+    }
+
+    protected override void LinkEvent(GameObject player)
+    {
+        OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
+
+        LinkActionEvent(true, true); // mainAction Link
+        LinkActionEvent(false, true); // subAction
+
+        _mainResultStrategy.OnLink(player);
+        _subResultStrategy.OnLink(player); // subResult
+
+        _subRecoilStrategy.OnLink(player);
     }
 }
 
@@ -149,7 +187,6 @@ abstract public class NoVariationGun : Gun
 
         _mainRecoilStrategy.OnLink(player);
         _subRecoilStrategy.OnLink(player);
-        _reloadStrategy.OnLink();
     }
 }
 
@@ -165,6 +202,5 @@ abstract public class NoVariationWeapon : BaseWeapon
 
         _mainRecoilStrategy.OnLink(player);
         _subRecoilStrategy.OnLink(player);
-        _reloadStrategy.OnLink();
     }
 }

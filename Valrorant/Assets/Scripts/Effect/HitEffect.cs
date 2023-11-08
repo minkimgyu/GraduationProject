@@ -27,6 +27,8 @@ public class HitEffect : BaseEffect
         _timer.Start(_duration);
     }
 
+    protected override void OnCollisionEnterRequested(Collision collision) { }
+
     protected override void OnUpdate()
     {
         _timer.Update();

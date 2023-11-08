@@ -13,10 +13,13 @@ public class WeaponController : MonoBehaviour
     GameObject armMesh;
 
     [SerializeField]
-    GameObject[] _weapons;
+    Transform _weaponParent;
 
-    List<IWeaponContainer> _weaponsContainers = new List<IWeaponContainer>();
-    public List<IWeaponContainer> WeaponsContainers { get { return _weaponsContainers; } }
+    [SerializeField]
+    float _weaponThrowPower = 3;
+
+    Dictionary<BaseWeapon.Type, BaseWeapon> _weaponsContainers = new Dictionary<BaseWeapon.Type, BaseWeapon>();
+    public Dictionary<BaseWeapon.Type, BaseWeapon> WeaponsContainers { get { return _weaponsContainers; } }
 
     BaseWeapon _nowEquipedWeapon = null;
     public BaseWeapon NowEquipedWeapon { get { return _nowEquipedWeapon; } set { _nowEquipedWeapon = value; } }
@@ -24,8 +27,8 @@ public class WeaponController : MonoBehaviour
     [SerializeField]
     Animator _ownerAnimator;
 
-    int _weaponIndex = 0;
-    public int WeaponIndex { get { return _weaponIndex; } set { _weaponIndex = value; } }
+    BaseWeapon.Type _nowEquipedweaponType;
+    public BaseWeapon.Type NowEquipedweaponType { get { return _nowEquipedweaponType; } set { _nowEquipedweaponType = value; } }
 
     public enum WeaponState
     {
@@ -40,16 +43,53 @@ public class WeaponController : MonoBehaviour
     StateMachine<WeaponState> _weaponFSM;
     public StateMachine<WeaponState> WeaponFSM { get { return _weaponFSM; } }
 
-    private void Start()
-    {
-        for (int i = 0; i < _weapons.Length; i++)
-        {
-            _weaponsContainers.Add(_weapons[i].GetComponent<IWeaponContainer>());
+    public Action<float> OnWeaponChangeRequested;
 
-            if(i == 0) _nowEquipedWeapon = _weaponsContainers[i].ReturnWeapon();
-            _weaponsContainers[i].ReturnWeapon().Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
+    public bool CanChangeWeapon(BaseWeapon.Type weaponType)
+    {
+        return _weaponsContainers.ContainsKey(weaponType);
+    }
+
+    void InitializeWeapons()
+    {
+        IWeaponContainer[] containers = _weaponParent.GetComponentsInChildren<IWeaponContainer>();
+        for (int i = 0; i < containers.Length; i++)
+        {
+            BaseWeapon baseWeapon = containers[i].ReturnWeapon();
+            baseWeapon.Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
+
+            _weaponsContainers.Add(baseWeapon.WeaponType, baseWeapon);
         }
 
+        _nowEquipedweaponType = BaseWeapon.Type.Melee;
+    }
+
+    void InitializeEvent()
+    {
+        MovementComponent movementComponent = GetComponent<MovementComponent>();
+        OnWeaponChangeRequested = movementComponent.OnWeaponChangeRequested; // 할당
+    }
+
+    public void AddWeapon(BaseWeapon baseWeapon)
+    {
+        baseWeapon.transform.SetParent(_weaponParent);
+        baseWeapon.PositionWeaponMesh(false);
+
+        baseWeapon.OnRooting(gameObject, _cameraHolder, _ownerAnimator);
+        _weaponsContainers.Add(baseWeapon.WeaponType, baseWeapon);
+
+        if (baseWeapon.WeaponType == _nowEquipedWeapon.WeaponType)
+        {
+            DropWeapon();
+            _nowEquipedWeapon = baseWeapon;
+            _weaponFSM.SetState(WeaponState.Equip);
+        }
+    }
+
+    private void Start()
+    {
+        InitializeEvent();
+        InitializeWeapons();
 
         _weaponFSM = new StateMachine<WeaponState>();
         InitializeFSM();
@@ -97,4 +137,69 @@ public class WeaponController : MonoBehaviour
     {
         _weaponFSM.OnCollisionEnter(collision);
     }
+
+    #region WeaponDrop
+
+    public void DropWeapon()
+    {
+        _nowEquipedWeapon.ThrowGun(_weaponThrowPower);
+        _nowEquipedWeapon.OnDrop(); // 드랍 함수 호출
+        _weaponsContainers.Remove(_nowEquipedweaponType); // 현재 끼고있는 무기를 제거
+
+        _nowEquipedWeapon = null; // 현재 장착하고 있는 무기를 null로 바꿔줌
+    }
+
+    public void ResetWeaponTypeWhenDrop()
+    {
+        if (_nowEquipedweaponType == BaseWeapon.Type.Main)
+        {
+            if(_weaponsContainers.ContainsKey(BaseWeapon.Type.Sub))
+            {
+                _nowEquipedweaponType = BaseWeapon.Type.Sub;
+            }
+            else
+            {
+                _nowEquipedweaponType = BaseWeapon.Type.Melee;
+            }
+        }
+        else if (_nowEquipedweaponType == BaseWeapon.Type.Sub) _nowEquipedweaponType = BaseWeapon.Type.Melee;
+    }
+
+    #endregion
+
+    #region WeaponChange
+
+    public void ChangeWeapon()
+    {
+        BaseWeapon.Type nowType = _nowEquipedweaponType;
+
+        if (_nowEquipedWeapon != null)
+        {
+            _nowEquipedWeapon.OnUnEquip();
+        }
+
+        _nowEquipedWeapon = _weaponsContainers[nowType];
+        _weaponsContainers[nowType].OnEquip();
+
+        ActivateEquipedWeapon();
+
+        OnWeaponChangeRequested?.Invoke(_nowEquipedWeapon.SlowDownRatioByWeaponWeight);
+    }
+
+    void ActivateEquipedWeapon()
+    {
+        foreach (var weapon in _weaponsContainers)
+        {
+            if (weapon.Key == _nowEquipedweaponType)
+            {
+                weapon.Value.gameObject.SetActive(true);
+            }
+            else
+            {
+                weapon.Value.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    #endregion
 }

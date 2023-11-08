@@ -22,8 +22,18 @@ public class DropState : IState
 
     public void OnStateEnter()
     {
-        //_storedPlayer.WeaponHolder.NowEquipedWeapon.OnDrop();
-        _storedWeaponController.WeaponFSM.RevertToPreviousState();
+        if (_storedWeaponController.NowEquipedWeapon.CanDrop())
+        {
+            _storedWeaponController.DropWeapon();
+            // 두번째 무기를 넣어준다.
+
+            _storedWeaponController.ResetWeaponTypeWhenDrop();
+            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+        }
+        else
+        {
+            _storedWeaponController.WeaponFSM.RevertToPreviousState();
+        }
     }
 
     public void OnStateExit()
@@ -37,6 +47,10 @@ public class DropState : IState
     public void OnStateLateUpdate()
     {
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 
     public void OnStateUpdate()
     {

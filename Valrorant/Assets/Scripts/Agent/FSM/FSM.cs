@@ -18,6 +18,10 @@ namespace FSM
 
         void OnStateCollisionEnter(Collision collision);
 
+        void OnStateTriggerEnter(Collider collider);
+
+        void OnStateTriggerExit(Collider collider);
+
         void OnStateExit();
     }
 
@@ -42,6 +46,18 @@ namespace FSM
         {
             if (_currentState == null) return;
             _currentState.OnStateCollisionEnter(collision);
+        }
+
+        public void OnTriggerEnter(Collider collider)
+        {
+            if (_currentState == null) return;
+            _currentState.OnStateTriggerEnter(collider);
+        }
+
+        public void OnTriggerExit(Collider collider)
+        {
+            if (_currentState == null) return;
+            _currentState.OnStateTriggerExit(collider);
         }
 
         public void OnUpdate()

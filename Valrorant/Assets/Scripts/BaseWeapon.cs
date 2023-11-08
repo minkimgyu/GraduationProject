@@ -18,6 +18,7 @@ abstract public class BaseWeapon : BaseRoutine
 
     public enum Type
     {
+       None,
        Main,
        Sub,
        Melee
@@ -87,26 +88,24 @@ abstract public class BaseWeapon : BaseRoutine
         _reloadStrategy.OnUpdate();
     }
 
+    protected override void OnCollisionEnterRequested(Collision collision) { }
+
     protected override void OnDisableGameObject() { }
+
+    public virtual bool CanDrop() { return false; }
+
+    public virtual void ThrowGun(float force) { }
 
     //////////////////////////////////////////////////////////////////////////////////////////// 이벤트 모음
 
-    void LinkRoundShower()
+    void LinkRoundViewer(bool nowLink)
     {
         GameObject gameObject = FindWithTag("BulletLeftShower");
         LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();
         if (_leftRoundShower == null) return;
 
-        OnRoundChangeRequested += _leftRoundShower.OnRoundCountChange;
-    }
-
-    void UnLinkRoundShower()
-    {
-        GameObject gameObject = FindWithTag("BulletLeftShower");
-        LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();
-        if (_leftRoundShower == null) return;
-
-        OnRoundChangeRequested -= _leftRoundShower.OnRoundCountChange;
+        if (nowLink) OnRoundChangeRequested += _leftRoundShower.OnRoundCountChange;
+        else OnRoundChangeRequested -= _leftRoundShower.OnRoundCountChange;
     }
 
     /// <summary>
@@ -120,27 +119,33 @@ abstract public class BaseWeapon : BaseRoutine
         _animator = GetComponent<Animator>();
 
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
-        LinkRoundShower();
+        LinkRoundViewer(true);
     }
 
     /// <summary>
     /// 여기에서 무기 해제 시, 필요 없는 변수나 이벤트를 해제해준다.
     /// </summary>
-    public virtual void OnDrop(GameObject player)
+    public virtual void OnDrop()
     {
+        LinkRoundViewer(false);
+
+        _mainRecoilStrategy.OnUnlink(_player);
+        _mainResultStrategy.TurnOffAim();
+
+        _mainResultStrategy.OnUnLink(_player);
+
+        _subResultStrategy.TurnOffAim();
+
+        _subResultStrategy.OnUnLink(_player);
+        _subResultStrategy.TurnOffAim();
+
+        _subRecoilStrategy.OnUnlink(_player);
+
         _player = null;
         _camTransform = null;
         _ownerAnimator = null;
 
-        UnLinkRoundShower();
-
-        _mainRecoilStrategy.OnUnlink(player);
-        _mainResultStrategy.OnUnLink(player);
-
-        _subRecoilStrategy.OnUnlink(player);
-        _subResultStrategy.OnUnLink(player);
-
-        _reloadStrategy.OnUnlink();
+        transform.SetParent(null);
     }
 
     /// <summary>
@@ -152,16 +157,16 @@ abstract public class BaseWeapon : BaseRoutine
         _camTransform = cam;
         _ownerAnimator = ownerAnimator;
 
-        LinkRoundShower();
+        LinkRoundViewer(true);
 
         _mainRecoilStrategy.OnLink(player);
-        _mainResultStrategy.OnUnLink(player);
+        _mainResultStrategy.OnLink(player);
 
         _subRecoilStrategy.OnLink(player);
-        _subResultStrategy.OnUnLink(player);
-
-        _reloadStrategy.OnLink();
+        _subResultStrategy.OnLink(player);
     }
+
+    public virtual void PositionWeaponMesh(bool nowDrop) { }
 
     /// 장착, 해제 이벤트
     ////////////////////////////////////////////////////////////////////////////////////

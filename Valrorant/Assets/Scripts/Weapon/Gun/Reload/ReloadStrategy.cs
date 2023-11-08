@@ -29,11 +29,11 @@ abstract public class ReloadStrategy
     /// </summary>
     public abstract void OnResetReload();
 
-    public abstract void OnUnlink();
+    //public abstract void OnUnlink();
 
-    public abstract void OnLink();
+    //public abstract void OnLink();
 
-    public abstract void OnInintialize();
+    //public abstract void OnInintialize();
 }
 
 public class NoReload : ReloadStrategy
@@ -51,40 +51,31 @@ public class NoReload : ReloadStrategy
     public override bool IsReloadFinish() { return false; }
   
     public override void OnResetReload() { }
-
-    public override void OnUnlink() { }
-
-    public override void OnLink() { }
-
-    public override void OnInintialize() { }
 }
 
-// ÅºÃ¢À¸·Î ÀåÀüÇÏ´Â °æ¿ì
-public class MagazineReload : ReloadStrategy
+abstract public class BaseReload : ReloadStrategy
 {
-    Timer _reloadTimer;
-    float _reloadDuration;
+    protected Timer _reloadTimer;
 
-    Timer _reloadExitTimer;
-    float _reloadExitDuration;
+    protected Timer _reloadExitTimer;
+    protected float _reloadExitDuration;
 
-    int _ammoCountInMagazine;
-    int _maxAmmoCountInMagazine;
-    int _ammoCountsInPossession;
+    protected int _ammoCountInMagazine;
+    protected int _maxAmmoCountInMagazine;
+    protected int _ammoCountsInPossession;
 
-    string _weaponName;
-    Animator _weaponAnimator;
-    Animator _ownerAnimator;
+    protected string _weaponName;
+    protected Animator _weaponAnimator;
+    protected Animator _ownerAnimator;
 
-    Action<int, int> OnReloadRequested;
+    protected Action<int, int> OnReloadRequested;
 
-    public MagazineReload(float reloadDuration, float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
+    public BaseReload(float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
         Animator weaponAnimator, Animator ownerAnimator, Action<int, int> onReloadRequested)
     {
         _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
 
         _reloadTimer = new Timer();
-        _reloadDuration = reloadDuration;
 
         _reloadExitTimer = new Timer();
         _reloadExitDuration = reloadExitDuration;
@@ -100,6 +91,19 @@ public class MagazineReload : ReloadStrategy
     public override bool IsReloadFinish()
     {
         return _reloadExitTimer.IsFinish;
+    }
+}
+
+    // ÅºÃ¢À¸·Î ÀåÀüÇÏ´Â °æ¿ì
+public class MagazineReload : BaseReload
+{
+    protected float _reloadDuration;
+
+    public MagazineReload(float reloadDuration, float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
+        Animator weaponAnimator, Animator ownerAnimator, Action<int, int> onReloadRequested) 
+        : base(reloadExitDuration, weaponName, maxAmmoCountInMagazine, weaponAnimator, ownerAnimator, onReloadRequested)
+    {
+        _reloadDuration = reloadDuration;
     }
 
     public override bool CancelReloadAndGoToMainAction() { return false; }
@@ -151,72 +155,27 @@ public class MagazineReload : ReloadStrategy
 
         OnReloadRequested?.Invoke(_ammoCountInMagazine, _ammoCountsInPossession);
     }
-
-    // È¹µæÇÏ¸é ¿¬°á½ÃÄÑÁÖ°í ÇØÁ¦ÇÏ¸é ¿¬°áÀ» ²÷¾îÁÜ
-    public override void OnUnlink()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested -= _leftRoundShower.OnBulletCountChange;
-    }
-
-    public override void OnLink()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested += _leftRoundShower.OnBulletCountChange;
-    }
-
-    public override void OnInintialize()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested += _leftRoundShower.OnBulletCountChange;
-    }
 }
 
 //// ÇÑ ¹ß¾¿ ÀåÀüÇÏ´Â °æ¿ì
-public class RoundByRoundReload : ReloadStrategy
+public class RoundByRoundReload : BaseReload
 {
     Timer _reloadBeforeTimer;
     float _reloadBeforeDuration;
 
-    Timer _reloadTimer;
     float _reloadDurationPerRound;
-
-    Timer _reloadExitTimer;
-    float _reloadExitDuration;
-
-    int _ammoCountInMagazine;
-    int _maxAmmoCountInMagazine;
-    int _ammoCountsInPossession;
-
-    string _weaponName;
-    Animator _weaponAnimator;
-    Animator _ownerAnimator;
-
-    Action<int, int> OnReloadRequested;
-
     float _storedReloadRatio;
     float _reloadRatio;
 
     public RoundByRoundReload(float reloadBeforeDuration, float reloadDurationPerRound, float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,
         Animator weaponAnimator, Animator ownerAnimator, Action<int, int> onReloadRequested)
+        : base(reloadExitDuration, weaponName, maxAmmoCountInMagazine, weaponAnimator, ownerAnimator, onReloadRequested)
     {
-        _maxAmmoCountInMagazine = maxAmmoCountInMagazine;
-
         _reloadBeforeDuration = reloadBeforeDuration;
         _reloadBeforeTimer = new Timer();
 
         _reloadTimer = new Timer();
         _reloadDurationPerRound = reloadDurationPerRound;
-
-        _reloadExitTimer = new Timer();
-        _reloadExitDuration = reloadExitDuration;
-
-        _weaponName = weaponName;
-
-        _weaponAnimator = weaponAnimator;
-        _ownerAnimator = ownerAnimator;
-
-        OnReloadRequested = onReloadRequested;
 
         _storedReloadRatio = 0;
     }
@@ -307,24 +266,5 @@ public class RoundByRoundReload : ReloadStrategy
         _ammoCountInMagazine += 1;
 
         OnReloadRequested?.Invoke(_ammoCountInMagazine, _ammoCountsInPossession);
-    }
-
-    // È¹µæÇÏ¸é ¿¬°á½ÃÄÑÁÖ°í ÇØÁ¦ÇÏ¸é ¿¬°áÀ» ²÷¾îÁÜ
-    public override void OnUnlink()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnReloadRequested -= _leftRoundShower.OnRoundCountChange;
-    }
-
-    public override void OnLink()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested += _leftRoundShower.OnBulletCountChange;
-    }
-
-    public override void OnInintialize()
-    {
-        //LeftRoundShower _leftRoundShower = GameObject.FindWithTag("BulletLeftShower").GetComponent<LeftRoundShower>();
-        //OnRoundChangeRequested += _leftRoundShower.OnBulletCountChange;
     }
 }

@@ -5,48 +5,39 @@ using FSM;
 
 public class ActionState : IState
 {
-    PlayerController _storedPlayer;
+    InteractionController _storedInteractionController;
 
-    public ActionState(PlayerController player)
+    WeaponController _weaponController;
+
+    public ActionState(InteractionController interactionController)
     {
-        _storedPlayer = player;
+        _storedInteractionController = interactionController;
+
+        _weaponController = interactionController.GetComponentInParent<WeaponController>();
     }
 
-    public void CheckStateChange()
+    public void CheckStateChange() { }
+
+    public void OnStateUpdate() { }
+
+    public void OnStateEnter() 
     {
-        bool canInteract = _storedPlayer.InteractionComponent.CanInteract();
-        if (canInteract == false) _storedPlayer.InteractionFSM.SetState(PlayerController.InteractionState.Ready);
+        _storedInteractionController.InteractableTarget.OnSightExit();
+        _storedInteractionController.InteractableTarget.OnInteract(_weaponController);
+
+        _storedInteractionController.InteractableTarget = null;
+        _storedInteractionController.InteractionFSM.RevertToPreviousState();
     }
 
-    public void OnStateUpdate()
-    {
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            _storedPlayer.InteractionComponent.InteractableTarget.OnInteract();
-        }
-    }
+    public void OnStateExit() { }
 
-    public void OnStateEnter()
-    {
-        _storedPlayer.InteractionComponent.InteractableTarget.OnSightEnter();
-        Debug.Log("OnSightEnter");
-    }
+    public void OnStateFixedUpdate() { }
 
-    public void OnStateExit()
-    {
-        _storedPlayer.InteractionComponent.InteractableTarget.OnSightExit();
-        Debug.Log("OnSightExit");
-    }
+    public void OnStateLateUpdate() { }
 
-    public void OnStateFixedUpdate()
-    {
-    }
+    public void OnStateCollisionEnter(Collision collision) { }
 
-    public void OnStateLateUpdate()
-    {
-    }
+    public void OnStateTriggerEnter(Collider collider) { }
 
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
+    public void OnStateTriggerExit(Collider collider) { }
 }

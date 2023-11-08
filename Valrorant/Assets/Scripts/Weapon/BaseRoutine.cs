@@ -8,11 +8,6 @@ abstract public class BaseRoutine
     public GameObject gameObject { get { return _iRoutine.ReturnGameObject(); } }
     public Transform transform { get { return _iRoutine.ReturnTransform(); } }
 
-    public Coroutine StartCoroutine(IEnumerator enumerator)
-    {
-        return _iRoutine.StartCoroutineInRoutineClass(enumerator);
-    }
-
     public T GetComponent<T>()
     {
         return _iRoutine.GetComponentInRoutineClass<T>();
@@ -32,10 +27,13 @@ abstract public class BaseRoutine
 
     protected abstract void OnDisableGameObject();
 
+    protected abstract void OnCollisionEnterRequested(Collision collision);
+
     public void SetUp(IRoutine iRoutine)
     {
         _iRoutine = iRoutine;
         _iRoutine.OnUpdate = OnUpdate;
         _iRoutine.OnDisableGameObject = OnDisableGameObject;
+        _iRoutine.OnCollisionEnterRequested = OnCollisionEnterRequested;
     }
 }

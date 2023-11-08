@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-abstract public class Gun : BaseWeapon //, IInteractable
+abstract public class Gun : BaseWeapon, IInteractable
 {
     [SerializeField]
     protected ParticleSystem _muzzleFlash;
@@ -34,6 +34,17 @@ abstract public class Gun : BaseWeapon //, IInteractable
 
     [SerializeField]
     protected float _reloadExitTime;
+
+    [SerializeField]
+    Transform _objectMesh;
+
+    BoxCollider _gunCollider;
+    Rigidbody _gunRigidbody;
+    bool _nowAttachToGround;
+
+    public Action<bool, string, Vector3> OnViewEventRequest;
+
+    public override bool CanDrop() { return true; }
 
     /// AutoReload 이벤트
     ////////////////////////////////////////////////////////////////////////////////////
@@ -69,9 +80,45 @@ abstract public class Gun : BaseWeapon //, IInteractable
     }
 
     ////////////////////////////////////////////////////////////////////////////////////
+
+    public override void ThrowGun(float force)
+    {
+        PositionWeaponMesh(true);
+        _gunRigidbody.AddForce(_camTransform.forward * force, ForceMode.Impulse);
+    }
+
+    public override void PositionWeaponMesh(bool nowDrop)
+    {
+        if(nowDrop)
+        {
+            _gunCollider.enabled = true;
+            _gunRigidbody.isKinematic = false;
+        }
+        else
+        {
+            _nowAttachToGround = false;
+            _gunCollider.enabled = false;
+            _gunRigidbody.isKinematic = true;
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            gameObject.SetActive(false);
+        }
+    }
+
+
     public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {
         base.Initialize(player, armMesh, cam, ownerAnimator);
+
+        WeaponInfoViwer weaponInfoViwer = GameObject.FindWithTag("WeaponInfoViewer").GetComponent<WeaponInfoViwer>();
+        OnViewEventRequest = weaponInfoViwer.OnViewEventReceived; // 드랍 시 해제 필요
+
+        _gunCollider = GetComponent<BoxCollider>();
+        _gunRigidbody = GetComponent<Rigidbody>();
+
+        _gunCollider.enabled = false;
+        _gunRigidbody.isKinematic = true;
+
         _ammoCountsInMagazine = _maxAmmoCountInMagazine;
     }
 
@@ -83,7 +130,7 @@ abstract public class Gun : BaseWeapon //, IInteractable
         _ammoCountsInMagazine = _mainResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
         OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
 
-        _subResultStrategy.OnMainActionFireEventRequested(); // 발사 후 줌 해제 적용
+        _subResultStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
     }
 
     protected override void OnSubActionEventCallRequsted()
@@ -93,6 +140,8 @@ abstract public class Gun : BaseWeapon //, IInteractable
         base.OnSubActionEventCallRequsted();
         _ammoCountsInMagazine = _subResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
         OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+
+        _mainResultStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
     }
 
     public override void OnEquip()
@@ -110,4 +159,26 @@ abstract public class Gun : BaseWeapon //, IInteractable
     protected virtual void OnZoomIn() { }
 
     protected virtual void OnZoomOut() { }
+
+    public void OnInteract(WeaponController weaponController)
+    {
+        weaponController.AddWeapon(this);
+    }
+
+    public void OnSightEnter()
+    {
+        OnViewEventRequest(true, _weaponName.ToString(), _objectMesh.position);
+    }
+
+    public void OnSightExit()
+    {
+        OnViewEventRequest(false, _weaponName.ToString(), _objectMesh.position);
+    }
+
+    protected override void OnCollisionEnterRequested(Collision collision)
+    {
+        _nowAttachToGround = true; // 어디든 부딫히면 그때부터 Interaction 적용
+    }
+
+    public bool IsInteractable() { return _nowAttachToGround; }
 }

@@ -38,6 +38,10 @@ public class LeftActionState : IState
     {
     }
 
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
+
     public void OnStateUpdate()
     {
         _storedWeaponController.NowEquipedWeapon.OnLeftClickProgress();

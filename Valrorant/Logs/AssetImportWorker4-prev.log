@@ -1,0 +1,764 @@
+Using pre-set license
+Built from '2021.3/staging' branch; Version is '2021.3.18f1 (3129e69bc0c7) revision 3221990'; Using compiler version '192829333'; Build Type 'Release'
+OS: 'Windows 10  (10.0.19045) 64bit Core' Language: 'ko' Physical Memory: 32555 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 1
+
+COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.3.18f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker4
+-projectPath
+C:/Users/meal/Documents/GitHub/GraduationProject/Valrorant
+-logFile
+Logs/AssetImportWorker4.log
+-srvPort
+64076
+Successfully changed project path to: C:/Users/meal/Documents/GitHub/GraduationProject/Valrorant
+C:/Users/meal/Documents/GitHub/GraduationProject/Valrorant
+[UnityMemory] Configuration Parameters - Can be set up in boot.config
+    "memorysetup-bucket-allocator-granularity=16"
+    "memorysetup-bucket-allocator-bucket-count=8"
+    "memorysetup-bucket-allocator-block-size=33554432"
+    "memorysetup-bucket-allocator-block-count=8"
+    "memorysetup-main-allocator-block-size=16777216"
+    "memorysetup-thread-allocator-block-size=16777216"
+    "memorysetup-gfx-main-allocator-block-size=16777216"
+    "memorysetup-gfx-thread-allocator-block-size=16777216"
+    "memorysetup-cache-allocator-block-size=4194304"
+    "memorysetup-typetree-allocator-block-size=2097152"
+    "memorysetup-profiler-bucket-allocator-granularity=16"
+    "memorysetup-profiler-bucket-allocator-bucket-count=8"
+    "memorysetup-profiler-bucket-allocator-block-size=33554432"
+    "memorysetup-profiler-bucket-allocator-block-count=8"
+    "memorysetup-profiler-allocator-block-size=16777216"
+    "memorysetup-profiler-editor-allocator-block-size=1048576"
+    "memorysetup-temp-allocator-size-main=16777216"
+    "memorysetup-job-temp-allocator-block-size=2097152"
+    "memorysetup-job-temp-allocator-block-size-background=1048576"
+    "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
+    "memorysetup-temp-allocator-size-background-worker=32768"
+    "memorysetup-temp-allocator-size-job-worker=262144"
+    "memorysetup-temp-allocator-size-preload-manager=33554432"
+    "memorysetup-temp-allocator-size-nav-mesh-worker=65536"
+    "memorysetup-temp-allocator-size-audio-worker=65536"
+    "memorysetup-temp-allocator-size-cloud-worker=32768"
+    "memorysetup-temp-allocator-size-gi-baking-worker=262144"
+    "memorysetup-temp-allocator-size-gfx=262144"
+Player connection [35108] Host "[IP] 192.168.0.2 [Port] 0 [Flags] 2 [Guid] 3885946849 [EditorId] 3885946849 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-G3SH0GC) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined multi-casting on [225.0.0.222:54997]...
+
+Player connection [35108] Host "[IP] 192.168.0.2 [Port] 0 [Flags] 2 [Guid] 3885946849 [EditorId] 3885946849 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-G3SH0GC) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" joined alternative multi-casting on [225.0.0.222:34997]...
+
+Refreshing native plugins compatible for Editor in 87.82 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.3.18f1 (3129e69bc0c7)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path C:/Users/meal/Documents/GitHub/GraduationProject/Valrorant/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce RTX 3070 (ID=0x2488)
+    Vendor:   NVIDIA
+    VRAM:     8031 MB
+    Driver:   31.0.15.3623
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56512
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.dll
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.3.18f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.007389 seconds.
+Native extension for WindowsStandalone target not found
+[usbmuxd] Start listen thread
+[usbmuxd] Listen thread started
+Native extension for iOS target not found
+Native extension for Android target not found
+Android Extension - Scanning For ADB Devices 234 ms
+Refreshing native plugins compatible for Editor in 79.34 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.855 seconds
+Domain Reload Profiling:
+	ReloadAssembly (855ms)
+		BeginReloadAssembly (62ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (0ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (0ms)
+		EndReloadAssembly (689ms)
+			LoadAssemblies (62ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (99ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (29ms)
+			SetupLoadedEditorAssemblies (511ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (303ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (79ms)
+				BeforeProcessingInitializeOnLoad (1ms)
+				ProcessInitializeOnLoadAttributes (85ms)
+				ProcessInitializeOnLoadMethodAttributes (42ms)
+				AfterProcessingInitializeOnLoad (0ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (0ms)
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.004515 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.63 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.919 seconds
+Domain Reload Profiling:
+	ReloadAssembly (919ms)
+		BeginReloadAssembly (90ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (6ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (18ms)
+		EndReloadAssembly (728ms)
+			LoadAssemblies (60ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (236ms)
+			ReleaseScriptCaches (0ms)
+			RebuildScriptCaches (53ms)
+			SetupLoadedEditorAssemblies (331ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (25ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (80ms)
+				ProcessInitializeOnLoadAttributes (200ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (6ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
+Refreshing native plugins compatible for Editor in 0.38 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3175 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 22 unused Assets / (56.9 KB). Loaded Objects now: 3645.
+Memory consumption went from 119.8 MB to 119.7 MB.
+Total: 1.658300 ms (FindLiveObjects: 0.153200 ms CreateObjectMapping: 0.044000 ms MarkObjects: 1.410500 ms  DeleteObjects: 0.049900 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 508579.421176 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ae6a1e966dbe3cdca0ab01a10d5961f3') in 0.212104 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 9.298316 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '369489a0f183a2cf1324661abd1c6ace') in 0.081364 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 8.134021 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/LMG.prefab
+  artifactKey: Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/LMG.prefab using Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'ee240ebe1929b0adfc6823ae0f400ec6') in 0.136286 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 23.833011 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '24a0501521d33310192f1b724add129d') in 0.057107 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 6.012490 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Shotgun.prefab
+  artifactKey: Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Shotgun.prefab using Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9a7d0d2d10a393671430b971ea7a615f') in 0.062652 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.263306 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/SMG.prefab
+  artifactKey: Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/SMG.prefab using Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'dc716fbc49c922315f78a91ac637289d') in 0.119883 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.789802 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Sniper.prefab
+  artifactKey: Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Sniper.prefab using Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9b77e523a6f86d15cd5a382b1a0edad9') in 0.061492 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004205 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.66 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.867 seconds
+Domain Reload Profiling:
+	ReloadAssembly (867ms)
+		BeginReloadAssembly (112ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (34ms)
+		EndReloadAssembly (659ms)
+			LoadAssemblies (61ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (228ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (41ms)
+			SetupLoadedEditorAssemblies (281ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (31ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (60ms)
+				ProcessInitializeOnLoadAttributes (166ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (7ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.62 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 15 unused Assets / (24.7 KB). Loaded Objects now: 3656.
+Memory consumption went from 121.7 MB to 121.7 MB.
+Total: 2.249300 ms (FindLiveObjects: 0.213300 ms CreateObjectMapping: 0.069100 ms MarkObjects: 1.953800 ms  DeleteObjects: 0.012100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004149 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.67 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.913 seconds
+Domain Reload Profiling:
+	ReloadAssembly (913ms)
+		BeginReloadAssembly (128ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (35ms)
+		EndReloadAssembly (694ms)
+			LoadAssemblies (75ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (249ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (42ms)
+			SetupLoadedEditorAssemblies (291ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (32ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (63ms)
+				ProcessInitializeOnLoadAttributes (172ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (6ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.59 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 15 unused Assets / (24.6 KB). Loaded Objects now: 3659.
+Memory consumption went from 121.7 MB to 121.7 MB.
+Total: 2.319100 ms (FindLiveObjects: 0.213600 ms CreateObjectMapping: 0.065600 ms MarkObjects: 2.026100 ms  DeleteObjects: 0.013100 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 152.018486 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '24a0501521d33310192f1b724add129d') in 0.123527 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Shotgun.prefab
+  artifactKey: Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Shotgun.prefab using Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'a62eec74ba7713e1b5f126dc9a3b01bd') in 0.068688 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Sniper.prefab
+  artifactKey: Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Sniper.prefab using Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '8d309e967954f0fe6596b8e1665de0e2') in 0.078821 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000021 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/SMG.prefab
+  artifactKey: Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/SMG.prefab using Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd6d03ea5a1c4581337be511fed6836de') in 0.133994 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.114142 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bcfb456ab9731fe53470ee95f84fc352') in 0.080006 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.005654 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.63 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.920 seconds
+Domain Reload Profiling:
+	ReloadAssembly (921ms)
+		BeginReloadAssembly (130ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (36ms)
+		EndReloadAssembly (698ms)
+			LoadAssemblies (84ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (244ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (41ms)
+			SetupLoadedEditorAssemblies (288ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (33ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (62ms)
+				ProcessInitializeOnLoadAttributes (167ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (7ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (5ms)
+Platform modules already initialized, skipping
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.63 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 15 unused Assets / (24.6 KB). Loaded Objects now: 3662.
+Memory consumption went from 121.8 MB to 121.7 MB.
+Total: 2.415900 ms (FindLiveObjects: 0.216900 ms CreateObjectMapping: 0.069300 ms MarkObjects: 2.113300 ms  DeleteObjects: 0.015500 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 3.891703 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'bcfb456ab9731fe53470ee95f84fc352') in 0.164464 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AR.prefab
+  artifactKey: Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AR.prefab using Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c6297757ab76536e3823ba010d880c8f') in 0.113299 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.123522 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b65e251f40aaed22230d62188cf315cb') in 0.082440 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.005951 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.50 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.913 seconds
+Domain Reload Profiling:
+	ReloadAssembly (914ms)
+		BeginReloadAssembly (135ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (5ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (36ms)
+		EndReloadAssembly (685ms)
+			LoadAssemblies (86ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (232ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (42ms)
+			SetupLoadedEditorAssemblies (294ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (33ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (64ms)
+				ProcessInitializeOnLoadAttributes (172ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (8ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.66 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 15 unused Assets / (24.7 KB). Loaded Objects now: 3665.
+Memory consumption went from 121.8 MB to 121.8 MB.
+Total: 2.347300 ms (FindLiveObjects: 0.214300 ms CreateObjectMapping: 0.070700 ms MarkObjects: 2.049500 ms  DeleteObjects: 0.012200 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 14.541451 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '1db322ff954e0eab6365b7dd8c1f0d05') in 0.151641 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.492788 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'fa4f7712ee061861b3dfbfae7231428a') in 0.079606 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.581153 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AR.prefab
+  artifactKey: Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AR.prefab using Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6cee326c723441c8b998e6622a4fd9a0') in 0.111218 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.370918 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e7db68c9d3ea5fed883811954b171af5') in 0.060271 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.603142 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Shotgun.prefab
+  artifactKey: Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Shotgun.prefab using Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd4bded01fddb6c3e874a1e6b4c9c361d') in 0.064590 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.141858 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/SMG.prefab
+  artifactKey: Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/SMG.prefab using Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd0033dc687ac92fe5fc982c468f0a749') in 0.121427 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.540309 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Sniper.prefab
+  artifactKey: Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Sniper.prefab using Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'f76cce1e43ec21c11488af058f762e27') in 0.062318 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004840 seconds.
+Begin MonoManager ReloadAssembly
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll
+Symbol file LoadedFromMemory doesn't match image C:\Users\meal\Documents\GitHub\GraduationProject\Valrorant\Library\PackageCache\com.unity.visualscripting@1.8.0\Editor\VisualScripting.Core\Dependencies\DotNetZip\Unity.VisualScripting.IonicZip.dll
+Native extension for WindowsStandalone target not found
+Native extension for iOS target not found
+Native extension for Android target not found
+Refreshing native plugins compatible for Editor in 0.64 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  0.912 seconds
+Domain Reload Profiling:
+	ReloadAssembly (913ms)
+		BeginReloadAssembly (129ms)
+			ExecutionOrderSort (0ms)
+			DisableScriptedObjects (4ms)
+			BackupInstance (0ms)
+			ReleaseScriptingObjects (0ms)
+			CreateAndSetChildDomain (36ms)
+		EndReloadAssembly (688ms)
+			LoadAssemblies (77ms)
+			RebuildTransferFunctionScriptingTraits (0ms)
+			SetupTypeCache (235ms)
+			ReleaseScriptCaches (1ms)
+			RebuildScriptCaches (41ms)
+			SetupLoadedEditorAssemblies (297ms)
+				LogAssemblyErrors (0ms)
+				InitializePlatformSupportModulesInManaged (32ms)
+				SetLoadedEditorAssemblies (0ms)
+				RefreshPlugins (1ms)
+				BeforeProcessingInitializeOnLoad (62ms)
+				ProcessInitializeOnLoadAttributes (178ms)
+				ProcessInitializeOnLoadMethodAttributes (17ms)
+				AfterProcessingInitializeOnLoad (6ms)
+				EditorAssembliesLoaded (0ms)
+			ExecutionOrderSort2 (0ms)
+			AwakeInstancesAfterBackupRestoration (6ms)
+Platform modules already initialized, skipping
+Failed to load shader (instanceID 396, GUID 9c442dc870b456e48b615cd8add0e9ef)
+Failed to load shader (instanceID 398, GUID 493b79ea9c9be44ed8b702014d3ac49c)
+Shader 'WFX/Transparent Specular': fallback shader 'Particles/Alpha Blended' not found
+Shader 'WFX/Transparent Diffuse': fallback shader 'Particles/Alpha Blended' not found
+Refreshing native plugins compatible for Editor in 1.69 ms, found 3 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3146 Unused Serialized files (Serialized files now loaded: 0)
+Unloading 15 unused Assets / (24.6 KB). Loaded Objects now: 3668.
+Memory consumption went from 121.8 MB to 121.8 MB.
+Total: 2.487200 ms (FindLiveObjects: 0.223400 ms CreateObjectMapping: 0.068300 ms MarkObjects: 2.178700 ms  DeleteObjects: 0.016000 ms)
+
+AssetImportParameters requested are different than current active one (requested -> active):
+  custom:video-decoder-ogg-theora: a1e56fd34408186e4bbccfd4996cb3dc -> 
+  custom:container-muxer-webm: aa71ff27fc2769a1b78a27578f13a17b -> 
+  custom:container-demuxer-webm: 4f35f7cbe854078d1ac9338744f61a02 -> 
+  custom:video-encoder-webm-vp8: eb34c28f22e8b96e1ab97ce403110664 -> 
+  custom:audio-encoder-webm-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+  custom:framework-win-MediaFoundation: 216162199b28c13a410421893ffa2e32 -> 
+  custom:container-demuxer-ogg: 62fdf1f143b41e24485cea50d1cbac27 -> 
+  custom:video-decoder-webm-vp8: 9c59270c3fd7afecdb556c50c9e8de78 -> 
+  custom:audio-decoder-ogg-vorbis: bf7c407c2cedff20999df2af8eb42d56 -> 
+========================================================================
+Received Import Request.
+  Time since last request: 88.960282 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Knife.prefab
+  artifactKey: Guid(260a0ead817a04f44b780ecc3c7f2f80) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Knife.prefab using Guid(260a0ead817a04f44b780ecc3c7f2f80) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '4eadb2ca7b13ac451137a11b213f6674') in 0.102183 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6174b8ebe63ece4494d6de910f5f240c') in 0.055844 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AR.prefab
+  artifactKey: Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AR.prefab using Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e02338cda0995b9a4e4c25d0619d3853') in 0.120712 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 0.000018 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/LMG.prefab
+  artifactKey: Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/LMG.prefab using Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '84ba7e213b24cbf23246143116eb292a') in 0.137492 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 30.666479 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '2243fec597212301a933a146f5db2dbd') in 0.081750 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 7.224677 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AR.prefab
+  artifactKey: Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AR.prefab using Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '985fbc4726a2b5d157b4e1168477095c') in 0.107194 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.904370 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AR.prefab
+  artifactKey: Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AR.prefab using Guid(7f0ebac9168699944ac7b3831372691c) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e2527ee35dbd9ef08ef17646549b03da') in 0.113141 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.262182 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/AK.prefab
+  artifactKey: Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/AK.prefab using Guid(014dabf83e278a44a97f65e223185702) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b9f86f002179ab356ab27b5de1c0feec') in 0.079287 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.562953 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/LMG.prefab
+  artifactKey: Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/LMG.prefab using Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c77a8e5e53a77aa9ef13cde7db5dd4b7') in 0.135827 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.671103 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/LMG.prefab
+  artifactKey: Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/LMG.prefab using Guid(b2977e4815ad3314abd3ec374ed6a836) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '6a4e499f3dad7e1830623a096927307a') in 0.134818 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.807348 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e5248485529f284b2f5f0a03ae1ee91e') in 0.049672 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.957660 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Pistol.prefab
+  artifactKey: Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Pistol.prefab using Guid(b522f35763fd1f24eaf053ddfd70f956) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '47e85a467c5bb917b37f65a75720d9b2') in 0.051769 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.235319 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Shotgun.prefab
+  artifactKey: Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Shotgun.prefab using Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'd1d1e33615f3e9bf45873cf812fb950d') in 0.063110 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.953969 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Shotgun.prefab
+  artifactKey: Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Shotgun.prefab using Guid(ba28cead8b2e9ef469ba2b0a7016746a) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '63398f17fbba05137f85ddbb7a33bf7f') in 0.061802 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 2.975626 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/SMG.prefab
+  artifactKey: Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/SMG.prefab using Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c7a5e2554ddcfa270139eb099950c43f') in 0.120173 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 1.297088 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/SMG.prefab
+  artifactKey: Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/SMG.prefab using Guid(b4f7ec413e521ac48b997da9e845ef11) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e76cd5309bba40bebf21ea94d659d681') in 0.120968 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.977868 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Sniper.prefab
+  artifactKey: Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Sniper.prefab using Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'b4d4289f9ba0db7adfa04542e7fc707e') in 0.060407 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 3.375360 seconds.
+  path: Assets/FPSAsset/OnlyWeapon/Sniper.prefab
+  artifactKey: Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/FPSAsset/OnlyWeapon/Sniper.prefab using Guid(1b0733e6d2151a242a0e92eaee4b9de7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9ddb07a0d2a67c2c1ab5694cc898a0e0') in 0.059014 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 253.571548 seconds.
+  path: Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
+  artifactKey: Guid(8f586378b4e144a9851e7b34d9b748ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset using Guid(8f586378b4e144a9851e7b34d9b748ee) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '9f775a9cf19f3a65f75d5c2084be8c62') in 0.070067 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 279.422429 seconds.
+  path: Assets/Font
+  artifactKey: Guid(d76e547c241354745a853f8b66cfd84e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font using Guid(d76e547c241354745a853f8b66cfd84e) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '7118ea7946adf5636a1576567b8745a4') in 0.006817 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 4.334089 seconds.
+  path: Assets/Font/NotoSansKR-Medium.ttf
+  artifactKey: Guid(a7c85cb48bdbc8b42863b93406251091) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font/NotoSansKR-Medium.ttf using Guid(a7c85cb48bdbc8b42863b93406251091) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '89c9e52792192cd9da085add4f7dd42a') in 0.031932 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 132.552281 seconds.
+  path: Assets/Font/NotoSansKR-Medium SDF.asset
+  artifactKey: Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font/NotoSansKR-Medium SDF.asset using Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'cbd97f117f6090a2d2417aebff417d05') in 0.320094 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 55.012546 seconds.
+  path: Assets/Font/NotoSansKR-Medium SDF.asset
+  artifactKey: Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font/NotoSansKR-Medium SDF.asset using Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'e200dd7e23fc3803b3448359b63004a4') in 0.307456 seconds 
+========================================================================
+Received Import Request.
+  Time since last request: 37.024566 seconds.
+  path: Assets/Font/NotoSansKR-Medium SDF.asset
+  artifactKey: Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Font/NotoSansKR-Medium SDF.asset using Guid(07df977d99164114997bc1a3e8488b8f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: '41c6dbfb4f1b5530d39fdef1892e925a') in 0.307687 seconds 

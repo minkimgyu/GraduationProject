@@ -61,4 +61,8 @@ public class CreepState : IState
             storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Jump);
         }
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 }

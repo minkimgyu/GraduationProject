@@ -14,17 +14,17 @@ public class ReloadState : IState
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            _storedWeaponController.WeaponIndex = 0;
+            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Main;
             CancelReload();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            _storedWeaponController.WeaponIndex = 1;
+            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Sub;
             CancelReload();
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            _storedWeaponController.WeaponIndex = 2;
+            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Melee;
             CancelReload();
         }
 
@@ -70,4 +70,8 @@ public class ReloadState : IState
     public void OnStateLateUpdate() { }
 
     public void OnStateUpdate() { }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 }

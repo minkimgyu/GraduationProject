@@ -9,20 +9,19 @@ public interface IRoutine
     Transform ReturnTransform();
     GameObject ReturnGameObject();
 
-    Coroutine StartCoroutineInRoutineClass(IEnumerator enumerator);
-
-    void StopCoroutineInRoutineClass(IEnumerator enumerator);
-
-    void StopCoroutineInRoutineClass(Coroutine routine);
-
     T GetComponentInRoutineClass<T>();
 
     T GetComponentInChildrenInRoutineClass<T>();
 
     Action OnUpdate { get; set; }
     Action OnDisableGameObject { get; set; }
+    Action<Collision> OnCollisionEnterRequested { get; set; }
 }
 
+public interface IInteractContainer
+{
+    IInteractable ReturnInteractableObject();
+}
 
 public interface IWeaponContainer
 {
@@ -43,6 +42,7 @@ public class AbstractContainer<W> : MonoBehaviour, IRoutine
 
     public Action OnUpdate { get; set; }
     public Action OnDisableGameObject { get; set; }
+    public Action<Collision> OnCollisionEnterRequested { get; set; }
 
     private void Awake() => SetUp();
 
@@ -50,22 +50,9 @@ public class AbstractContainer<W> : MonoBehaviour, IRoutine
 
     private void OnDisable() => OnDisableGameObject();
 
+    private void OnCollisionEnter(Collision collision) => OnCollisionEnterRequested(collision);
+
     protected virtual void SetUp() { }
-
-    public Coroutine StartCoroutineInRoutineClass(IEnumerator enumerator)
-    {
-        return StartCoroutine(enumerator);
-    }
-
-    public void StopCoroutineInRoutineClass(IEnumerator enumerator)
-    {
-        StopCoroutine(enumerator);
-    }
-
-    public void StopCoroutineInRoutineClass(Coroutine routine)
-    {
-        StopCoroutine(routine);
-    }
 
     public T GetComponentInRoutineClass<T>()
     {

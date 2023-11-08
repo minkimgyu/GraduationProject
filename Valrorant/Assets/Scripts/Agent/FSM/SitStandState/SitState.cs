@@ -46,4 +46,8 @@ public class SitState : IState
             _storedPlayer.PostureFSM.SetState(PlayerController.PostureState.Stand);
         }
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 }

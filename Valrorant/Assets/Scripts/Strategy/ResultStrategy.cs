@@ -21,13 +21,15 @@ abstract public class ResultStrategy
 
     public abstract void OnReload();
 
+    public abstract void TurnOffAim();
+
     public abstract void OnUnEquip();
 
     public abstract void OnUpdate();
 
     public abstract void OnOtherActionEventRequested();
 
-    public abstract void OnMainActionFireEventRequested();
+    public abstract void TurnOffZoomWhenOtherExecute();
 }
 
 public class NoResult : ResultStrategy
@@ -42,6 +44,8 @@ public class NoResult : ResultStrategy
 
     public override void OnUnEquip() { }
 
+    public override void TurnOffAim() { }
+
     public override void OnUpdate() { }
 
     public override void OnOtherActionEventRequested() { }
@@ -54,7 +58,7 @@ public class NoResult : ResultStrategy
 
     public override void CheckBulletLeftCount(int leftBullet) { }
 
-    public override void OnMainActionFireEventRequested() { }
+    public override void TurnOffZoomWhenOtherExecute() { }
 }
 
 public class ZoomStrategy : ResultStrategy
@@ -120,6 +124,8 @@ public class ZoomStrategy : ResultStrategy
         Zoom(true);
     }
 
+    public override void TurnOffAim() => TurnOffZoomDirectly();
+
     public override void OnReload() => TurnOffZoomDirectly();
 
     public override void OnUnEquip() => TurnOffZoomDirectly();
@@ -146,7 +152,7 @@ public class ZoomStrategy : ResultStrategy
 
     public override void CheckBulletLeftCount(int leftBulletCount) { }
 
-    public override void OnMainActionFireEventRequested() { }
+    public override void TurnOffZoomWhenOtherExecute() { }
 }
 
 public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, float, float, float, float, bool>
@@ -169,7 +175,7 @@ public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, flo
         _armMesh = armMesh;
     }
 
-    public override void OnMainActionFireEventRequested() 
+    public override void TurnOffZoomWhenOtherExecute() 
     {
         TurnOffZoomDirectly();
     }
@@ -321,6 +327,8 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
     }
 
     //public override int ReturnFireCountInOneShoot() { return _fireCountsInOneShoot; }
+
+    public override void TurnOffAim() { }
 
     public override int DecreaseBullet(int ammoCountsInMagazine)
     {
@@ -599,7 +607,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     public override bool CanDo() { return _leftBulletCount > 0; }
 
-    public override void OnMainActionFireEventRequested() { }
+    public override void TurnOffZoomWhenOtherExecute() { }
 }
 
 // WithWeight는 속도 백터의 길이를 받아서 적용시켜주는 인터페이스
@@ -661,7 +669,7 @@ public class SingleAndExplosionScatterAttackCombination : ResultStrategy // Atta
         return true;
     }
 
-    public override void OnMainActionFireEventRequested() { }
+    public override void TurnOffZoomWhenOtherExecute() { }
 
     public override void Do()
     {
@@ -700,6 +708,8 @@ public class SingleAndExplosionScatterAttackCombination : ResultStrategy // Atta
     public override void OnReload() { }
 
     public override void OnUnEquip() { }
+
+    public override void TurnOffAim() { }
 
     public override int DecreaseBullet(int ammoCountsInMagazine)
     {
@@ -970,7 +980,9 @@ abstract public class BaseKnifeAttack : ApplyAttack
         _waitTimer.Start(_waitDuration);
     }
 
-    public override void OnMainActionFireEventRequested() { }
+    public override void TurnOffZoomWhenOtherExecute() { }
+
+    public override void TurnOffAim() { }
 
     public override void Do()
     {

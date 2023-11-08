@@ -56,4 +56,8 @@ public class StopState : IState
     public void OnStateCollisionEnter(Collision collision)
     {
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 }

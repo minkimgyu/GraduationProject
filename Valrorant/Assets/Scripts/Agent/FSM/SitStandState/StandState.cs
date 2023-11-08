@@ -20,9 +20,7 @@ public class StandState : IState
         }
     }
 
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
+    public void OnStateCollisionEnter(Collision collision) { }
 
     public void OnStateEnter()
     {
@@ -30,18 +28,15 @@ public class StandState : IState
         _storedPlayer.MovementComponent.SwitchPosture();
     }
 
-    public void OnStateExit()
-    {
-    }
+    public void OnStateExit() { }
 
-    public void OnStateFixedUpdate()
-    {
-    }
+    public void OnStateFixedUpdate() { }
 
-    public void OnStateLateUpdate()
-    {
-    }
+    public void OnStateLateUpdate() { }
 
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
     public void OnStateUpdate()
     {
         _storedPlayer.MovementComponent.UpdateStand();

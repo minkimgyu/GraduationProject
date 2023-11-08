@@ -25,11 +25,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         Jump
     }
 
-    
-
-    StateMachine<InteractionState> _interactionFSM;
-    public StateMachine<InteractionState> InteractionFSM { get { return _interactionFSM; } }
-
     StateMachine<PostureState> _postureFSM;
     public StateMachine<PostureState> PostureFSM { get { return _postureFSM; } }
 
@@ -42,21 +37,20 @@ public class PlayerController : MonoBehaviour, IDamageable
     ViewComponent _viewComponent;
     public ViewComponent ViewComponent { get { return _viewComponent; } }
 
-    InteractionComponent _interactionComponent;
-    public InteractionComponent InteractionComponent { get { return _interactionComponent; } }
+    InteractionController _interactionComponent;
+    public InteractionController InteractionComponent { get { return _interactionComponent; } }
 
     Animator _animator;
 
     private void Start()
     {
         _animator = GetComponentInChildren<Animator>();
-        _interactionComponent = GetComponent<InteractionComponent>();
+        _interactionComponent = GetComponent<InteractionController>();
         _movementComponent = GetComponent<MovementComponent>();
         _viewComponent = GetComponent<ViewComponent>();
 
         _movementFSM = new StateMachine<MovementState>();
         _postureFSM = new StateMachine<PostureState>();
-        _interactionFSM = new StateMachine<InteractionState>();
 
         InitializeFSM();
     }
@@ -65,43 +59,28 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         _movementFSM.OnUpdate();
         _postureFSM.OnUpdate();
-        _interactionFSM.OnUpdate();
     }
 
     private void FixedUpdate()
     {
         _movementFSM.OnFixedUpdate();
         _postureFSM.OnFixedUpdate();
-        _interactionFSM.OnFixedUpdate();
     }
 
     private void LateUpdate()
     {
         _movementFSM.OnLateUpdate();
         _postureFSM.OnLateUpdate();
-        _interactionFSM.OnLateUpdate();
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         _movementFSM.OnCollisionEnter(collision);
         _postureFSM.OnCollisionEnter(collision);
-        _interactionFSM.OnCollisionEnter(collision);
     }
 
     void InitializeFSM()
     {
-        Dictionary<InteractionState, IState> interactionStates = new Dictionary<InteractionState, IState>();
-
-        IState ready = new ReadyState(this);
-        IState action = new ActionState(this);
-
-        interactionStates.Add(InteractionState.Ready, ready);
-        interactionStates.Add(InteractionState.Action, action);
-
-        _interactionFSM.Initialize(interactionStates, InteractionState.Ready);
-
-
         Dictionary<PostureState, IState> postureStates = new Dictionary<PostureState, IState>();
 
         IState sit = new SitState(this);

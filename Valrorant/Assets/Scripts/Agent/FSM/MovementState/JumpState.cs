@@ -50,4 +50,8 @@ public class JumpState : IState
     public void CheckStateChange()
     {
     }
+
+    public void OnStateTriggerEnter(Collider collider) { }
+
+    public void OnStateTriggerExit(Collider collider) { }
 }
