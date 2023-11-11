@@ -1,77 +1,47 @@
 using FSM;
 using UnityEngine;
 
-public class ReloadState : IState
+public class ReloadState : State
 {
-    WeaponController _storedWeaponController;
+    WeaponController _sWC;
 
     public ReloadState(WeaponController player)
     {
-        _storedWeaponController = player;
+        _sWC = player;
     }
 
-    public void CheckStateChange()
+    public override void CheckStateChange()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Main;
-            CancelReload();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Sub;
-            CancelReload();
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            _storedWeaponController.NowEquipedweaponType = BaseWeapon.Type.Melee;
-            CancelReload();
-        }
+        _sWC.GetWeaponChangeInput();
 
-        bool nowCancelMainAction = _storedWeaponController.NowEquipedWeapon.CancelReloadAndGoToMainAction();
+        bool nowCancelMainAction = _sWC.NowEquipedWeapon.CancelReloadAndGoToMainAction();
         if (nowCancelMainAction)
         {
-            _storedWeaponController.NowEquipedWeapon.ResetReload();
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
         }
 
-        bool nowCancelSubAction = _storedWeaponController.NowEquipedWeapon.CancelReloadAndGoToSubAction();
+        bool nowCancelSubAction = _sWC.NowEquipedWeapon.CancelReloadAndGoToSubAction();
         if (nowCancelSubAction)
         {
-            _storedWeaponController.NowEquipedWeapon.ResetReload();
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
         }
 
-        bool canExit = _storedWeaponController.NowEquipedWeapon.IsReloadFinish();
+        bool canExit = _sWC.NowEquipedWeapon.IsReloadFinish();
         if (canExit)
         {
-            _storedWeaponController.NowEquipedWeapon.ResetReload();
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
         }
+
+        _sWC.CheckChangeStateForRooting();
     }
 
-    void CancelReload()
+    public override void OnStateExit()
     {
-        _storedWeaponController.NowEquipedWeapon.ResetReload();
-        _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
+        if (_sWC.NowEquipedWeapon != null) _sWC.NowEquipedWeapon.ResetReload();
     }
 
-    public void OnStateEnter()
+    public override void OnStateEnter()
     {
-        _storedWeaponController.NowEquipedWeapon.OnReload();
+        _sWC.NowEquipedWeapon.OnReload();
     }
-
-    public void OnStateCollisionEnter(Collision collision) { }
-
-    public void OnStateExit() { }
-
-    public void OnStateFixedUpdate() { }
-
-    public void OnStateLateUpdate() { }
-
-    public void OnStateUpdate() { }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
 }

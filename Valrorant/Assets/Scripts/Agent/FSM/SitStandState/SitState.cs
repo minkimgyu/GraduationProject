@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class SitState : IState
+public class SitState : State
 {
     PlayerController _storedPlayer;
 
@@ -12,42 +12,22 @@ public class SitState : IState
         _storedPlayer = player;
     }
 
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
-
-    public void OnStateEnter()
+    public override void OnStateEnter()
     {
         _storedPlayer.MovementComponent.LockToCrouchForce = true;
         _storedPlayer.MovementComponent.SwitchPosture();
     }
 
-    public void OnStateExit()
-    {
-    }
-
-    public void OnStateFixedUpdate()
-    {
-    }
-
-    public void OnStateLateUpdate()
-    {
-    }
-
-    public void OnStateUpdate()
+    public override void OnStateUpdate()
     {
         _storedPlayer.MovementComponent.UpdateCrouch();
     }
 
-    public void CheckStateChange()
+    public override void CheckStateChange()
     {
         if (Input.GetKeyUp(KeyCode.LeftControl))
         {
             _storedPlayer.PostureFSM.SetState(PlayerController.PostureState.Stand);
         }
     }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
 }

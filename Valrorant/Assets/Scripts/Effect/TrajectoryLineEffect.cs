@@ -38,6 +38,4 @@ public class TrajectoryLineEffect : BaseEffect
             DisableObject();
         }
     }
-
-    protected override void OnCollisionEnterRequested(Collision collision) { }
 }

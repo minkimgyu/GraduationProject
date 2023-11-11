@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class StopState : IState
+public class StopState : State
 {
     PlayerController storedPlayer;
 
@@ -12,7 +12,7 @@ public class StopState : IState
         storedPlayer = player;
     }
 
-    public void CheckStateChange()
+    public override void CheckStateChange()
     {
         if ((Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0) && Input.GetKeyDown(KeyCode.LeftAlt))
         {
@@ -30,34 +30,14 @@ public class StopState : IState
         }
     }
 
-    public void OnStateEnter()
-    {
-    }
-
-    public void OnStateExit()
-    {
-    }
-
-    public void OnStateFixedUpdate()
-    {
-    }
-
-    public void OnStateLateUpdate()
+    public override void OnStateLateUpdate()
     {
         storedPlayer.ViewComponent.ResetCamera();
     }
 
-    public void OnStateUpdate()
+    public override void OnStateUpdate()
     {
         storedPlayer.ViewComponent.ResetView();
         storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
     }
-
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
 }

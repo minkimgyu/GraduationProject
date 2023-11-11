@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClassicContainerClass : AbstractContainer<Classic>, IWeaponContainer, IInteractContainer
+public class ClassicContainerClass : WeaponContainer<Classic>, IWeaponContainer, IInteractContainer
 {
     protected override void SetUp() { _storedRoutine.SetUp(this); }
 

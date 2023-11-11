@@ -1,21 +1,21 @@
 using System.Collections;
 using UnityEngine;
 
-abstract public class BaseRoutine
+abstract public class BaseRoutine<T>
 {
-    IRoutine _iRoutine;
+    protected IRoutine _iRoutine;
 
     public GameObject gameObject { get { return _iRoutine.ReturnGameObject(); } }
     public Transform transform { get { return _iRoutine.ReturnTransform(); } }
 
-    public T GetComponent<T>()
+    public W GetComponent<W>()
     {
-        return _iRoutine.GetComponentInRoutineClass<T>();
+        return _iRoutine.GetComponentInRoutineClass<W>();
     }
 
-    public T GetComponentInChildren<T>()
+    public W GetComponentInChildren<W>()
     {
-        return _iRoutine.GetComponentInChildrenInRoutineClass<T>();
+        return _iRoutine.GetComponentInChildrenInRoutineClass<W>();
     }
 
     public GameObject FindWithTag(string tag)
@@ -23,17 +23,30 @@ abstract public class BaseRoutine
         return GameObject.FindWithTag(tag);
     }
 
+    public abstract void SetUp(T routine);
+}
+
+abstract public class WeaponRoutine : BaseRoutine<IWeaponRoutine>
+{
+    protected abstract void OnCollisionEnterRequested(Collision collision);
+
+    public override void SetUp(IWeaponRoutine iWeaponRoutine)
+    {
+        iWeaponRoutine.OnCollisionEnterRequested = OnCollisionEnterRequested;
+        _iRoutine = iWeaponRoutine;
+    }
+}
+
+abstract public class EffectRoutine : BaseRoutine<IEffectRoutine>
+{
     protected abstract void OnUpdate();
 
     protected abstract void OnDisableGameObject();
 
-    protected abstract void OnCollisionEnterRequested(Collision collision);
-
-    public void SetUp(IRoutine iRoutine)
+    public override void SetUp(IEffectRoutine iEffectRoutine)
     {
-        _iRoutine = iRoutine;
-        _iRoutine.OnUpdate = OnUpdate;
-        _iRoutine.OnDisableGameObject = OnDisableGameObject;
-        _iRoutine.OnCollisionEnterRequested = OnCollisionEnterRequested;
+        iEffectRoutine.OnUpdate = OnUpdate;
+        iEffectRoutine.OnDisableGameObject = OnDisableGameObject;
+        _iRoutine = iEffectRoutine;
     }
 }

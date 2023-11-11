@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OdinContainerClass : AbstractContainer<Odin>, IWeaponContainer, IInteractContainer
+public class OdinContainerClass : WeaponContainer<Odin>, IWeaponContainer, IInteractContainer
 {
     protected override void SetUp() { _storedRoutine.SetUp(this); }
 

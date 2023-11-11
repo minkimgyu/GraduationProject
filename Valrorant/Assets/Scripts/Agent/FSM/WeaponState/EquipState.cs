@@ -4,50 +4,50 @@ using UnityEngine;
 using FSM;
 using System;
 
-public class EquipState : IState
+public class EquipState : State
 {
-    WeaponController _storedWeaponController;
+    WeaponController _sWC;
     Timer _timer;
+
+    BaseWeapon.Type _weaponType;
 
     public EquipState(WeaponController weaponController)
     {
-        _storedWeaponController = weaponController;
+        _sWC = weaponController;
         _timer = new Timer();
     }
 
-    public void CheckStateChange()
+    public override void OnMessageReceived(BaseWeapon.Type weaponType)
     {
-        if (_timer.IsFinish) _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+        _weaponType = weaponType;
     }
 
-    public void OnStateCollisionEnter(Collision collision)
+    public override void CheckStateChange()
     {
+        if (_timer.IsFinish) _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+
+        _sWC.CheckChangeStateForRooting();
     }
 
-    public void OnStateEnter()
+    public override void OnStateExit()
     {
-        _storedWeaponController.ChangeWeapon();
-        _timer.Start(_storedWeaponController.NowEquipedWeapon.EquipFinishTime); // µÙ∑π¿Ã
+        _timer.Reset();
     }
 
-    public void OnStateExit()
+    public override void OnStateEnter()
     {
+        if (_sWC.NowEquipedWeapon != null && _weaponType == _sWC.NowEquipedWeapon.WeaponType)
+        {
+            _sWC.WeaponFSM.RevertToPreviousState();
+            return;
+        }
 
+        _sWC.ChangeWeapon(_weaponType);
+        _timer.Start(_sWC.NowEquipedWeapon.EquipFinishTime); // µÙ∑π¿Ã
+        _weaponType = BaseWeapon.Type.None;
     }
 
-    public void OnStateFixedUpdate()
-    {
-    }
-
-    public void OnStateLateUpdate()
-    {
-    }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
-
-    public void OnStateUpdate()
+    public override void OnStateUpdate()
     {
         _timer.Update();
     }

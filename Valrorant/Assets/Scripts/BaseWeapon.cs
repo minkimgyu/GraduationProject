@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-abstract public class BaseWeapon : BaseRoutine
+abstract public class BaseWeapon : WeaponRoutine
 {
     public enum Name
     {
@@ -74,7 +74,7 @@ abstract public class BaseWeapon : BaseRoutine
     [SerializeField] float _weaponWeight = 1;
     public float SlowDownRatioByWeaponWeight { get { return 1.0f /_weaponWeight; } }
 
-    protected override void OnUpdate() // --> WeaponFSM에 연결시켜주자
+    public void RunUpdateInController() // --> WeaponFSM에 연결시켜주자
     {
         _mainActionStrategy.OnUpdate();
         _subActionStrategy.OnUpdate();
@@ -88,11 +88,9 @@ abstract public class BaseWeapon : BaseRoutine
         _reloadStrategy.OnUpdate();
     }
 
-    protected override void OnCollisionEnterRequested(Collision collision) { }
-
-    protected override void OnDisableGameObject() { }
-
     public virtual bool CanDrop() { return false; }
+
+    protected override void OnCollisionEnterRequested(Collision collision) { }
 
     public virtual void ThrowGun(float force) { }
 
@@ -145,6 +143,8 @@ abstract public class BaseWeapon : BaseRoutine
         _camTransform = null;
         _ownerAnimator = null;
 
+        _animator.Play("Idle", -1, 0);
+
         transform.SetParent(null);
     }
 
@@ -174,8 +174,8 @@ abstract public class BaseWeapon : BaseRoutine
     public virtual void OnEquip()
     {
         gameObject.SetActive(true);
-        _ownerAnimator.Play(_weaponName + "Equip");
-        _animator.Play("Equip");
+        _ownerAnimator.Play(_weaponName + "Equip", -1, 0);
+        _animator.Play("Equip", -1, 0);
     }
 
     public virtual void OnUnEquip()
@@ -204,6 +204,8 @@ abstract public class BaseWeapon : BaseRoutine
     public void ResetReload() // 재장전을 취소할 경우
     {
         _reloadStrategy.OnResetReload();
+        // 애니메이션 idle 초기화
+
     }
 
     /// Reload 이벤트 --> ReloadStrategy 제외한 총알 계산 관련 함수
@@ -355,25 +357,3 @@ abstract public class BaseWeapon : BaseRoutine
         }
     }
 }
-
-//_mainActionStrategy.OnActionStart = OnMainActionClickStart;
-//_mainActionStrategy.OnActionProgress = OnMainActionClickProgress;
-//_mainActionStrategy.OnActionEnd = OnMainActionClickEnd;
-
-//_mainActionStrategy.OnEventCallRequsted = OnMainActionEventCallRequsted;
-//_subActionStrategy.OnEventCallRequsted = OnSubActionEventCallRequsted;
-
-//_subActionStrategy.OnActionStart = OnSubActionClickStart;
-//_subActionStrategy.OnActionProgress = OnSubActionClickProgress;
-//_subActionStrategy.OnActionEnd = OnSubActionClickEnd;
-
-//_mainActionStrategy.OnEventCallFinished = OnMainActionEventCallFinished;
-//_subActionStrategy.OnEventCallFinished = OnSubActionEventCallFinished;
-
-//_mainResultStrategy.OnInintialize(player);
-//_subResultStrategy.OnInintialize(player);
-
-//_mainRecoilStrategy.OnInintialize(player);
-//_subRecoilStrategy.OnInintialize(player);
-
-//_reloadStrategy.OnInintialize();

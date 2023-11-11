@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageTxtEffectContainerClass : AbstractContainer<DamageTxtEffect>, IEffectContainer
+public class DamageTxtEffectContainerClass : EffectContainer<DamageTxtEffect>, IEffectContainer
 {
     protected override void SetUp() { _storedRoutine.SetUp(this); }
 

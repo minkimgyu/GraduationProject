@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhantomContainerClass : AbstractContainer<Phantom>, IWeaponContainer, IInteractContainer
+public class PhantomContainerClass : WeaponContainer<Phantom>, IWeaponContainer, IInteractContainer
 {
     protected override void SetUp() { _storedRoutine.SetUp(this); }
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class BaseEffect : BaseRoutine
+abstract public class BaseEffect : EffectRoutine
 {
     [SerializeField]
     protected float _duration;

@@ -3,89 +3,46 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class IdleState : IState
+public class IdleState : State
 {
-    WeaponController _storedWeaponController;
+    WeaponController _sWC;
 
     public IdleState(WeaponController weaponController)
     {
-        _storedWeaponController = weaponController;
+        _sWC = weaponController;
     }
 
-    void GoToEquipStateUsingType(BaseWeapon.Type weaponType)
+    public override void CheckStateChange()
     {
-        bool nowContain = _storedWeaponController.CanChangeWeapon(weaponType);
-        if (nowContain == false) return;
-
-        _storedWeaponController.NowEquipedweaponType = weaponType;
-        _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Equip);
-    }
-
-    public void CheckStateChange()
-    {
-        // 이부분은 타입을 보고 장착하도록 변경해준다.
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            GoToEquipStateUsingType(BaseWeapon.Type.Main);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            GoToEquipStateUsingType(BaseWeapon.Type.Sub);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            GoToEquipStateUsingType(BaseWeapon.Type.Melee);
-        }
-
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Drop);
-        }
+        _sWC.GetWeaponChangeInput();
 
         if (Input.GetMouseButtonDown(0))
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
         }
         else if (Input.GetMouseButtonDown(1))
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
         }
 
-        if (Input.GetKeyDown(KeyCode.R) && _storedWeaponController.NowEquipedWeapon.CanReload())
+        if (Input.GetKeyDown(KeyCode.R) && _sWC.NowEquipedWeapon.CanReload())
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
-    }
 
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
-
-    public void OnStateEnter()
-    {
-        if(_storedWeaponController.NowEquipedWeapon.CanAutoReload())
+        if(Input.GetKeyDown(KeyCode.G) && _sWC.NowEquipedWeapon.CanDrop() == true)
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Drop, false);
         }
+
+        _sWC.CheckChangeStateForRooting();
     }
 
-    public void OnStateExit()
+    public override void OnStateEnter()
     {
-    }
-
-    public void OnStateFixedUpdate()
-    {
-    }
-
-    public void OnStateLateUpdate()
-    {
-    }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
-
-    public void OnStateUpdate()
-    {
+        if (_sWC.NowEquipedWeapon.CanAutoReload())
+        {
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+        }
     }
 }

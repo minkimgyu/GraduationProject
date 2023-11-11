@@ -160,9 +160,9 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     protected virtual void OnZoomOut() { }
 
-    public void OnInteract(WeaponController weaponController)
+    public void OnInteract()
     {
-        weaponController.AddWeapon(this);
+
     }
 
     public void OnSightEnter()
@@ -181,4 +181,6 @@ abstract public class Gun : BaseWeapon, IInteractable
     }
 
     public bool IsInteractable() { return _nowAttachToGround; }
+
+    public T ReturnComponent<T>() { return GetComponent<T>(); }
 }

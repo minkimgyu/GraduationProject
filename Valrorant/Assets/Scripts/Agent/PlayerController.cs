@@ -81,30 +81,31 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     void InitializeFSM()
     {
-        Dictionary<PostureState, IState> postureStates = new Dictionary<PostureState, IState>();
+        Dictionary<PostureState, BaseState> postureStates = new Dictionary<PostureState, BaseState>();
 
-        IState sit = new SitState(this);
-        IState stand = new StandState(this);
+        BaseState sit = new SitState(this);
+        BaseState stand = new StandState(this);
 
         postureStates.Add(PostureState.Sit, sit);
         postureStates.Add(PostureState.Stand, stand);
 
-        _postureFSM.Initialize(postureStates, PostureState.Stand);
+        _postureFSM.Initialize(postureStates);
+        _postureFSM.SetState(PostureState.Stand);
 
+        Dictionary<MovementState, BaseState> movementStates = new Dictionary<MovementState, BaseState>();
 
-        Dictionary<MovementState, IState> movementStates = new Dictionary<MovementState, IState>();
-
-        IState stop = new StopState(this);
-        IState walk = new WalkState(this);
-        IState creep = new CreepState(this);
-        IState jump = new JumpState(this);
+        BaseState stop = new StopState(this);
+        BaseState walk = new WalkState(this);
+        BaseState creep = new CreepState(this);
+        BaseState jump = new JumpState(this);
 
         movementStates.Add(MovementState.Stop, stop);
         movementStates.Add(MovementState.Walk, walk);
         movementStates.Add(MovementState.Creep, creep);
         movementStates.Add(MovementState.Jump, jump);
 
-        _movementFSM.Initialize(movementStates, MovementState.Stop);
+        _movementFSM.Initialize(movementStates);
+        _movementFSM.SetState(MovementState.Stop);
     }
 
     public void GetDamage(float damage)

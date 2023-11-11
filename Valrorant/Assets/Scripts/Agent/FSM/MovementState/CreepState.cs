@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class CreepState : IState
+public class CreepState : State
 {
     PlayerController storedPlayer;
 
@@ -12,31 +12,17 @@ public class CreepState : IState
         storedPlayer = player;
     }
 
-    
-
-    public void OnStateCollisionEnter(Collision collision)
-    {
-    }
-
-    public void OnStateEnter()
-    {
-    }
-
-    public void OnStateExit()
-    {
-    }
-
-    public void OnStateFixedUpdate()
+    public override void OnStateFixedUpdate()
     {
         storedPlayer.MovementComponent.Move(true);
     }
 
-    public void OnStateLateUpdate()
+    public override void OnStateLateUpdate()
     {
         storedPlayer.ViewComponent.ResetCamera();
     }
 
-    public void OnStateUpdate()
+    public override void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
         storedPlayer.ViewComponent.ResetView();
@@ -44,7 +30,7 @@ public class CreepState : IState
         storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
     }
 
-    public void CheckStateChange()
+    public override void CheckStateChange()
     {
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
@@ -61,8 +47,4 @@ public class CreepState : IState
             storedPlayer.MovementFSM.SetState(PlayerController.MovementState.Jump);
         }
     }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
 }

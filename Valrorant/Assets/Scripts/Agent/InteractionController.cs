@@ -8,7 +8,7 @@ public interface IInteractable
 {
     void OnSightEnter();
 
-    void OnInteract(WeaponController weaponController);
+    T ReturnComponent<T>(); // 오브젝트 리턴 후, 이걸 사용해서 GetComponent 진행
 
     void OnSightExit();
 
@@ -19,8 +19,8 @@ public class InteractionController : MonoBehaviour
 {
     public enum InteractionState
     {
-        Standby,
-        Action
+        Ready,
+        Interact,
     }
 
     StateMachine<InteractionState> _interactionFSM;
@@ -37,15 +37,17 @@ public class InteractionController : MonoBehaviour
 
     void InitializeFSM()
     {
-        Dictionary<InteractionState, IState> interactionStates = new Dictionary<InteractionState, IState>();
+        Dictionary<InteractionState, BaseState> interactionStates = new Dictionary<InteractionState, BaseState>();
 
-        IState standby = new StandbyState(this);
-        IState action = new ActionState(this);
+        BaseState ready = new ReadyState(this);
+        BaseState interact = new InteractState(this);
+       
 
-        interactionStates.Add(InteractionState.Standby, standby);
-        interactionStates.Add(InteractionState.Action, action);
+        interactionStates.Add(InteractionState.Ready, ready);
+        interactionStates.Add(InteractionState.Interact, interact);
 
-        _interactionFSM.Initialize(interactionStates, InteractionState.Standby);
+        _interactionFSM.Initialize(interactionStates);
+        _interactionFSM.SetState(InteractionState.Ready);
     }
 
     private void Update()

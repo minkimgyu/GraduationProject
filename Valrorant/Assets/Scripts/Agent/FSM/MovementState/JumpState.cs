@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class JumpState : IState
+public class JumpState : State
 {
     PlayerController storedPlayer;
 
@@ -12,7 +12,7 @@ public class JumpState : IState
         storedPlayer = player;
     }
 
-    public void OnStateCollisionEnter(Collision collision)
+    public override void OnStateCollisionEnter(Collision collision)
     {
         if (collision.transform.tag == "Ground")
         {
@@ -20,38 +20,26 @@ public class JumpState : IState
         }
     }
 
-    public void OnStateEnter()
+    public override void OnStateEnter()
     {
         storedPlayer.MovementComponent.Jump();
     }
 
-    public void OnStateExit()
-    {
-    }
-
-    public void OnStateFixedUpdate()
+    public override void OnStateFixedUpdate()
     {
         storedPlayer.MovementComponent.Move();
     }
 
-    public void OnStateLateUpdate()
+    public override void OnStateLateUpdate()
     {
         storedPlayer.ViewComponent.ResetCamera();
     }
 
-    public void OnStateUpdate()
+    public override void OnStateUpdate()
     {
         storedPlayer.MovementComponent.ResetDirection();
         storedPlayer.ViewComponent.ResetView();
 
         storedPlayer.MovementComponent.RaiseDisplacementEvent(); // 이동 값에 따른 백터의 길이를 이밴트로 넘겨줌
     }
-
-    public void CheckStateChange()
-    {
-    }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
 }

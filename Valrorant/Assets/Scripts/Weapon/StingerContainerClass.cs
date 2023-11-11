@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StingerContainerClass : AbstractContainer<Stinger>, IWeaponContainer, IInteractContainer
+public class StingerContainerClass : WeaponContainer<Stinger>, IWeaponContainer, IInteractContainer
 {
     protected override void SetUp() { _storedRoutine.SetUp(this); }
 

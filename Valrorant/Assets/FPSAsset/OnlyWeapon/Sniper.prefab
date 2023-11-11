@@ -655,29 +655,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _storedRoutine:
     _range: 100
-    _weaponName: 7
+    _weaponName: 6
     _weaponType: 1
     _equipFinishTime: 1.3
-    _weaponWeight: 1.2
-    _muzzleFlash: {fileID: 7275431699713156057}
-    _emptyCartridgeSpawner: {fileID: 5205210593146384565}
-    _muzzle: {fileID: 6298365500383224727}
+    _weaponWeight: 1.25
+    _muzzleFlash: {fileID: 3294700404745082167, guid: b4f7ec413e521ac48b997da9e845ef11, type: 3}
+    _emptyCartridgeSpawner: {fileID: 56265620611250696, guid: b4f7ec413e521ac48b997da9e845ef11, type: 3}
+    _muzzle: {fileID: 8536305093211362890, guid: b4f7ec413e521ac48b997da9e845ef11, type: 3}
     _trajectoryLineEffect: TrajectoryLineEffect
-    _maxAmmoCountInMagazine: 12
+    _maxAmmoCountInMagazine: 20
     _ammoCountsInMagazine: 0
-    _ammoCountsInPossession: 36
-    _reloadFinishTime: 1
-    _reloadExitTime: 1.515
-    _objectMesh: {fileID: 2152754547404185257}
-    _mainActionDelayWhenZoomIn: 0.1525
-    _mainActionDelayWhenZoomOut: 0.1125
-    _subActionDelay: 0.05
-    _mainActionbulletSpreadPowerRatio: 0.5
-    _zoomDuration: 0.1
-    _scopeOnDelay: 0.05
+    _ammoCountsInPossession: 60
+    _reloadFinishTime: 1.56
+    _reloadExitTime: 2.56
+    _objectMesh: {fileID: 5010608489417388644, guid: b4f7ec413e521ac48b997da9e845ef11, type: 3}
+    _mainActionDelayWhenZoomIn: 0.0625
+    _mainActionDelayWhenZoomOut: 0.11804
+    _subActionDelay: 0.23608
+    _mainActionbulletSpreadPowerRatio: 1
+    _zoomDuration: 1
+    _scopeOnDelay: 0.165
     _normalFieldOfView: 60
-    _zoomFieldOfView: 45
-    _doubleZoomFieldOfView: 30
+    _zoomFieldOfView: 0.5
+    _doubleZoomFieldOfView: 0.1
     _zoomCameraPosition: {x: -0.059, y: 0.172, z: 0}
     _gunMesh: {fileID: 2152754547404185254}
     _mainActionRecoilRange: {fileID: 11400000, guid: e67c3c180a6a5404bb7923dd7a579864, type: 2}
@@ -1137,11 +1137,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1058362130614037491, guid: 7e93bf6b6c6b1ee4191f42c424ec0721, type: 3}
   m_PrefabInstance: {fileID: 7658239592550976874}
   m_PrefabAsset: {fileID: 0}
---- !u!198 &7275431699713156057 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 1058362130628193971, guid: 7e93bf6b6c6b1ee4191f42c424ec0721, type: 3}
-  m_PrefabInstance: {fileID: 7658239592550976874}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8296342528155170847
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1223,11 +1218,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a8e00ef8e33e2140aaf07133cc4bece, type: 3}
---- !u!198 &5205210593146384565 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4259869673865119914, guid: 7a8e00ef8e33e2140aaf07133cc4bece, type: 3}
-  m_PrefabInstance: {fileID: 8296342528155170847}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5400336301948551647 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4166778344553970112, guid: 7a8e00ef8e33e2140aaf07133cc4bece, type: 3}

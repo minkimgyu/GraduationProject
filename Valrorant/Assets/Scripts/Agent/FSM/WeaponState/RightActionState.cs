@@ -3,57 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 
-public class RightActionState : IState
+public class RightActionState : State
 {
-    WeaponController _storedWeaponController;
+    WeaponController _sWC;
 
     public RightActionState(WeaponController player)
     {
-        _storedWeaponController = player;
+        _sWC = player;
     }
 
-    public void CheckStateChange()
+    public override void OnStateEnter()
     {
+        _sWC.NowEquipedWeapon.OnRightClickStart();
     }
 
-    public void OnStateCollisionEnter(Collision collision)
+    public override void OnStateExit()
     {
+        _sWC.NowEquipedWeapon.OnRightClickEnd();
     }
 
-    public void OnStateEnter()
+    public override void CheckStateChange() 
     {
-        _storedWeaponController.NowEquipedWeapon.OnRightClickStart();
-    }
-
-    public void OnStateExit()
-    {
-        _storedWeaponController.NowEquipedWeapon.OnRightClickEnd();
-    }
-
-    public void OnStateFixedUpdate()
-    {
-    }
-
-    public void OnStateLateUpdate()
-    {
-    }
-
-    public void OnStateTriggerEnter(Collider collider) { }
-
-    public void OnStateTriggerExit(Collider collider) { }
-
-    public void OnStateUpdate()
-    {
-        _storedWeaponController.NowEquipedWeapon.OnRightClickProgress();
-
-        if (_storedWeaponController.NowEquipedWeapon.CanAutoReload())
+        if (_sWC.NowEquipedWeapon.CanAutoReload())
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
         }
 
         if (Input.GetMouseButtonUp(1))
         {
-            _storedWeaponController.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+            _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
         }
+
+        _sWC.CheckChangeStateForRooting();
+    }
+
+    public override void OnStateUpdate()
+    {
+        _sWC.NowEquipedWeapon.OnRightClickProgress();
     }
 }
