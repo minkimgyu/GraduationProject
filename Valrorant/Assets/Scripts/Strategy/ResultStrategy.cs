@@ -164,8 +164,11 @@ public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, flo
     bool nowDoubleZoom;
     float _doubleZoomFieldOfView;
 
+    Timer _disableMeshTimer;
+    float _disableMeshDelay;
+
     public DoubleZoomStrategy(GameObject scope, GameObject armMesh, GameObject gunMesh, Vector3 zoomCameraPosition, float zoomDuration, float scopeOnDuration, float normalFieldOfView, float zoomFieldOfView,
-        float doubleZoomFieldOfView, System.Action<bool> onZoom) : base(scope, zoomCameraPosition, zoomDuration, scopeOnDuration, normalFieldOfView, zoomFieldOfView, onZoom)
+        float doubleZoomFieldOfView, System.Action<bool> onZoom, float disableMeshDelay) : base(scope, zoomCameraPosition, zoomDuration, scopeOnDuration, normalFieldOfView, zoomFieldOfView, onZoom)
     {
         _scope = scope;
         _scope.SetActive(false);
@@ -173,6 +176,9 @@ public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, flo
         _gunMesh = gunMesh;
         _doubleZoomFieldOfView = doubleZoomFieldOfView;
         _armMesh = armMesh;
+
+        _disableMeshDelay = disableMeshDelay;
+        _disableMeshTimer = new Timer();
     }
 
     public override void TurnOffZoomWhenOtherExecute() 
@@ -193,12 +199,22 @@ public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, flo
         _armMesh.SetActive(nowActivate);
     }
 
+    public override void OnUpdate() 
+    {
+        _disableMeshTimer.Update();
+
+        if(_disableMeshTimer.IsFinish)
+        {
+            ActivateMesh(false);
+            // 더블 줌으로 들어감
+            _disableMeshTimer.Reset();
+        }
+    }
+
     public override void Do()
     {
         if(_nowZoom == true && nowDoubleZoom == false)
         {
-            ActivateMesh(false);
-            // 더블 줌으로 들어감
             nowDoubleZoom = true;
             InvokeZoomEventOtherComponent(_doubleZoomFieldOfView, true);
         }
@@ -210,7 +226,7 @@ public class DoubleZoomStrategy : ZoomStrategy//, ISubject<GameObject, bool, flo
         }
         else if (_nowZoom == false)
         {
-            ActivateMesh(false);
+            _disableMeshTimer.Start(_disableMeshDelay);
             base.Do(); // 줌으로 들어감
         }
     }

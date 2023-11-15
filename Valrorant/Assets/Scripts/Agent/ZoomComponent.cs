@@ -9,10 +9,9 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
     [SerializeField] private Camera[] _cameras;
     private GameObject _crosshair;
 
-    [SerializeField] private Transform _cameraHolder;
+    [SerializeField] private Transform _armMesh;
 
-    [SerializeField] private Transform _cameraNormalTransform;
-    [SerializeField] private Transform _cameraZoomTransform;
+    private Vector3 _armLocalPosition;
 
     Coroutine _zoomRoutine;
 
@@ -21,18 +20,18 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
         _crosshair = GameObject.FindWithTag("Crosshair");
     }
 
-    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, Vector3 zoomCameraLocalPosition, float scopeOnDelay, float fieldOfView, bool isInstant)
+    public void OnZoomCalled(GameObject scope, bool nowZoom, float zoomDuration, Vector3 armLocalPosition, float scopeOnDelay, float fieldOfView, bool isInstant)
     {
         StopZoomRoutine();
-        _cameraZoomTransform.localPosition = zoomCameraLocalPosition;
+        _armLocalPosition = armLocalPosition;
 
         if (isInstant)
         {
             scope.SetActive(nowZoom);
             _crosshair.SetActive(!nowZoom);
 
-            if (nowZoom) MoveCamera(fieldOfView, _cameraZoomTransform.position);
-            else MoveCamera(fieldOfView, _cameraNormalTransform.position);
+            if (nowZoom) MoveCamera(fieldOfView, _armLocalPosition);
+            else MoveCamera(fieldOfView, Vector3.zero);
         }
         else
         {
@@ -52,7 +51,7 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
         {
             if (nowZoom)
             {
-                MoveCamera(fieldOfView, _cameraZoomTransform.position, progress);
+                MoveCamera(fieldOfView, _armLocalPosition, progress);
 
                 if (progress > scopeOnDelay && isActivateFinish == false)
                 {
@@ -62,7 +61,7 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
             }
             else
             {
-                MoveCamera(fieldOfView, _cameraNormalTransform.position, progress);
+                MoveCamera(fieldOfView, Vector3.zero, progress);
 
                 if (isActivateFinish == false)
                 {
@@ -82,24 +81,24 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
         scope.SetActive(nowZoom);
     }
 
-    void MoveCamera(float fieldOfView, Vector3 cameraPosition, float progress)
+    void MoveCamera(float fieldOfView, Vector3 armPosition, float progress)
     {
         for (int i = 0; i < _cameras.Length; i++)
         {
             _cameras[i].fieldOfView = Mathf.Lerp(_cameras[i].fieldOfView, fieldOfView, progress);
         }
 
-        _cameraHolder.position = Vector3.Lerp(_cameraHolder.position, cameraPosition, progress);
+        _armMesh.localPosition = Vector3.Lerp(_armMesh.localPosition, armPosition, progress);
     }
 
-    void MoveCamera(float fieldOfView, Vector3 cameraPosition)
+    void MoveCamera(float fieldOfView, Vector3 armPosition)
     {
         for (int i = 0; i < _cameras.Length; i++)
         {
             _cameras[i].fieldOfView = fieldOfView;
         }
 
-        _cameraHolder.position = cameraPosition;
+        _armMesh.localPosition = armPosition;
     }
 
     void StopZoomRoutine()

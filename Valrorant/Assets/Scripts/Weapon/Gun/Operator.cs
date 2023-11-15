@@ -22,6 +22,9 @@ public class Operator : AllVariationGun
     GameObject _scope;
 
     [SerializeField]
+    float _meshDisableDelay;
+
+    [SerializeField]
     float _zoomDuration;
 
     [SerializeField]
@@ -74,7 +77,7 @@ public class Operator : AllVariationGun
         GameObject scopeContainer = GameObject.FindWithTag("ScopeContainer");
         _scope = scopeContainer.GetComponent<ScopeContainer>().ReturnScope(); // 찾아서 넘겨줌
 
-        _subResultStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall);
+        _subResultStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall, _meshDisableDelay);
 
 
         _storedMainRecoilWhenZoomIn = new ManualRecoilGenerator(_mainActionDelayWhenZoomIn, _mainActionRecoilRange);
