@@ -1,0 +1,154 @@
+#title {
+    height: 50px;
+    font-size: 30px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+#type-field > Label {
+    -unity-text-align: upper-left;
+    margin-right: 86px;
+}
+
+#name-field > Label {
+    -unity-text-align: upper-left;
+    margin-right: 86px;
+}
+
+#name-field > #unity-text-input {
+    -unity-text-align: upper-left;
+}
+
+#repeat-field > Label {
+    -unity-text-align: upper-left;
+    margin-right: 0;
+}
+
+#repeat-field > #unity-text-input {
+    -unity-text-align: upper-left;
+}
+
+#distance-field > Label {
+    -unity-text-align: upper-center;
+    margin-right: 49px;
+}
+
+#distance-field > #unity-text-input {
+    -unity-text-align: upper-left;
+}
+
+#recovery-duration-field > Label {
+    -unity-text-align: upper-center;
+    margin-right: 71px;
+}
+
+#path-field > Label {
+    -unity-text-align: upper-left;
+    margin-right: 0;
+}
+
+#object-field > VisualElement {
+    -unity-text-align: upper-center;
+    margin-left: 81px;
+}
+
+#object-field > Label {
+    -unity-text-align: upper-left;
+    margin-right: 5px;
+}
+
+#point-pos-field > Label {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: -15px;
+}
+
+#point-pos-field VisualElement VisualElement {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    width: initial;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    height: initial;
+    flex-grow: 0;
+}
+
+#range-pos-field > Label {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: -15px;
+}
+
+#range-pos-field VisualElement VisualElement {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    width: initial;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    height: initial;
+    flex-grow: 0;
+}
+
+#index-field > Label {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0;
+}
+
+#index-field > #unity-text-input {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+}
+
+#save-toggle > Label {
+    margin-right: 250px;
+}
+
+#width-field > Label {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: -72px;
+    font-size: 15px;
+}
+
+#width-field > #unity-text-input {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0;
+    width: 80px;
+    font-size: 15px;
+}
+
+#height-field > Label {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: -67px;
+    font-size: 15px;
+}
+
+#height-field > #unity-text-input {
+    -unity-text-align: upper-left;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0;
+    width: 80px;
+    font-size: 15px;
+}

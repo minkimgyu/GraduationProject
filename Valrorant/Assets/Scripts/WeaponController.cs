@@ -54,10 +54,7 @@ public class WeaponController : MonoBehaviour
 
     public Action<float> OnWeaponChangeRequested;
 
-    public bool CheckContainerHaveSameType()
-    {
-        return _weaponsContainers.ContainsKey(_storedWeaponWhenInteracting.WeaponType);
-    }
+
 
     public bool CanChangeWeapon(BaseWeapon.Type weaponType)
     {
@@ -216,6 +213,11 @@ public class WeaponController : MonoBehaviour
                 _weaponFSM.SetState(WeaponState.Root);
             }
         }
+    }
+
+    public bool CheckContainerHaveSameType()
+    {
+        return _weaponsContainers.ContainsKey(_storedWeaponWhenInteracting.WeaponType);
     }
 
     #endregion

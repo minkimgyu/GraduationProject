@@ -93,8 +93,12 @@ public class Bucky : NoVariationGun
             _emptyCartridgeSpawner, false, _weaponName.ToString(), _muzzle, _trajectoryLineEffect, _findRange, _subActionSinglePenetratePower, _subActionBulletCountInOneShoot, _subSingleActionBulletSpreadPowerDecreaseRatio,
             _damageDictionary, frontPosition, _explosionEffectName, _subActionScatterPenetratePower, _subActionSpreadOffset, _subActionPelletCount, _subScatterActionBulletSpreadPowerDecreaseRatio, _subSingleAttackDamageDictionary);
 
-        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainRecoilRange);
-        _subRecoilStrategy = new ManualRecoilGenerator(_subActionkDelay, _subRecoilRange);
+        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
+        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
+        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+
+        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, mainRecoilData);
+        _subRecoilStrategy = new ManualRecoilGenerator(_subActionkDelay, subRecoilData);
 
         _reloadStrategy = new RoundByRoundReload(_reloadBeforeDuration, _reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
 

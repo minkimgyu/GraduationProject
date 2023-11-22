@@ -79,9 +79,12 @@ public class Operator : AllVariationGun
 
         _subResultStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall, _meshDisableDelay);
 
+        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
+        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
+        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
 
-        _storedMainRecoilWhenZoomIn = new ManualRecoilGenerator(_mainActionDelayWhenZoomIn, _mainActionRecoilRange);
-        _storedMainRecoilWhenZoomOut = new ManualRecoilGenerator(_mainActionDelayWhenZoomOut, _mainActionRecoilRange);
+        _storedMainRecoilWhenZoomIn = new ManualRecoilGenerator(_mainActionDelayWhenZoomIn, mainRecoilData);
+        _storedMainRecoilWhenZoomOut = new ManualRecoilGenerator(_mainActionDelayWhenZoomOut, subRecoilData);
 
         _subRecoilStrategy = new NoRecoilGenerator();
 

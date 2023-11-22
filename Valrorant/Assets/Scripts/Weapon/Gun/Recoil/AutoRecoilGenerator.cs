@@ -9,15 +9,18 @@ public class AutoRecoilGenerator : RecoilStrategy
 
     float _recoilRatio;
 
-    RecoilMap _recoilMap;
+    RecoilMapData _recoilMap;
+    List<Vector2> _recoilPoints;
 
-    public AutoRecoilGenerator(float shootInterval, float recoilRatio, RecoilMap recoilMap)
+    public AutoRecoilGenerator(float shootInterval, float recoilRatio, RecoilMapData recoilData)
     {
         _shootInterval = shootInterval;
         _timer = new Timer();
 
         _recoilRatio = recoilRatio;
-        _recoilMap = recoilMap;
+
+        _recoilMap = recoilData;
+        _recoilPoints = recoilData.ReturnAllAnglesBetweenCenterAndPoint();
         _actorBoneRecoilMultiplier = 1f;
     }
 
@@ -35,7 +38,7 @@ public class AutoRecoilGenerator : RecoilStrategy
 
         _indexMultiplier = 1;
         ResetIndex();
-        StartLerp(Vector2.zero, _recoilMap.RecoilRecoverDuration); // 
+        StartLerp(Vector2.zero, _recoilMap.RecoveryDuration); // 
     }
 
     public override void OnOtherActionEventRequested()
@@ -69,7 +72,7 @@ public class AutoRecoilGenerator : RecoilStrategy
     {
         _index += _indexMultiplier;
 
-        if (_index >= _recoilMap.RecoilData.Length - 1) // 끝지점에 도착한 경우
+        if (_index >= _recoilPoints.Count - 1) // 끝지점에 도착한 경우
         {
             _indexMultiplier = -1;
         }
@@ -78,7 +81,7 @@ public class AutoRecoilGenerator : RecoilStrategy
             _indexMultiplier = 1;
         }
 
-        return _recoilMap.RecoilData[_index];
+        return _recoilPoints[_index];
     }
 
 
@@ -91,7 +94,7 @@ public class AutoRecoilGenerator : RecoilStrategy
     public override void RecoverRecoil()
     {
         StopRecoil();
-        StartLerp(Vector2.zero, _recoilMap.RecoilRecoverDuration);
+        StartLerp(Vector2.zero, _recoilMap.RecoveryDuration);
     }
 
     public override void ResetValues()

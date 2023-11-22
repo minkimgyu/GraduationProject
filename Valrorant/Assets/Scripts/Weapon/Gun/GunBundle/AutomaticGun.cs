@@ -36,8 +36,10 @@ abstract public class AutomaticGun : ActionAndRecoilVariationGun
     [SerializeField]
     protected float _delayUntilScopeActivated = 0.1f;
 
-    [SerializeField]
-    protected RecoilMap _recoilMap;
+    //[SerializeField]
+    //protected RecoilMap _recoilMap;
+
+    //protected BaseRecoilData _recoilData;
 
     [SerializeField]
     protected float _normalFieldOfView;
@@ -64,8 +66,11 @@ abstract public class AutomaticGun : ActionAndRecoilVariationGun
 
         _subResultStrategy = new ZoomStrategy(_scope, _cameraPositionWhenZoom, _zoomDuration, _delayUntilScopeActivated, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall);
 
-        _storedMainRecoilWhenZoomIn = new AutoRecoilGenerator(_mainActionDelayWhenZoomIn, _recoilRatioWhenZoomIn, _recoilMap);
-        _storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(_mainActionDelayWhenZoomIn, _recoilRatioWhenZoomOut, _recoilMap);
+        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
+        RecoilMapData recoilData = storage.OnRecoilDataSendRequested<RecoilMapData>(_weaponName, EventCallPart.Both);
+
+        _storedMainRecoilWhenZoomIn = new AutoRecoilGenerator(_mainActionDelayWhenZoomIn, _recoilRatioWhenZoomIn, recoilData);
+        _storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(_mainActionDelayWhenZoomIn, _recoilRatioWhenZoomOut, recoilData);
 
 
         _subRecoilStrategy = new NoRecoilGenerator();

@@ -81,8 +81,12 @@ public class Stinger : AllVariationGun
         // 무기를 버릴 경우, 제거해야함
         _subResultStrategy = new ZoomStrategy(_scope, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall); // OnZoomRequested 함수 넣어도 괜찮을 듯
 
-        _storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(_autoAttackActionDelay, _recoilRatio, _recoilMap);
-        _storedMainRecoilWhenZoomIn = new BurstRecoilGenerator(_burstAttackActionDelay, _recoilRange);
+        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
+        RecoilMapData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilMapData>(_weaponName, EventCallPart.Left);
+        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+
+        _storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(_autoAttackActionDelay, _recoilRatio, mainRecoilData);
+        _storedMainRecoilWhenZoomIn = new BurstRecoilGenerator(_burstAttackActionDelay, subRecoilData);
 
         _subRecoilStrategy = new NoRecoilGenerator();
 

@@ -57,8 +57,12 @@ public class Classic : NoVariationGun
         _mainActionStrategy = new ManualAttackAction(_mainActionDelay);
         _subActionStrategy = new ManualAttackAction(_subActionDelay);
 
-        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange);
-        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, _mainActionRecoilRange);
+        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
+        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
+        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+
+        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, mainRecoilData);
+        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, subRecoilData);
 
         _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
 

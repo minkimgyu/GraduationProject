@@ -1,0 +1,69 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/Editor/Map/SprayStyle.uss?fileID=7433441132597879392&amp;guid=886c77bb97e85e14fbe955f4c78b418c&amp;type=3#SprayStyle" />
+    <ui:GroupBox name="container" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; flex-direction: row; min-width: auto; min-height: auto;">
+        <ui:GroupBox name="info-container" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+            <ui:Label text="Spray Editor" display-tooltip-when-elided="true" name="title" style="background-color: rgb(0, 0, 0); height: 50px; font-size: 32px; -unity-text-outline-color: rgb(255, 255, 255); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(0, 255, 105); border-right-color: rgb(0, 255, 105); border-top-color: rgb(0, 255, 105); border-bottom-color: rgb(0, 255, 105);" />
+            <ui:GroupBox name="field-container" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 400px; display: flex;">
+                <ui:GroupBox name="edit-box" style="margin-top: 0; padding-top: 0;">
+                    <ui:Label text="Edit" display-tooltip-when-elided="true" style="font-size: 35px; margin-top: 10px; color: rgb(0, 184, 255); background-color: rgb(0, 0, 0); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:GroupBox name="GroupBox" style="flex-direction: column; align-items: flex-start; justify-content: flex-start; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 0;">
+                        <ui:Label tabindex="-1" text="Mode" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                        <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 0; align-self: stretch; justify-content: space-around; align-items: stretch;">
+                            <ui:EnumField label="Recoil Mode" type="RecoilType, Assembly-CSharp-Editor" name="mode-field" style="margin-left: 3px; margin-right: 3px; margin-top: 1px; margin-bottom: 1px; font-size: 15px;" />
+                        </ui:GroupBox>
+                    </ui:GroupBox>
+                </ui:GroupBox>
+                <ui:GroupBox name="file-box" style="margin-top: 0; padding-top: 0;">
+                    <ui:Label text="File" display-tooltip-when-elided="true" style="font-size: 35px; margin-top: 10px; color: rgb(0, 184, 255); background-color: rgb(0, 0, 0); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:Label tabindex="-1" text="Info" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                    <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px;">
+                        <ui:TextField picking-mode="Ignore" label="Name" value="Enter Name" text="name" name="name-field" style="font-size: 15px; -unity-text-align: upper-left;" />
+                        <ui:FloatField label="Distance From Target" value="10" name="distance-field" style="font-size: 15px;" />
+                        <ui:FloatField label="Recovery Duration" value="1.5" name="recovery-duration-field" style="font-size: 15px;" />
+                    </ui:GroupBox>
+                    <ui:Label tabindex="-1" text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                    <ui:TextField picking-mode="Ignore" label="Path" text="name" name="path-field" value="/Editor/Json/" style="font-size: 15px; -unity-text-align: upper-left;" />
+                    <ui:Toggle label="Can Duplicate" name="save-toggle" style="font-size: 15px;" />
+                    <ui:Button text="Save" display-tooltip-when-elided="true" name="save-button" style="height: auto; font-size: 16px;" />
+                    <ui:Label tabindex="-1" text="Load" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                    <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px;">
+                        <uie:ObjectField label="Asset" name="asset-field" type="UnityEngine.TextAsset, UnityEngine.CoreModule" style="font-size: 15px;" />
+                    </ui:GroupBox>
+                    <ui:Button text="Load" display-tooltip-when-elided="true" name="load-button" style="height: auto; font-size: 16px;" />
+                </ui:GroupBox>
+                <ui:GroupBox name="point-box" style="margin-top: 0; padding-top: 0; display: flex; visibility: visible;">
+                    <ui:Label text="Point" display-tooltip-when-elided="true" style="font-size: 35px; margin-top: 10px; color: rgb(0, 184, 255); background-color: rgb(0, 0, 0); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:GroupBox name="GroupBox" style="flex-direction: column; align-items: flex-start; justify-content: flex-start; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 0;">
+                        <ui:Label tabindex="-1" text="Info" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                        <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px; align-self: stretch; justify-content: space-around; align-items: stretch;">
+                            <ui:Vector2Field label="Position" name="point-pos-field" style="margin-top: 1px; margin-right: 3px; margin-bottom: 1px; margin-left: 3px; width: auto; font-size: 15px; justify-content: flex-end; align-self: stretch; align-items: stretch;" />
+                            <uie:IntegerField label="Index" value="0" name="index-field" style="font-size: 15px; justify-content: space-between; margin-top: 1px; margin-right: 3px; margin-bottom: 1px; margin-left: 3px;" />
+                            <uie:IntegerField label="Repeat Index" value="0" name="repeat-field" style="justify-content: flex-start; align-items: stretch; font-size: 15px;" />
+                        </ui:GroupBox>
+                        <ui:Button text="Apply" display-tooltip-when-elided="true" name="point-apply-button" style="height: auto; font-size: 16px; align-self: stretch;" />
+                        <ui:Label tabindex="-1" text="Remove" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                        <ui:Button text="Clear All Points" display-tooltip-when-elided="true" name="remove-button" style="height: auto; font-size: 16px; align-self: stretch;" />
+                    </ui:GroupBox>
+                </ui:GroupBox>
+                <ui:GroupBox name="range-box" style="margin-top: 0; padding-top: 0; display: none;">
+                    <ui:Label text="Range" display-tooltip-when-elided="true" style="font-size: 35px; margin-top: 10px; color: rgb(0, 184, 255); background-color: rgb(0, 0, 0); padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;" />
+                    <ui:GroupBox name="GroupBox" style="flex-direction: column; align-items: flex-start; justify-content: flex-start; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 0;">
+                        <ui:Label tabindex="-1" text="Info" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
+                        <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px; align-self: stretch; justify-content: space-around; align-items: stretch; min-width: auto; min-height: auto;">
+                            <ui:Vector2Field label="Position" name="range-pos-field" style="margin-top: 1px; margin-right: 3px; margin-bottom: 1px; margin-left: 3px; width: auto; font-size: 15px; justify-content: flex-end; align-self: stretch; align-items: stretch;" />
+                        </ui:GroupBox>
+                        <ui:Button text="Apply" display-tooltip-when-elided="true" name="range-apply-button" style="height: auto; font-size: 16px; align-self: stretch;" />
+                    </ui:GroupBox>
+                </ui:GroupBox>
+            </ui:GroupBox>
+        </ui:GroupBox>
+        <ui:GroupBox name="preview-container" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;">
+            <ui:VisualElement name="preview-area" style="width: 800px; height: 800px; align-items: auto; justify-content: flex-start; margin-left: 0;">
+                <ui:VisualElement name="preview-panel" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Editor/Point/Transparency500.png?fileID=2800000&amp;guid=9541ed3c445b6034ea496edfbee85b62&amp;type=3#Transparency500&apos;); align-items: center; justify-content: center; max-width: none; max-height: none; width: auto; height: auto;">
+                    <ui:VisualElement name="draw-preview" style="width: 800px; height: 800px; background-image: url(&apos;project://database/Assets/Editor/target.png?fileID=2800000&amp;guid=0d82970ff7f246941a7c4ec4e9480954&amp;type=3#target&apos;); margin-bottom: 0; align-items: center; justify-content: center; max-width: none; max-height: none; min-width: auto; min-height: auto; margin-top: 0; margin-right: 0; margin-left: 0; position: absolute;" />
+                    <ui:VisualElement name="point-preview" style="width: 800px; height: 800px; background-image: none; margin-bottom: 0; align-items: center; justify-content: center; max-width: none; max-height: none; min-width: auto; min-height: auto; margin-top: 0; margin-right: 0; margin-left: 0;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:GroupBox>
+    </ui:GroupBox>
+</ui:UXML>

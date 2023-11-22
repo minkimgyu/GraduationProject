@@ -5,17 +5,17 @@ using UnityEngine;
 public class ManualRecoilGenerator : RecoilStrategy
 {
     bool _nowCreateRecoil = false;
-    RecoilRange _recoilRange;
+    RecoilRangeData _recoilRange;
 
     Vector2 _recoilDirection;
 
-    public ManualRecoilGenerator(float shootInterval, RecoilRange recoilRange)
+    public ManualRecoilGenerator(float shootInterval, RecoilRangeData recoilRange)
     {
         _shootInterval = shootInterval;
         _timer = new Timer();
 
         _recoilRange = recoilRange;
-        _recoilDirection = Vector2.zero;
+        _recoilDirection = recoilRange.ReturnFixedPoint();
     }
 
     public override void OnUpdate()
@@ -25,7 +25,7 @@ public class ManualRecoilGenerator : RecoilStrategy
         if (_nowCreateRecoil == true && _timer.IsFinish == true) // 반동을 걸어주고 끝난 경우
         {
             StopRecoil();
-            StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration); // 이후, 회복시킴
+            StartLerp(Vector2.zero, _recoilRange.RecoveryDuration); // 이후, 회복시킴
             _nowCreateRecoil = false;
         }
     }
@@ -71,7 +71,6 @@ public class ManualRecoilGenerator : RecoilStrategy
 
     protected override Vector2 ReturnNextRecoilPoint()
     {
-        _recoilDirection.Set(0, _recoilRange.YUpPoint);
         return _recoilDirection;
     }
 
@@ -83,7 +82,7 @@ public class ManualRecoilGenerator : RecoilStrategy
     {
         // 반동을 바로 회복하는 코드 필요함
         StopRecoil();
-        StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration);
+        StartLerp(Vector2.zero, _recoilRange.RecoveryDuration);
     }
 
     public override void ResetValues()

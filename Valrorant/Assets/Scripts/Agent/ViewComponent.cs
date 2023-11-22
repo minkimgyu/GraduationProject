@@ -32,7 +32,8 @@ public class ViewComponent : MonoBehaviour
 
     public void OnRecoilProgress(Vector2 cameraForce, Vector2 recoilForce, Vector2 actorBoneForce)
     {
-        _cameraRotationMultiplier = cameraForce;
+        _cameraRotationMultiplier = cameraForce; // 카메라만 영향을 반만 받음
+
         _firePointRotationMultiplier = recoilForce;
         _actorBoneRotationMultiplier = actorBoneForce;
     }
@@ -42,7 +43,8 @@ public class ViewComponent : MonoBehaviour
         _viewRotation.x += Mathf.Lerp(_viewRotation.x, Input.GetAxisRaw("Mouse X"), _viewSensitivity.x * Time.smoothDeltaTime);
         _viewRotation.y = Mathf.Clamp(_viewRotation.y - (Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.smoothDeltaTime), _viewClampYMin, _viewClampYMax);
 
-        _direction.rotation = Quaternion.Euler(0, CameraViewRotation.x, 0);
+        _direction.rotation = Quaternion.Euler(0, ActorBoneViewRotation.x, 0);
+
         _actorBone.rotation = Quaternion.Euler(ActorBoneViewRotation.y, _direction.eulerAngles.y, 0);
     }
 

@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class BurstRecoilGenerator : RecoilStrategy
 {
-    RecoilRange _recoilRange;
+    //RecoilRange _recoilRange;
 
-    float _upPoint;
+    RecoilRangeData _recoilRange;
 
     Vector2 _recoilDirection;
 
-    public BurstRecoilGenerator(float shootInterval, RecoilRange recoilRange)
+    public BurstRecoilGenerator(float shootInterval, RecoilRangeData recoilRange)
     {
         _shootInterval = shootInterval;
         _timer = new Timer();
-
-        _upPoint = 0;
 
         _recoilRange = recoilRange;
         _recoilDirection = Vector2.zero;
@@ -61,9 +59,7 @@ public class BurstRecoilGenerator : RecoilStrategy
 
     protected override Vector2 ReturnNextRecoilPoint()
     {
-        _upPoint += _recoilRange.YUpPoint;
-
-        _recoilDirection.Set(0, _upPoint);
+        _recoilDirection += _recoilRange.Point;
         return _recoilDirection;
     }
 
@@ -71,19 +67,19 @@ public class BurstRecoilGenerator : RecoilStrategy
     public override void OnEventFinished()
     {
         StopRecoil();
-        _upPoint = 0; // 초기화
-        StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration); // 이후, 회복시킴
+        _recoilDirection = Vector2.zero;
+        StartLerp(Vector2.zero, _recoilRange.RecoveryDuration); // 이후, 회복시킴
     }
 
     public override void RecoverRecoil()
     {
         StopRecoil();
-        StartLerp(Vector2.zero, _recoilRange.RecoilRecoverDuration);
+        StartLerp(Vector2.zero, _recoilRange.RecoveryDuration);
     }
 
     public override void ResetValues()
     {
         StopRecoil();
-        _upPoint = 0; // 초기화
+        _recoilDirection = Vector2.zero;
     }
 }

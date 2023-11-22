@@ -8,7 +8,6 @@ namespace FSM
     {
         public override void CheckStateChange() { }
 
-        public override void OnMessageReceived() { } // 여러 개 만들어서 상속
         public override void OnMessageReceived(BaseWeapon.Type weaponType) { } // 여러 개 만들어서 상속
         public override void OnMessageReceived(bool containSameType) { }
 
@@ -33,8 +32,6 @@ namespace FSM
 
     abstract public class BaseState
     {
-        public abstract void OnMessageReceived();
-
         public abstract void OnMessageReceived(BaseWeapon.Type weaponType);
 
         public abstract void OnMessageReceived(bool containSameType);
