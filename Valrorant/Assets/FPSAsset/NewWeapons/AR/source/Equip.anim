@@ -162,7 +162,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine
+    path: AR
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -3835,7 +3835,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine
+    path: AR
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -3887,7 +3887,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine/handle
+    path: handle
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -3939,7 +3939,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine/handle/handle2
+    path: handle/handle2
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -3991,7 +3991,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine/bolt
+    path: bolt
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -4043,7 +4043,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: Go/carbine/boltcatch
+    path: boltcatch
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -4631,7 +4631,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4785,7 +4785,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4939,7 +4939,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5093,7 +5093,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -19863,7 +19863,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -19945,7 +19945,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20027,7 +20027,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20082,7 +20082,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Go/carbine/handle
+    path: handle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20137,7 +20137,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Go/carbine/handle
+    path: handle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20192,7 +20192,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Go/carbine/handle
+    path: handle
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20247,7 +20247,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Go/carbine/handle/handle2
+    path: handle/handle2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20302,7 +20302,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Go/carbine/handle/handle2
+    path: handle/handle2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20357,7 +20357,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Go/carbine/handle/handle2
+    path: handle/handle2
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20412,7 +20412,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Go/carbine/bolt
+    path: bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20467,7 +20467,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Go/carbine/bolt
+    path: bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20522,7 +20522,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Go/carbine/bolt
+    path: bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20577,7 +20577,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: Go/carbine/boltcatch
+    path: boltcatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20632,7 +20632,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: Go/carbine/boltcatch
+    path: boltcatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -20687,7 +20687,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: Go/carbine/boltcatch
+    path: boltcatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -21313,7 +21313,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -21467,7 +21467,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -21621,7 +21621,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: Go/carbine
+    path: AR
     classID: 4
     script: {fileID: 0}
   - curve:

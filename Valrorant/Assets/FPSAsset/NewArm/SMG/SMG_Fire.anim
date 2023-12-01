@@ -36,7 +36,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45
+    path: Root/Joint/WeaponContainer
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -61,7 +61,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -104,7 +104,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -129,7 +129,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1133,7 +1133,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45
+    path: Root/Joint/WeaponContainer
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1176,7 +1176,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/carrier
+    path: Root/Joint/WeaponContainer/carrier
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1201,7 +1201,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1226,7 +1226,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1251,7 +1251,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -4842,7 +4842,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4870,7 +4870,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4898,7 +4898,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4926,7 +4926,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4954,7 +4954,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -4982,7 +4982,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5010,7 +5010,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5038,7 +5038,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5084,7 +5084,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5130,7 +5130,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5176,7 +5176,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5222,7 +5222,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5250,7 +5250,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5278,7 +5278,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5306,7 +5306,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5334,7 +5334,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9620,7 +9620,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9666,7 +9666,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9712,7 +9712,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9758,7 +9758,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: smg45/carrier
+    path: Root/Joint/WeaponContainer/carrier
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9804,7 +9804,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: smg45/carrier
+    path: Root/Joint/WeaponContainer/carrier
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9850,7 +9850,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: smg45/carrier
+    path: Root/Joint/WeaponContainer/carrier
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9878,7 +9878,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9906,7 +9906,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9934,7 +9934,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9962,7 +9962,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -9990,7 +9990,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -10018,7 +10018,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -10046,7 +10046,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -10074,7 +10074,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -10102,7 +10102,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18615,7 +18615,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18643,7 +18643,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18671,7 +18671,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: smg45
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18699,7 +18699,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18727,7 +18727,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18755,7 +18755,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: smg45/bolt
+    path: Root/Joint/WeaponContainer/bolt
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18801,7 +18801,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18847,7 +18847,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18893,7 +18893,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: smg45/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18921,7 +18921,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18949,7 +18949,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -18977,7 +18977,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: smg45/clip
+    path: Root/Joint/WeaponContainer/clip
     classID: 4
     script: {fileID: 0}
   - curve:

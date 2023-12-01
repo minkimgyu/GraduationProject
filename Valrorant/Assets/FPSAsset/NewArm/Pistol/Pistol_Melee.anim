@@ -126,7 +126,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -160,7 +160,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -194,7 +194,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1127,7 +1127,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1152,7 +1152,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1186,7 +1186,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/lid
+    path: Root/Joint/WeaponContainer/lid
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1220,7 +1220,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/slide
+    path: Root/Joint/WeaponContainer/slide
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1254,7 +1254,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    path: BPpistol/slidecatch
+    path: Root/Joint/WeaponContainer/slidecatch
   - curve:
       serializedVersion: 2
       m_Curve:
@@ -1758,7 +1758,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1876,7 +1876,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -1994,7 +1994,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2112,7 +2112,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2149,7 +2149,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2186,7 +2186,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2223,7 +2223,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2260,7 +2260,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2297,7 +2297,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.x
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2334,7 +2334,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.y
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2371,7 +2371,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.z
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -2408,7 +2408,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalRotation.w
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6080,7 +6080,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6144,7 +6144,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6208,7 +6208,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6236,7 +6236,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6264,7 +6264,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6292,7 +6292,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6329,7 +6329,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: BPpistol/lid
+    path: Root/Joint/WeaponContainer/lid
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6366,7 +6366,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: BPpistol/lid
+    path: Root/Joint/WeaponContainer/lid
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6403,7 +6403,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: BPpistol/lid
+    path: Root/Joint/WeaponContainer/lid
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6440,7 +6440,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: BPpistol/slide
+    path: Root/Joint/WeaponContainer/slide
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6477,7 +6477,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: BPpistol/slide
+    path: Root/Joint/WeaponContainer/slide
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6514,7 +6514,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: BPpistol/slide
+    path: Root/Joint/WeaponContainer/slide
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6551,7 +6551,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.x
-    path: BPpistol/slidecatch
+    path: Root/Joint/WeaponContainer/slidecatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6588,7 +6588,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.y
-    path: BPpistol/slidecatch
+    path: Root/Joint/WeaponContainer/slidecatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -6625,7 +6625,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalPosition.z
-    path: BPpistol/slidecatch
+    path: Root/Joint/WeaponContainer/slidecatch
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7353,7 +7353,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7471,7 +7471,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7589,7 +7589,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: BPpistol
+    path: Root/Joint/WeaponContainer
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7626,7 +7626,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7663,7 +7663,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7700,7 +7700,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: BPpistol/clip/bullet
+    path: Root/Joint/WeaponContainer/clip/bullet
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7737,7 +7737,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.x
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7774,7 +7774,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.y
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -7811,7 +7811,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: localEulerAngles.z
-    path: BPpistol/trigger
+    path: Root/Joint/WeaponContainer/trigger
     classID: 4
     script: {fileID: 0}
   - curve:
