@@ -41,19 +41,19 @@ public class BurstRecoilGenerator : RecoilStrategy
 
     public override void OnLink(GameObject player)
     {
-        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        RecoilReceiver viewComponent = player.GetComponent<RecoilReceiver>();
         OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
     }
 
     public override void OnUnlink(GameObject player)
     {
-        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        RecoilReceiver viewComponent = player.GetComponent<RecoilReceiver>();
         OnRecoilProgressRequested -= viewComponent.OnRecoilProgress;
     }
 
     public override void OnInintialize(GameObject player)
     {
-        ViewComponent viewComponent = player.GetComponent<ViewComponent>();
+        RecoilReceiver viewComponent = player.GetComponent<RecoilReceiver>();
         OnRecoilProgressRequested += viewComponent.OnRecoilProgress;
     }
 

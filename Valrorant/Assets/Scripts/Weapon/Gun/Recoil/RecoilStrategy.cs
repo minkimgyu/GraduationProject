@@ -18,7 +18,7 @@ abstract public class RecoilStrategy
 
     protected Timer _timer;
 
-    public System.Action<Vector2, Vector2, Vector2> OnRecoilProgressRequested;
+    public System.Action<Vector2> OnRecoilProgressRequested;
 
     public RecoilStrategy()
     {
@@ -83,7 +83,9 @@ abstract public class RecoilStrategy
         if (_timer.IsRunning == false) return;
 
         Vector2 recoilValue = LerpRecoil();
-        OnRecoilProgressRequested?.Invoke(recoilValue * _cameraRecoilMultiplier, recoilValue * _firePointRecoilMultiplier, recoilValue * _actorBoneRecoilMultiplier);
+        OnRecoilProgressRequested?.Invoke(recoilValue);
+
+        //OnRecoilProgressRequested?.Invoke(recoilValue * _cameraRecoilMultiplier, recoilValue * _firePointRecoilMultiplier, recoilValue * _actorBoneRecoilMultiplier);
     }
 
     protected abstract Vector2 ReturnNextRecoilPoint();

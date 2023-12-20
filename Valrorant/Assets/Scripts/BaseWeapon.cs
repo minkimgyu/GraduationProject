@@ -94,11 +94,19 @@ abstract public class BaseWeapon : WeaponRoutine
 
     public virtual void ThrowGun(float force) { }
 
+    public virtual void RefillAmmo() {  }
+
+    public virtual bool NowNeedToRefillAmmo() { return false; }
+
     //////////////////////////////////////////////////////////////////////////////////////////// 이벤트 모음
 
     void LinkRoundViewer(bool nowLink)
     {
+        
+
         GameObject gameObject = FindWithTag("BulletLeftShower");
+        if (gameObject == null) return;
+
         LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();
         if (_leftRoundShower == null) return;
 
@@ -117,6 +125,8 @@ abstract public class BaseWeapon : WeaponRoutine
         _animator = GetComponent<Animator>();
 
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
+
+        if (player.tag != "Player") return;
         LinkRoundViewer(true);
     }
 
@@ -201,6 +211,11 @@ abstract public class BaseWeapon : WeaponRoutine
         return _reloadStrategy.IsReloadFinish();
     }
 
+    public bool IsReloadRunning() // 재장전 중인 경우
+    {
+        return _reloadStrategy.IsReloadRunning();
+    }
+
     public void ResetReload() // 재장전을 취소할 경우
     {
         _reloadStrategy.OnResetReload();
@@ -221,7 +236,12 @@ abstract public class BaseWeapon : WeaponRoutine
         return _reloadStrategy.CancelReloadAndGoToSubAction();
     }
 
+    public virtual bool NeedToReload() { return true; }
+
     public virtual bool CanReload() { return false; }
+
+    public virtual bool CanAttack() { return false; }
+
     public virtual void OnReload() { }
 
     /// ActionStrategy 이벤트

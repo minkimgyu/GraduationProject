@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Dummy : MonoBehaviour, IDamageable
 {
+    public float HP { get; set; }
+
     public void GetDamage(float damage)
     {
     }

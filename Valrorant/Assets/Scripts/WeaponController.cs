@@ -4,7 +4,12 @@ using UnityEngine;
 using System;
 using FSM;
 
-public class WeaponController : MonoBehaviour
+public interface IEquipedWeapon
+{
+    BaseWeapon ReturnNowEquipedWeapon();
+}
+
+public class WeaponController : MonoBehaviour, IEquipedWeapon
 {
     [SerializeField]
     Transform _cameraHolder;
@@ -309,6 +314,11 @@ public class WeaponController : MonoBehaviour
                 weapon.Value.gameObject.SetActive(false);
             }
         }
+    }
+
+    public BaseWeapon ReturnNowEquipedWeapon()
+    {
+        return _nowEquipedWeapon;
     }
 
     #endregion

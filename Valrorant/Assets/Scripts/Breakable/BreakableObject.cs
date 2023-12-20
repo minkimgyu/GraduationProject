@@ -8,8 +8,7 @@ public class BreakableObject : DirectDamageTarget, IDamageable
     [SerializeField]
     Component component;
 
-    [SerializeField]
-    float _hp;
+    [SerializeField] float _maxHp;
 
     bool breakOnce = true;
 
@@ -19,12 +18,20 @@ public class BreakableObject : DirectDamageTarget, IDamageable
     [SerializeField]
     GameObject fracturedObjectPrefab;
 
+    public float HP { get; set; }
+
+    protected override void Start()
+    {
+        base.Start();
+        HP = _maxHp;
+    }
+
     public void GetDamage(float damage)
     {
         FracturedObject fracturedObject;
 
-        _hp -= damage;
-        if(_hp < 0 && breakOnce == true)
+        HP -= damage;
+        if(HP < 0 && breakOnce == true)
         {
             breakOnce = false;
             GameObject go = Instantiate(fracturedObjectPrefab, transform.position, transform.rotation);

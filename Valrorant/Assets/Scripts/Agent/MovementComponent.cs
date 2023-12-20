@@ -4,12 +4,10 @@ using UnityEngine;
 using ObserverPattern;
 using System;
 
-public class MovementComponent : MonoBehaviour
+public class MovementComponent : DisplacementSender
 {
     private Rigidbody _rigidbody;
     private Vector3 _moveDirection;
-
-    private float _velocityLengthDecreaseRatio = 0.1f;
 
     [SerializeField] Transform _direction;
 
@@ -44,8 +42,6 @@ public class MovementComponent : MonoBehaviour
     float _standHeight = 0f;
     float _crouchHeight = 0f;
 
-    public Action<float> OnDisplacementRequested;
-
     Timer _postureTimer;
     public Timer PostureTimer { get { return _postureTimer; } }
 
@@ -63,7 +59,7 @@ public class MovementComponent : MonoBehaviour
         _postureTimer = new Timer();
     }
 
-    public void RaiseDisplacementEvent()
+    public override void RaiseDisplacementEvent()
     {
         OnDisplacementRequested?.Invoke(_rigidbody.velocity.magnitude * _velocityLengthDecreaseRatio);
     }

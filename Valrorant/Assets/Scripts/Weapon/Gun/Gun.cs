@@ -24,6 +24,9 @@ abstract public class Gun : BaseWeapon, IInteractable
     protected int _maxAmmoCountInMagazine = 30;
 
     [SerializeField]
+    protected int _maxAmmoCountsInPossession;
+
+    [SerializeField]
     protected int _ammoCountsInMagazine;
 
     [SerializeField]
@@ -45,6 +48,21 @@ abstract public class Gun : BaseWeapon, IInteractable
     public Action<bool, string, Vector3> OnViewEventRequest;
 
     public override bool CanDrop() { return true; }
+
+    public override bool NowNeedToRefillAmmo() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession == 0; }
+
+    public override bool NeedToReload() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession > 0; }
+
+    public override bool CanAttack() { return _ammoCountsInMagazine > 0; }
+
+    public override void RefillAmmo() 
+    {
+        //_reloadStrategy.OnResetReload(); // 리로드 중이면 취소하고 진행
+
+        _ammoCountsInMagazine = _maxAmmoCountInMagazine;
+        _ammoCountsInPossession = _maxAmmoCountsInPossession;
+        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+    }
 
     /// AutoReload 이벤트
     ////////////////////////////////////////////////////////////////////////////////////
@@ -110,9 +128,6 @@ abstract public class Gun : BaseWeapon, IInteractable
     {
         base.Initialize(player, armMesh, cam, ownerAnimator);
 
-        WeaponInfoViwer weaponInfoViwer = GameObject.FindWithTag("WeaponInfoViewer").GetComponent<WeaponInfoViwer>();
-        OnViewEventRequest = weaponInfoViwer.OnViewEventReceived; // 드랍 시 해제 필요
-
         _gunCollider = GetComponent<BoxCollider>();
         _gunRigidbody = GetComponent<Rigidbody>();
 
@@ -120,6 +135,15 @@ abstract public class Gun : BaseWeapon, IInteractable
         _gunRigidbody.isKinematic = true;
 
         _ammoCountsInMagazine = _maxAmmoCountInMagazine;
+        _ammoCountsInPossession = _maxAmmoCountsInPossession;
+
+        GameObject viewer = GameObject.FindWithTag("WeaponInfoViewer");
+        if (viewer == null) return;
+
+        WeaponInfoViwer weaponInfoViwer = viewer.GetComponent<WeaponInfoViwer>();
+        if (weaponInfoViwer == null) return; 
+
+        OnViewEventRequest = weaponInfoViwer.OnViewEventReceived; // 드랍 시 해제 필요
     }
 
     protected override void OnMainActionEventCallRequsted()
@@ -167,12 +191,12 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     public void OnSightEnter()
     {
-        OnViewEventRequest(true, _weaponName.ToString(), _objectMesh.position);
+        OnViewEventRequest?.Invoke(true, _weaponName.ToString(), _objectMesh.position);
     }
 
     public void OnSightExit()
     {
-        OnViewEventRequest(false, _weaponName.ToString(), _objectMesh.position);
+        OnViewEventRequest?.Invoke(false, _weaponName.ToString(), _objectMesh.position);
     }
 
     protected override void OnCollisionEnterRequested(Collision collision)

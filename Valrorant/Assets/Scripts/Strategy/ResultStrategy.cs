@@ -133,12 +133,16 @@ public class ZoomStrategy : ResultStrategy
     public override void OnLink(GameObject player)
     {
         ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
+        if (zoomComponent == null) return;
+
         OnZoomRequested += zoomComponent.OnZoomCalled;
     }
 
     public override void OnUnLink(GameObject player)
     {
         ZoomComponent zoomComponent = player.GetComponent<ZoomComponent>();
+        if (zoomComponent == null) return;
+
         OnZoomRequested -= zoomComponent.OnZoomCalled;
     }
 
@@ -604,13 +608,17 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     public override void OnUnLink(GameObject player)
     {
-        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
+        DisplacementSender movementComponent = player.GetComponent<DisplacementSender>();
+        if (movementComponent == null) return;
+
         movementComponent.OnDisplacementRequested -= OnDisplacementWeightReceived;
     }
 
     public override void OnLink(GameObject player)
     {
-        MovementComponent movementComponent = player.GetComponent<MovementComponent>();
+        DisplacementSender movementComponent = player.GetComponent<DisplacementSender>();
+        if (movementComponent == null) return;
+
         movementComponent.OnDisplacementRequested += OnDisplacementWeightReceived;
     }
 

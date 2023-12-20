@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FSM;
+using System;
 
-public class PlayerController : MonoBehaviour, IDamageable
+public class PlayerController : DirectDamageTarget, IDamageable
 {
     public enum InteractionState
     {
@@ -40,10 +41,34 @@ public class PlayerController : MonoBehaviour, IDamageable
     InteractionController _interactionComponent;
     public InteractionController InteractionComponent { get { return _interactionComponent; } }
 
+    [SerializeField] float _maxHp;
+    public float HP { get; set; }
+
     Animator _animator;
 
-    private void Start()
+    public Action OnDeathRequested;
+
+    public Action<float> OnHealthUpdateRequested;
+
+    public void GetDamage(float damage)
     {
+        HP -= damage;
+        OnHealthUpdateRequested?.Invoke(HP);
+
+        if (HP <= 0)
+        {
+            // StageManager에 메시지 보내기
+            //Destroy(gameObject);
+
+            OnDeathRequested?.Invoke();
+        }
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        HP = _maxHp;
+
         _animator = GetComponentInChildren<Animator>();
         _interactionComponent = GetComponent<InteractionController>();
         _movementComponent = GetComponent<MovementComponent>();
@@ -53,6 +78,23 @@ public class PlayerController : MonoBehaviour, IDamageable
         _postureFSM = new StateMachine<PostureState>();
 
         InitializeFSM();
+
+        GameObject go = GameObject.FindWithTag("StageManager");
+        if (go == null) return;
+
+        StageManager stageManager = go.GetComponent<StageManager>();
+        if (stageManager == null) return;
+
+        OnDeathRequested += stageManager.OnPlayerKillRequested;
+
+        GameObject healthShower = GameObject.FindWithTag("HealthLeftShower");
+        if (healthShower == null) return;
+
+        LeftHealthShower leftHealthShower = healthShower.GetComponent<LeftHealthShower>();
+        if (leftHealthShower == null) return;
+
+        OnHealthUpdateRequested += leftHealthShower.OnHealthUpdateRequested;
+        OnHealthUpdateRequested?.Invoke(HP);
     }
 
     private void Update()
@@ -106,10 +148,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         _movementFSM.Initialize(movementStates);
         _movementFSM.SetState(MovementState.Stop);
-    }
-
-    public void GetDamage(float damage)
-    {
     }
 
     public Vector3 GetFowardVector()

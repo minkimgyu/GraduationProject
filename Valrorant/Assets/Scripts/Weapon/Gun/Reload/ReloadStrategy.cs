@@ -21,6 +21,7 @@ abstract public class ReloadStrategy
     /// 리로드가 끝난 경우 해당 State에서 탈출
     /// </summary>
     public abstract bool IsReloadFinish();
+    public abstract bool IsReloadRunning();
 
     protected abstract void CalculateAmmoWhenReload();
 
@@ -49,7 +50,8 @@ public class NoReload : ReloadStrategy
     protected override void CalculateAmmoWhenReload() { } // 총알 계산
    
     public override bool IsReloadFinish() { return false; }
-  
+    public override bool IsReloadRunning() { return false; }
+
     public override void OnResetReload() { }
 }
 
@@ -92,6 +94,11 @@ abstract public class BaseReload : ReloadStrategy
     {
         return _reloadExitTimer.IsFinish;
     }
+
+    public override bool IsReloadRunning()
+    {
+        return _reloadExitTimer.IsRunning;
+    }
 }
 
     // 탄창으로 장전하는 경우
@@ -127,6 +134,7 @@ public class MagazineReload : BaseReload
         if(_reloadTimer.IsFinish)
         {
             CalculateAmmoWhenReload();
+            _reloadTimer.Reset();
         }
 
         _reloadExitTimer.Update();
@@ -178,11 +186,6 @@ public class RoundByRoundReload : BaseReload
         _reloadDurationPerRound = reloadDurationPerRound;
 
         _storedReloadRatio = 0;
-    }
-
-    public override bool IsReloadFinish()
-    {
-        return _reloadExitTimer.IsFinish;
     }
 
     public override bool CancelReloadAndGoToMainAction() { return Input.GetMouseButtonDown(0); }
