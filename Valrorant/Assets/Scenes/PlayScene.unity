@@ -977,7 +977,8 @@ GameObject:
   - component: {fileID: 45716522}
   - component: {fileID: 45716521}
   - component: {fileID: 45716520}
-  m_Layer: 0
+  - component: {fileID: 45716523}
+  m_Layer: 10
   m_Name: TiledBrick5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1073,6 +1074,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45716518}
   m_Mesh: {fileID: 4300000, guid: 9154c20a006d4744bbb36e39c73a9edd, type: 3}
+--- !u!114 &45716523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45716518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &48159564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,7 +1185,8 @@ GameObject:
   - component: {fileID: 48635676}
   - component: {fileID: 48635675}
   - component: {fileID: 48635674}
-  m_Layer: 0
+  - component: {fileID: 48635677}
+  m_Layer: 10
   m_Name: Barracks2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1267,6 +1285,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 48635672}
   m_Mesh: {fileID: 4300000, guid: 3c71554aa4b132342a5923e5b2cf60ca, type: 3}
+--- !u!114 &48635677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48635672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &49124873
 GameObject:
   m_ObjectHideFlags: 0
@@ -5939,7 +5973,8 @@ GameObject:
   - component: {fileID: 239474525}
   - component: {fileID: 239474524}
   - component: {fileID: 239474523}
-  m_Layer: 0
+  - component: {fileID: 239474526}
+  m_Layer: 10
   m_Name: TiledBrick10 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6035,6 +6070,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 239474521}
   m_Mesh: {fileID: 4300000, guid: 4c6ab391ca55f964d80cb9f2bdcd7ca3, type: 3}
+--- !u!114 &239474526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 239474521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &240581621
 GameObject:
   m_ObjectHideFlags: 0
@@ -9598,7 +9649,8 @@ GameObject:
   - component: {fileID: 396869230}
   - component: {fileID: 396869229}
   - component: {fileID: 396869228}
-  m_Layer: 0
+  - component: {fileID: 396869231}
+  m_Layer: 10
   m_Name: TiledBrick4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9694,6 +9746,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 396869226}
   m_Mesh: {fileID: 4300000, guid: f41f21f8c89c5ee4c94330abd05b6a8a, type: 3}
+--- !u!114 &396869231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 396869226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &397794403
 GameObject:
   m_ObjectHideFlags: 0
@@ -9706,7 +9774,8 @@ GameObject:
   - component: {fileID: 397794407}
   - component: {fileID: 397794406}
   - component: {fileID: 397794405}
-  m_Layer: 0
+  - component: {fileID: 397794408}
+  m_Layer: 10
   m_Name: TiledBrick4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9802,6 +9871,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397794403}
   m_Mesh: {fileID: 4300000, guid: f41f21f8c89c5ee4c94330abd05b6a8a, type: 3}
+--- !u!114 &397794408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 397794403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &402347701
 GameObject:
   m_ObjectHideFlags: 0
@@ -10231,7 +10316,8 @@ GameObject:
   - component: {fileID: 412024186}
   - component: {fileID: 412024185}
   - component: {fileID: 412024184}
-  m_Layer: 0
+  - component: {fileID: 412024187}
+  m_Layer: 10
   m_Name: TiledBrick12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10327,6 +10413,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 412024182}
   m_Mesh: {fileID: 4300000, guid: 6aa357370833cdc4ca5e7b9a37e71105, type: 3}
+--- !u!114 &412024187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412024182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &434845519
 GameObject:
   m_ObjectHideFlags: 0
@@ -11930,7 +12032,8 @@ GameObject:
   - component: {fileID: 490112571}
   - component: {fileID: 490112570}
   - component: {fileID: 490112569}
-  m_Layer: 0
+  - component: {fileID: 490112572}
+  m_Layer: 10
   m_Name: TiledBrick4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12026,6 +12129,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 490112567}
   m_Mesh: {fileID: 4300000, guid: f41f21f8c89c5ee4c94330abd05b6a8a, type: 3}
+--- !u!114 &490112572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490112567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &491387118
 GameObject:
   m_ObjectHideFlags: 0
@@ -12423,7 +12542,8 @@ GameObject:
   - component: {fileID: 511105590}
   - component: {fileID: 511105589}
   - component: {fileID: 511105588}
-  m_Layer: 0
+  - component: {fileID: 511105591}
+  m_Layer: 10
   m_Name: TiledBrick9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12519,6 +12639,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 511105586}
   m_Mesh: {fileID: 4300002, guid: b8db1d7ddb405d44aba03051c5c374e9, type: 3}
+--- !u!114 &511105591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 511105586}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &515030631
 GameObject:
   m_ObjectHideFlags: 0
@@ -12940,7 +13076,8 @@ GameObject:
   - component: {fileID: 531826868}
   - component: {fileID: 531826867}
   - component: {fileID: 531826866}
-  m_Layer: 0
+  - component: {fileID: 531826869}
+  m_Layer: 10
   m_Name: TiledBrick15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13036,6 +13173,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 531826864}
   m_Mesh: {fileID: 4300000, guid: d860ecff569d6e5498780ba856816934, type: 3}
+--- !u!114 &531826869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531826864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &565361345
 GameObject:
   m_ObjectHideFlags: 0
@@ -17619,7 +17772,8 @@ GameObject:
   m_Component:
   - component: {fileID: 812058086}
   - component: {fileID: 812058087}
-  m_Layer: 0
+  - component: {fileID: 812058088}
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17662,6 +17816,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1.2299817}
   m_Center: {x: 0, y: -0.00054384826, z: -0.17055704}
+--- !u!114 &812058088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812058085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &814504860
 GameObject:
   m_ObjectHideFlags: 0
@@ -17845,7 +18015,8 @@ GameObject:
   - component: {fileID: 823736246}
   - component: {fileID: 823736245}
   - component: {fileID: 823736244}
-  m_Layer: 0
+  - component: {fileID: 823736247}
+  m_Layer: 10
   m_Name: TiledBrick10 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17861,7 +18032,7 @@ Transform:
   m_GameObject: {fileID: 823736242}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 12.695, y: 0, z: -14.42}
+  m_LocalPosition: {x: 13.506, y: 0, z: -14.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17941,6 +18112,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 823736242}
   m_Mesh: {fileID: 4300000, guid: 4c6ab391ca55f964d80cb9f2bdcd7ca3, type: 3}
+--- !u!114 &823736247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823736242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &825413047
 GameObject:
   m_ObjectHideFlags: 0
@@ -17953,7 +18140,8 @@ GameObject:
   - component: {fileID: 825413051}
   - component: {fileID: 825413050}
   - component: {fileID: 825413049}
-  m_Layer: 0
+  - component: {fileID: 825413052}
+  m_Layer: 10
   m_Name: TiledBrick14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18049,6 +18237,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825413047}
   m_Mesh: {fileID: 4300000, guid: 4bfa9f4c2b2e98d41b107dd1f43ab5a8, type: 3}
+--- !u!114 &825413052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 825413047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &826581917
 GameObject:
   m_ObjectHideFlags: 0
@@ -20829,7 +21033,8 @@ GameObject:
   - component: {fileID: 943380236}
   - component: {fileID: 943380235}
   - component: {fileID: 943380234}
-  m_Layer: 0
+  - component: {fileID: 943380237}
+  m_Layer: 10
   m_Name: TiledBrick10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20925,6 +21130,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943380232}
   m_Mesh: {fileID: 4300000, guid: 4c6ab391ca55f964d80cb9f2bdcd7ca3, type: 3}
+--- !u!114 &943380237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943380232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &946720859
 GameObject:
   m_ObjectHideFlags: 0
@@ -23879,7 +24100,8 @@ GameObject:
   - component: {fileID: 1060538374}
   - component: {fileID: 1060538373}
   - component: {fileID: 1060538372}
-  m_Layer: 0
+  - component: {fileID: 1060538375}
+  m_Layer: 10
   m_Name: TiledBrick6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23976,6 +24198,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1060538370}
   m_Mesh: {fileID: 4300000, guid: f0cabd8b5abd4484c8604bc36ed17d13, type: 3}
+--- !u!114 &1060538375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060538370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1062570866
 GameObject:
   m_ObjectHideFlags: 0
@@ -25868,7 +26106,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1183917799}
   - component: {fileID: 1183917800}
-  m_Layer: 0
+  - component: {fileID: 1183917801}
+  m_Layer: 10
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25911,6 +26150,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1.2299817}
   m_Center: {x: 0, y: -0.00054384826, z: -0.17055704}
+--- !u!114 &1183917801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183917798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1187716872
 GameObject:
   m_ObjectHideFlags: 0
@@ -26101,7 +26356,8 @@ GameObject:
   - component: {fileID: 1190704352}
   - component: {fileID: 1190704351}
   - component: {fileID: 1190704350}
-  m_Layer: 0
+  - component: {fileID: 1190704353}
+  m_Layer: 10
   m_Name: TiledBrick8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26197,6 +26453,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190704348}
   m_Mesh: {fileID: 4300000, guid: e22ef565c6c3e9f428988eb25562eb73, type: 3}
+--- !u!114 &1190704353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1190704348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1192771647
 GameObject:
   m_ObjectHideFlags: 0
@@ -28564,7 +28836,8 @@ GameObject:
   - component: {fileID: 1295866975}
   - component: {fileID: 1295866974}
   - component: {fileID: 1295866973}
-  m_Layer: 0
+  - component: {fileID: 1295866976}
+  m_Layer: 10
   m_Name: TiledBrick7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28660,6 +28933,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1295866971}
   m_Mesh: {fileID: 4300000, guid: 1b3c4b63307418f459c979594e9cdb43, type: 3}
+--- !u!114 &1295866976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1295866971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1298409337
 GameObject:
   m_ObjectHideFlags: 0
@@ -29451,7 +29740,8 @@ GameObject:
   - component: {fileID: 1331200199}
   - component: {fileID: 1331200198}
   - component: {fileID: 1331200197}
-  m_Layer: 0
+  - component: {fileID: 1331200200}
+  m_Layer: 10
   m_Name: Barracks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29551,6 +29841,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1331200195}
   m_Mesh: {fileID: 4300000, guid: a037ddb2ce204b249a720efdf6512435, type: 3}
+--- !u!114 &1331200200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1331200195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1331906657
 GameObject:
   m_ObjectHideFlags: 0
@@ -33303,7 +33609,8 @@ GameObject:
   - component: {fileID: 1506791014}
   - component: {fileID: 1506791013}
   - component: {fileID: 1506791012}
-  m_Layer: 0
+  - component: {fileID: 1506791015}
+  m_Layer: 10
   m_Name: TiledBrick13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33399,6 +33706,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1506791010}
   m_Mesh: {fileID: 4300000, guid: 53062b7b914efa247ab11928a013dee1, type: 3}
+--- !u!114 &1506791015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1506791010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1512282444
 GameObject:
   m_ObjectHideFlags: 0
@@ -36311,7 +36634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!136 &1632863902
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -36394,7 +36717,7 @@ Transform:
   m_GameObject: {fileID: 1632863901}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.51, y: 1.083, z: -22.64}
+  m_LocalPosition: {x: 5.88, y: 1.083, z: 26.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -37413,7 +37736,8 @@ GameObject:
   - component: {fileID: 1666776410}
   - component: {fileID: 1666776409}
   - component: {fileID: 1666776408}
-  m_Layer: 0
+  - component: {fileID: 1666776411}
+  m_Layer: 10
   m_Name: TiledBrick10 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37429,7 +37753,7 @@ Transform:
   m_GameObject: {fileID: 1666776406}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -4.171, y: 0, z: -16.095142}
+  m_LocalPosition: {x: -4.957, y: 0, z: -16.095142}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -37509,6 +37833,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666776406}
   m_Mesh: {fileID: 4300000, guid: 4c6ab391ca55f964d80cb9f2bdcd7ca3, type: 3}
+--- !u!114 &1666776411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1666776406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1668836084
 GameObject:
   m_ObjectHideFlags: 0
@@ -40921,7 +41261,8 @@ GameObject:
   - component: {fileID: 1803306676}
   - component: {fileID: 1803306675}
   - component: {fileID: 1803306674}
-  m_Layer: 0
+  - component: {fileID: 1803306677}
+  m_Layer: 10
   m_Name: TiledBrick7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41017,6 +41358,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1803306672}
   m_Mesh: {fileID: 4300000, guid: 1b3c4b63307418f459c979594e9cdb43, type: 3}
+--- !u!114 &1803306677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803306672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1804334941
 GameObject:
   m_ObjectHideFlags: 0
@@ -42439,7 +42796,8 @@ GameObject:
   - component: {fileID: 1903359981}
   - component: {fileID: 1903359980}
   - component: {fileID: 1903359979}
-  m_Layer: 0
+  - component: {fileID: 1903359982}
+  m_Layer: 10
   m_Name: TiledBrick10 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42535,6 +42893,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1903359977}
   m_Mesh: {fileID: 4300000, guid: 4c6ab391ca55f964d80cb9f2bdcd7ca3, type: 3}
+--- !u!114 &1903359982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1903359977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &1903556521
 GameObject:
   m_ObjectHideFlags: 0
@@ -44778,7 +45152,8 @@ GameObject:
   - component: {fileID: 2036110438}
   - component: {fileID: 2036110437}
   - component: {fileID: 2036110436}
-  m_Layer: 0
+  - component: {fileID: 2036110439}
+  m_Layer: 10
   m_Name: TiledBrick11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44874,6 +45249,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2036110434}
   m_Mesh: {fileID: 4300000, guid: 1615226e221b6a545985ec9c1f403343, type: 3}
+--- !u!114 &2036110439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036110434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &2037379817
 GameObject:
   m_ObjectHideFlags: 0
@@ -45814,7 +46205,8 @@ GameObject:
   - component: {fileID: 2087730378}
   - component: {fileID: 2087730377}
   - component: {fileID: 2087730376}
-  m_Layer: 0
+  - component: {fileID: 2087730379}
+  m_Layer: 10
   m_Name: Shelter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45912,6 +46304,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087730374}
   m_Mesh: {fileID: 4300000, guid: 2b6c7090b9fc0a34aaf43d7c52f9c989, type: 3}
+--- !u!114 &2087730379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087730374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6da4b902882497d4cbf4ef206d320a10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  durability: 3
+  bulletPenetrationEffectName: BulletHoleEffect
+  BulletNonPenetrationEffectName: NonPenetrateBulletHoleEffect
+  knifeAttackEffectName: KnifeScratchEffect
 --- !u!1 &2087876383
 GameObject:
   m_ObjectHideFlags: 0
