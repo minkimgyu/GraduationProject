@@ -19,7 +19,9 @@ public class DamageTxtEffect : BaseEffect
         _text.text = damage.ToString();
 
         transform.position = hitPosition;
-        transform.rotation = holeRotation * transform.rotation * Quaternion.Euler(0, 1, 0); // Y축으로만 돌리기
+
+        transform.LookAt(Camera.main.transform);
+        //transform.rotation = holeRotation * transform.rotation * Quaternion.Euler(0, 1, 0); // Y축으로만 돌리기
         finalPoint = new Vector3(transform.position.x, transform.position.y + upPoint, transform.position.z);
     }
 
