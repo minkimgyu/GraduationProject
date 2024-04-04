@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-abstract public class BaseEffect : EffectRoutine
+abstract public class BaseEffect : MonoBehaviour
 {
     [SerializeField]
     protected float _duration;
@@ -19,7 +19,7 @@ abstract public class BaseEffect : EffectRoutine
 
     abstract public void PlayEffect();
 
-    protected override void OnDisableGameObject()
+    protected virtual void OnDisable()
     {
         _timer.Reset();
         ObjectPooler.ReturnToPool(gameObject);

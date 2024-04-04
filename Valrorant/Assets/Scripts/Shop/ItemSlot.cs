@@ -15,7 +15,7 @@ public class ItemSlot : MonoBehaviour
     public void OnClickEventRequested()
     {
         GameObject weaponGo = Instantiate(_storedWeapon);
-        BaseWeapon _weapon = weaponGo.GetComponent<IWeaponContainer>().ReturnWeapon();
+        BaseWeapon _weapon = weaponGo.GetComponent<BaseWeapon>();
 
         OnSlotClickRequested?.Invoke(_weapon);
     }

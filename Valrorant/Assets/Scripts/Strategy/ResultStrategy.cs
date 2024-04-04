@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
-using ObserverPattern;
 
 abstract public class ResultStrategy
 {
@@ -455,10 +454,10 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     void SpawnBothPenetrateEffect(IEffectable effectableTarget, PenetrateData penetrateData)
     {
-        bool canReturnEffectName = effectableTarget.CanReturnHitEffectName(IEffectable.ConditionType.BulletPenetration);
+        bool canReturnEffectName = effectableTarget.CanReturnHitEffectName(IEffectable.ConditionType.Penetration);
         if (canReturnEffectName)
         {
-            string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.BulletPenetration);
+            string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.Penetration);
 
             SpawnEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, false);
             SpawnEffect(effectName, penetrateData.ExitPoint, penetrateData.ExitNormal, false);
@@ -468,8 +467,8 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     void SpawnNonePenetrateEffect(IEffectable effectableTarget, PenetrateData penetrateData)
     {
-        bool canReturnEffectName = effectableTarget.CanReturnHitEffectName(IEffectable.ConditionType.BulletNonPenetration);
-        string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.BulletNonPenetration);
+        bool canReturnEffectName = effectableTarget.CanReturnHitEffectName(IEffectable.ConditionType.NonPenetration);
+        string effectName = effectableTarget.ReturnHitEffectName(IEffectable.ConditionType.NonPenetration);
 
         if (canReturnEffectName) SpawnEffect(effectName, penetrateData.EntryPoint, penetrateData.EntryNormal, true);
     }
@@ -570,7 +569,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
     protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
+        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
 
         bulletHoleEffect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         bulletHoleEffect.PlayEffect();
@@ -579,7 +578,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
     protected override void SpawnEffect(string name, Vector3 hitPosition)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
+        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
 
         bulletHoleEffect.Initialize(hitPosition);
         bulletHoleEffect.PlayEffect();
@@ -587,7 +586,7 @@ abstract public class PenetrateAttack : ApplyAttack, IDisplacement
 
     void DrawTrajectoryLine(Vector3 hitPosition)
     {
-        BaseEffect trajectoryLineEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(_trajectoryLineEffect).ReturnEffect();
+        BaseEffect trajectoryLineEffect = ObjectPooler.SpawnFromPool<BaseEffect>(_trajectoryLineEffect);
         trajectoryLineEffect.Initialize(hitPosition, _muzzle.position);
         trajectoryLineEffect.PlayEffect();
     }
@@ -965,18 +964,17 @@ abstract public class BaseKnifeAttack : ApplyAttack
         hit.collider.TryGetComponent(out effectable);
         if (effectable == null) return;
 
-        bool canReturnEffectName = effectable.CanReturnHitEffectName(IEffectable.ConditionType.KnifeAttack);
+        bool canReturnEffectName = effectable.CanReturnHitEffectName(IEffectable.ConditionType.Stabbing);
         if (canReturnEffectName)
         {
-            string effectName = effectable.ReturnHitEffectName(IEffectable.ConditionType.KnifeAttack);
+            string effectName = effectable.ReturnHitEffectName(IEffectable.ConditionType.Stabbing);
             SpawnEffect(effectName, hit.point, hit.normal);
         }
     }
 
     protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal)
     {
-        BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<IEffectContainer>(name).ReturnEffect();
+        BaseEffect bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
 
         bulletHoleEffect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         bulletHoleEffect.PlayEffect();

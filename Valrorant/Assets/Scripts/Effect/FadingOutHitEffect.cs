@@ -25,9 +25,9 @@ public class FadingOutHitEffect : HitEffect
         _holeRenderer.color = Color.Lerp(startColor, endColor, progress);
     }
 
-    protected override void OnUpdate()
+    protected override void Update()
     {
-        base.OnUpdate();
+        base.Update();
         ChangeColor(_timer.Ratio);
     }
 }

@@ -5,35 +5,23 @@ using DamageUtility;
 
 public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
 {
-    [SerializeField]
-    bool canSpawnDamageTxt = true;
+    [SerializeField] bool canSpawnDamageTxt = true;
 
-    [SerializeField]
-    float durability = 0;
+    [SerializeField] float durability = 0;
 
-    [SerializeField]
-    string bulletPenetrationEffectName;
-
-    [SerializeField]
-    string BulletNonPenetrationEffectName;
-
-    [SerializeField]
-    string knifeAttackEffectName;
-
-    Dictionary<IEffectable.ConditionType, string> hitEffect;
+    Dictionary<IEffectable.ConditionType, IEffectable.EffectName> hitEffect;
 
     public IDamageable IDamage { get; set; }
 
-    [SerializeField]
-    DistanceAreaData.HitArea hitArea;
+    protected DistanceAreaData.HitArea hitArea;
 
     protected virtual void Start()
     {
-        hitEffect = new Dictionary<IEffectable.ConditionType, string>()
+        hitEffect = new Dictionary<IEffectable.ConditionType, IEffectable.EffectName>()
         {
-            {IEffectable.ConditionType.BulletPenetration, bulletPenetrationEffectName},
-            {IEffectable.ConditionType.BulletNonPenetration, BulletNonPenetrationEffectName},
-            {IEffectable.ConditionType.KnifeAttack, knifeAttackEffectName}
+            {IEffectable.ConditionType.Penetration, IEffectable.EffectName.ObjectFragmentation},
+            {IEffectable.ConditionType.NonPenetration, IEffectable.EffectName.ObjectFragmentation},
+            {IEffectable.ConditionType.Stabbing, IEffectable.EffectName.ObjectFragmentation}
         };
     }
 
@@ -57,7 +45,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
 
     public string ReturnHitEffectName(IEffectable.ConditionType effectType)
     {
-        return hitEffect[effectType];
+        return hitEffect[effectType].ToString();
     }
 
     public DistanceAreaData.HitArea ReturnHitArea()
@@ -75,7 +63,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
         if (canSpawnDamageTxt == false) return;
 
         BaseEffect effect;
-        effect = ObjectPooler.SpawnFromPool<IEffectContainer>("DamageTxt").ReturnEffect();
+        effect = ObjectPooler.SpawnFromPool<BaseEffect>("DamageTxt");
 
         effect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal), damage);
         effect.PlayEffect();

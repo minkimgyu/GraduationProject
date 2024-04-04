@@ -68,13 +68,11 @@ public class WeaponController : MonoBehaviour, IEquipedWeapon
 
     void InitializeWeapons()
     {
-        IWeaponContainer[] containers = _weaponParent.GetComponentsInChildren<IWeaponContainer>();
-        for (int i = 0; i < containers.Length; i++)
+        BaseWeapon[] weapons = _weaponParent.GetComponentsInChildren<BaseWeapon>();
+        for (int i = 0; i < weapons.Length; i++)
         {
-            BaseWeapon baseWeapon = containers[i].ReturnWeapon();
-            baseWeapon.Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
-
-            _weaponsContainers.Add(baseWeapon.WeaponType, baseWeapon);
+            weapons[i].Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
+            _weaponsContainers.Add(weapons[i].WeaponType, weapons[i]);
         }
     }
 

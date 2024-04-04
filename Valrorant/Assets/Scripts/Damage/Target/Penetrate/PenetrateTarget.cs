@@ -2,48 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PenetrateTarget : MonoBehaviour, IPenetrable, IEffectable
+abstract public class PenetrateTarget : MonoBehaviour, IPenetrable, IEffectable
 {
-    [SerializeField]
-    float durability;
+    protected float _durability;
 
-    [SerializeField]
-    string bulletPenetrationEffectName;
+    protected Dictionary<IEffectable.ConditionType, IEffectable.EffectName> _hitEffect;
 
-    [SerializeField]
-    string BulletNonPenetrationEffectName;
-
-    [SerializeField]
-    string knifeAttackEffectName;
-
-    protected Dictionary<IEffectable.ConditionType, string> hitEffect;
+    protected abstract void Initialize();
 
     // Start is called before the first frame update
     void Start()
     {
-        hitEffect = new Dictionary<IEffectable.ConditionType, string>()
-        {
-            {IEffectable.ConditionType.BulletPenetration, bulletPenetrationEffectName },
-            {IEffectable.ConditionType.BulletNonPenetration, BulletNonPenetrationEffectName },
-            {IEffectable.ConditionType.KnifeAttack, knifeAttackEffectName }
-        };
+        Initialize();
     }
 
     public float ReturnDurability()
     {
-        return durability;
+        return _durability;
     }
 
     public bool CanReturnHitEffectName(IEffectable.ConditionType effectType)
     {
-        if (hitEffect.ContainsKey(effectType) == false) return false;
+        if (_hitEffect.ContainsKey(effectType) == false) return false;
 
         return true;
     }
 
     public string ReturnHitEffectName(IEffectable.ConditionType effectType)
     {
-        return hitEffect[effectType];
+        return _hitEffect[effectType].ToString();
     }
 
     public GameObject ReturnAttachedObject()

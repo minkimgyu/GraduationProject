@@ -64,8 +64,22 @@ public class PlayerController : DirectDamageTarget, IDamageable
         }
     }
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if(focus)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
     protected override void Start()
     {
+        Cursor.visible = false;
+
         base.Start();
         HP = _maxHp;
 

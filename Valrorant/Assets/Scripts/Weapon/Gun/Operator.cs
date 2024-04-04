@@ -46,9 +46,6 @@ public class Operator : AllVariationGun
     GameObject _gunMesh;
 
     [SerializeField]
-    RecoilRange _mainActionRecoilRange;
-
-    [SerializeField]
     WeightApplier _mainWeightApplier;
 
     Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _attackDamageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()

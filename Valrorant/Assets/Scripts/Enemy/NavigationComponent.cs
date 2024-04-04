@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum TargetType
-{
-    Point,
-    Enemy
-}
-
 public class NavigationComponent : DisplacementSender
 {
+    public enum TargetType
+    {
+        Point,
+        Enemy
+    }
+
     NavMeshAgent _agent;
     Animator _animator;
     [SerializeField] float _rotationSpeed = 120;

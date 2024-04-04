@@ -17,19 +17,16 @@ abstract public class Gun : BaseWeapon, IInteractable
     [SerializeField]
     protected Transform _muzzle;
 
-    [SerializeField]
-    protected string _trajectoryLineEffect;
+    protected string _trajectoryLineEffect = "TrajectoryLine";
 
     [SerializeField]
     protected int _maxAmmoCountInMagazine = 30;
 
     [SerializeField]
-    protected int _maxAmmoCountsInPossession;
+    protected int _maxAmmoCountsInPossession = 60;
 
-    [SerializeField]
     protected int _ammoCountsInMagazine;
 
-    [SerializeField]
     protected int _ammoCountsInPossession;
 
     [SerializeField]
@@ -199,7 +196,7 @@ abstract public class Gun : BaseWeapon, IInteractable
         OnViewEventRequest?.Invoke(false, _weaponName.ToString(), _objectMesh.position);
     }
 
-    protected override void OnCollisionEnterRequested(Collision collision)
+    protected override void OnCollisionEnter(Collision collision)
     {
         _nowAttachToGround = true; // 어디든 부딫히면 그때부터 Interaction 적용
     }

@@ -44,9 +44,6 @@ public class Guardian : RecoilVariationGun
     protected Vector3 _cameraPositionWhenZoom;
 
     [SerializeField]
-    protected RecoilRange _recoilRange;
-
-    [SerializeField]
     protected WeightApplier _weightApplier;
 
     protected Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary;

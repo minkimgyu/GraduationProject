@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-abstract public class BaseWeapon : WeaponRoutine
+abstract public class BaseWeapon : MonoBehaviour
 {
     public enum Name
     {
@@ -90,7 +90,7 @@ abstract public class BaseWeapon : WeaponRoutine
 
     public virtual bool CanDrop() { return false; }
 
-    protected override void OnCollisionEnterRequested(Collision collision) { }
+    protected virtual void OnCollisionEnter(Collision collision) { }
 
     public virtual void ThrowGun(float force) { }
 
@@ -102,9 +102,7 @@ abstract public class BaseWeapon : WeaponRoutine
 
     void LinkRoundViewer(bool nowLink)
     {
-        
-
-        GameObject gameObject = FindWithTag("BulletLeftShower");
+        GameObject gameObject = GameObject.FindWithTag("BulletLeftShower");
         if (gameObject == null) return;
 
         LeftRoundShower _leftRoundShower = gameObject.GetComponent<LeftRoundShower>();

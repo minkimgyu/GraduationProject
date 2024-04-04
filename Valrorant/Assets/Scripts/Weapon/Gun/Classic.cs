@@ -25,12 +25,6 @@ public class Classic : NoVariationGun
     float _bulletSpreadPowerDecreaseRatio;
 
     [SerializeField]
-    RecoilRange _mainActionRecoilRange;
-
-    [SerializeField]
-    RecoilRange _subActionRecoilRange;
-
-    [SerializeField]
     WeightApplier _mainWeightApplier;
 
     [SerializeField]

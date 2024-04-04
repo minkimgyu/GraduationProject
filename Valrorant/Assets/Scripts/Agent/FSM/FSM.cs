@@ -16,6 +16,10 @@ namespace FSM
 
         public override void OnStateLateUpdate() { }
 
+
+        public override void OnReceiveNoise() { }
+
+
         public override void OnStateCollisionEnter(Collision collision) { }
 
         public override void OnStateTriggerEnter(Collider collider) { }
@@ -41,6 +45,9 @@ namespace FSM
         public abstract void OnStateFixedUpdate();
 
         public abstract void OnStateLateUpdate();
+
+        public abstract void OnReceiveNoise();
+
 
         public abstract void OnStateCollisionEnter(Collision collision);
 

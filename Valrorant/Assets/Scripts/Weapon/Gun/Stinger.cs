@@ -35,9 +35,6 @@ public class Stinger : AllVariationGun
     float _scopeOnDelay;
 
     [SerializeField]
-    RecoilMap _recoilMap;
-
-    [SerializeField]
     float _normalFieldOfView;
 
     [SerializeField]
@@ -55,9 +52,6 @@ public class Stinger : AllVariationGun
 
     [SerializeField]
     WeightApplier _weightApplier;
-
-    [SerializeField]
-    RecoilRange _recoilRange;
 
     public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
     {

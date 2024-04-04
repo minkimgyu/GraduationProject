@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleComponent : MonoBehaviour, IEquipedWeapon
+public class BattleComponent : MonoBehaviour//, IEquipedWeapon
 {
     BaseWeapon _nowEquipedWeapon;
 
@@ -100,8 +100,8 @@ public class BattleComponent : MonoBehaviour, IEquipedWeapon
 
     void InitializeWeapons()
     {
-        IWeaponContainer container = _weaponParent.GetComponentInChildren<IWeaponContainer>();
-        _nowEquipedWeapon = container.ReturnWeapon();
-        _nowEquipedWeapon.Initialize(gameObject, _armMesh, _cameraHolder, _ownerAnimator);
+        //IWeaponContainer container = _weaponParent.GetComponentInChildren<IWeaponContainer>();
+        //_nowEquipedWeapon = container.ReturnWeapon();
+        //_nowEquipedWeapon.Initialize(gameObject, _armMesh, _cameraHolder, _ownerAnimator);
     }
 }

@@ -29,10 +29,7 @@ public class ReadyState : State
 
     public override void OnStateTriggerEnter(Collider collider)
     {
-        IInteractContainer interactContainer = collider.GetComponent<IInteractContainer>();
-        if (interactContainer == null) return;
-
-        IInteractable interactableTarget = interactContainer.ReturnInteractableObject();
+        IInteractable interactableTarget = collider.GetComponent<IInteractable>();
         if (interactableTarget.IsInteractable() == false) return; // IsInteractable 거짓이면 리턴
 
         if (_storedInteractionController.InteractableTarget != null)

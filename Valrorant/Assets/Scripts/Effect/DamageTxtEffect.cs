@@ -30,7 +30,7 @@ public class DamageTxtEffect : BaseEffect
         _timer.Start(_duration);
     }
 
-    protected override void OnUpdate()
+    protected virtual void Update()
     {
         _timer.Update();
 

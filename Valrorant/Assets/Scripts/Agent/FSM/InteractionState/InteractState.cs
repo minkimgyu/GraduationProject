@@ -28,10 +28,9 @@ public class InteractState : State
 
     void AcquireWeapon()
     {
-        IWeaponContainer weaponContainer = _storedInteractionController.InteractableTarget.ReturnComponent<IWeaponContainer>();
-        if (weaponContainer == null) return;
+        BaseWeapon weapon = _storedInteractionController.InteractableTarget.ReturnComponent<BaseWeapon>();
+        if (weapon == null) return;
 
-        BaseWeapon baseWeapon = weaponContainer.ReturnWeapon();
-        _weaponController.StoredWeaponWhenInteracting = baseWeapon;
+        _weaponController.StoredWeaponWhenInteracting = weapon;
     }
 }

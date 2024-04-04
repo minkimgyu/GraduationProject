@@ -19,7 +19,7 @@ public class Bucky : NoVariationGun
     int _pelletCount;
 
     [SerializeField]
-    float _subActionkDelay;
+    float _subActionDelay;
 
     [SerializeField]
     float _spreadOffset;
@@ -55,12 +55,6 @@ public class Bucky : NoVariationGun
     [SerializeField]
     float _findRange;
 
-    [SerializeField]
-    RecoilRange _mainRecoilRange;
-
-    [SerializeField]
-    RecoilRange _subRecoilRange;
-
     Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
         { DistanceAreaData.HitArea.Head, new DistanceAreaData[]{ new DistanceAreaData(0, 8, 40), new DistanceAreaData(8, 12, 26), new DistanceAreaData(12, 50, 18) } },
@@ -83,7 +77,7 @@ public class Bucky : NoVariationGun
 
         // 여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
         _mainActionStrategy = new ManualAction(_mainActionDelay);
-        _subActionStrategy = new ManualAction(_subActionkDelay);
+        _subActionStrategy = new ManualAction(_subActionDelay);
 
         _mainResultStrategy = new ScatterProjectileAttack(_camTransform, _range, _targetLayer, _mainActionBulletCountInOneShoot, ownerAnimator, _animator, _muzzleFlash, false,
             _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _pelletCount, _bulletSpreadPowerDecreaseRatio, _damageDictionary);
@@ -98,7 +92,7 @@ public class Bucky : NoVariationGun
         RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
 
         _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, mainRecoilData);
-        _subRecoilStrategy = new ManualRecoilGenerator(_subActionkDelay, subRecoilData);
+        _subRecoilStrategy = new ManualRecoilGenerator(_subActionDelay, subRecoilData);
 
         _reloadStrategy = new RoundByRoundReload(_reloadBeforeDuration, _reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
 

@@ -23,7 +23,7 @@ public class TrajectoryLineEffect : BaseEffect
         transform.position = Vector3.Lerp(transform.position, _hitPosition, progress);
     }
 
-    protected override void OnUpdate()
+    protected virtual void Update()
     {
         _timer.Update();
 
