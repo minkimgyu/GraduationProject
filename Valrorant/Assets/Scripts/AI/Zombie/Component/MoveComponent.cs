@@ -3,34 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class MoveComponent : MonoBehaviour
+namespace AI.Component
 {
-    Rigidbody _rigid;
-    float _speed;
-
-    Action<string, bool> ResetAnimatorValue;
-
-    public void Initialize(float speed, Action<string, bool> ResetAnimatorValue)
+    public class MoveComponent : MonoBehaviour
     {
-        _speed = speed;
-        this.ResetAnimatorValue = ResetAnimatorValue;
-        _rigid = GetComponent<Rigidbody>();
-    }
+        Rigidbody _rigid;
+        float _speed;
 
-    public Vector3 ReturnVelocity()
-    {
-        return _rigid.velocity;
-    }
+        Action<string, bool> ResetAnimatorValue;
 
-    public void Move(Vector3 dir)
-    {
-        _rigid.velocity = dir * _speed;
-        ResetAnimatorValue?.Invoke("NowMove", true);
-    }
+        public void Initialize(float speed, Action<string, bool> ResetAnimatorValue)
+        {
+            _speed = speed;
+            this.ResetAnimatorValue = ResetAnimatorValue;
+            _rigid = GetComponent<Rigidbody>();
+        }
 
-    public void Stop()
-    {
-        _rigid.velocity = Vector3.zero;
-        ResetAnimatorValue?.Invoke("NowMove", false);
+        public Vector3 ReturnVelocity()
+        {
+            return _rigid.velocity;
+        }
+
+        public void Move(Vector3 dir)
+        {
+            _rigid.velocity = dir * _speed;
+            ResetAnimatorValue?.Invoke("NowMove", true);
+        }
+
+        public void Stop()
+        {
+            _rigid.velocity = Vector3.zero;
+            ResetAnimatorValue?.Invoke("NowMove", false);
+        }
     }
 }

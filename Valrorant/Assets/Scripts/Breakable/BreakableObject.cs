@@ -25,23 +25,33 @@ public class BreakableObject : DirectDamageTarget, IDamageable
 
     public void GetDamage(float damage)
     {
-        FracturedObject fracturedObject;
-
         HP -= damage;
-        if(HP < 0 && breakOnce == true)
+        if(IsDie() && breakOnce == true)
         {
-            breakOnce = false;
-            GameObject go = Instantiate(fracturedObjectPrefab, transform.position, transform.rotation);
-            go.TryGetComponent(out fracturedObject);
-            if (fracturedObject == null) return;
-
-            fracturedObject.Initialize(_disableDuration);
-            Destroy(gameObject);
+            Die();
         }
     }
 
     public Vector3 GetFowardVector()
     {
         return transform.forward;
+    }
+
+    public bool IsDie()
+    {
+        return HP <= 0;
+    }
+
+    public void Die()
+    {
+        FracturedObject fracturedObject;
+
+        breakOnce = false;
+        GameObject go = Instantiate(fracturedObjectPrefab, transform.position, transform.rotation);
+        go.TryGetComponent(out fracturedObject);
+        if (fracturedObject == null) return;
+
+        fracturedObject.Initialize(_disableDuration);
+        Destroy(gameObject);
     }
 }

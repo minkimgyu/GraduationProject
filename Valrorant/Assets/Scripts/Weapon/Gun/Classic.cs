@@ -42,10 +42,10 @@ public class Classic : NoVariationGun
         base.Initialize(player, armMesh, cam, ownerAnimator);
 
         _mainResultStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _attackDamageDictionary, _mainWeightApplier);
+            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
 
         _subResultStrategy = new ScatterProjectileAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _subAttackBulletCounts, _bulletSpreadPowerRatio, _attackDamageDictionary, _subWeightApplier);
+            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _subAttackBulletCounts, _bulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _subWeightApplier);
 
 
         _mainActionStrategy = new ManualAttackAction(_mainActionDelay);

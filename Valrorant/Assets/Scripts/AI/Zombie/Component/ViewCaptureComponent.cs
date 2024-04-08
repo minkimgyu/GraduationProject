@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ViewCaptureComponent : MovableTargetCaptureComponent<ITarget>
+public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
 {
     [SerializeField] float _captureAngle = 90;
 
@@ -17,9 +17,9 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ITarget>
         _captureAngle = angle;
     }
 
-    bool canRaycastTarget(Transform target)
+    bool canRaycastTarget(Vector3 sightPoint, Transform target)
     {
-        Vector3 dir = (target.position - _sightPoint.position).normalized;
+        Vector3 dir = (sightPoint - _sightPoint.position).normalized;
 
         RaycastHit hit;
         Physics.Raycast(_sightPoint.position, dir, out hit, _captureRadius, _layerMask);
@@ -43,12 +43,13 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ITarget>
             if (_capturedTargets[i] == null) continue;
 
             Transform targetTransform = _capturedTargets[i].ReturnTransform();
+            Transform sightPoint = _capturedTargets[i].ReturnSightPoint();
 
             float angle = returnAngleBetween(targetTransform.position);
             bool inInAngle = isInAngle(angle);
             if (inInAngle == false) continue;
 
-            bool canRaycast = canRaycastTarget(targetTransform);
+            bool canRaycast = canRaycastTarget(sightPoint.position, targetTransform);
             if (canRaycast == false) continue;
 
             _storedTarget = _capturedTargets[i];

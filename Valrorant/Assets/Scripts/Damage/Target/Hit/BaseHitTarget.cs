@@ -7,7 +7,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
 {
     [SerializeField] bool canSpawnDamageTxt = true;
 
-    [SerializeField] float durability = 0;
+    protected float _durability = 0;
 
     Dictionary<IEffectable.ConditionType, IEffectable.EffectName> hitEffect;
 
@@ -27,7 +27,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
 
     public float ReturnDurability()
     {
-        return durability;
+        return _durability;
     }
 
     public void OnHit(float damage, Vector3 hitPosition, Vector3 hitNormal)

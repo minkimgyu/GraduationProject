@@ -65,10 +65,10 @@ public class Operator : AllVariationGun
         _subActionStrategy = new ManualAttackAction(_subActionDelay);
 
         _storedMainResultWhenZoomOut = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, _mainWeightApplier);
+            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
 
         _storedMainResultWhenZoomIn = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary);
+            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest);
 
 
         GameObject scopeContainer = GameObject.FindWithTag("ScopeContainer");

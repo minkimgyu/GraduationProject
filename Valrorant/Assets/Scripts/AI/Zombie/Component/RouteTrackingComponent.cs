@@ -66,7 +66,7 @@ public class RouteTrackingComponent : MonoBehaviour
         ResetPath();
     }
 
-    public void FollowPath(Vector3 targetPos, bool lookTarget)
+    public void FollowPath(Vector3 targetPos, bool lookPath = false)
     {
         CreatePath(targetPos);
         if (_isFollowingFinish == true) return;
@@ -74,8 +74,7 @@ public class RouteTrackingComponent : MonoBehaviour
 
         Vector3 nextPathPos = new Vector3(_paths[_pathIndex].x, transform.position.y, _paths[_pathIndex].z);
 
-        if(lookTarget) View?.Invoke((targetPos - transform.position).normalized);
-        else View?.Invoke((_paths[_pathIndex] - transform.position).normalized);
+        if(lookPath) View?.Invoke((_paths[_pathIndex] - transform.position).normalized);
 
         Vector3 dir = (nextPathPos - transform.position).normalized;
         Move?.Invoke(dir);
@@ -93,4 +92,14 @@ public class RouteTrackingComponent : MonoBehaviour
         }
     }
 
+    private void OnDrawGizmos()
+    {
+        if (_paths.Count == 0) return;
+
+        for (int i = 0; i < _paths.Count; i++)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawCube(_paths[i], Vector3.one);
+        }
+    }
 }

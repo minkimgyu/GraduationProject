@@ -80,12 +80,14 @@ public class Bucky : NoVariationGun
         _subActionStrategy = new ManualAction(_subActionDelay);
 
         _mainResultStrategy = new ScatterProjectileAttack(_camTransform, _range, _targetLayer, _mainActionBulletCountInOneShoot, ownerAnimator, _animator, _muzzleFlash, false,
-            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _pelletCount, _bulletSpreadPowerDecreaseRatio, _damageDictionary);
+            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _pelletCount, _bulletSpreadPowerDecreaseRatio, 
+            _damageDictionary, OnGenerateNoiseRequest);
 
         // 무기를 버릴 경우, 제거해야함
         _subResultStrategy = new SingleAndExplosionScatterAttackCombination(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, 
-            _emptyCartridgeSpawner, false, _weaponName.ToString(), _muzzle, _trajectoryLineEffect, _findRange, _subActionSinglePenetratePower, _subActionBulletCountInOneShoot, _subSingleActionBulletSpreadPowerDecreaseRatio,
-            _damageDictionary, frontPosition, _explosionEffectName, _subActionScatterPenetratePower, _subActionSpreadOffset, _subActionPelletCount, _subScatterActionBulletSpreadPowerDecreaseRatio, _subSingleAttackDamageDictionary);
+            _emptyCartridgeSpawner, false, _weaponName.ToString(), _muzzle, _trajectoryLineEffect, _findRange, _subActionSinglePenetratePower, _subActionBulletCountInOneShoot, 
+            _subSingleActionBulletSpreadPowerDecreaseRatio, _damageDictionary, frontPosition, _explosionEffectName, _subActionScatterPenetratePower, _subActionSpreadOffset, 
+            _subActionPelletCount, _subScatterActionBulletSpreadPowerDecreaseRatio, _subSingleAttackDamageDictionary, OnGenerateNoiseRequest);
 
         RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
         RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);

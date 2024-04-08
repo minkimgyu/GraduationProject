@@ -62,7 +62,8 @@ abstract public class AutomaticGun : ActionAndRecoilVariationGun
         _subActionStrategy = new ManualAction(_subActionDelay);
 
         _mainResultStrategy = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false,
-            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _displacementSpreadMultiplyRatio, _damageDictionary);
+            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _displacementSpreadMultiplyRatio, 
+            _damageDictionary, OnGenerateNoiseRequest);
 
         _subResultStrategy = new ZoomStrategy(_scope, _cameraPositionWhenZoom, _zoomDuration, _delayUntilScopeActivated, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall);
 

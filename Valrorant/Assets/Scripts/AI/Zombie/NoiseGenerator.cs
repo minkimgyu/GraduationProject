@@ -5,19 +5,12 @@ using UnityEngine;
 public class NoiseGenerator : MonoBehaviour
 {
     [SerializeField] Noise _noisePrefab;
+    [SerializeField] float _disableTime;
+    [SerializeField] float _radius = 10;
 
-    private void Update()
+    public void GenerateNoise(Vector3 pos)
     {
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            GenerateNoise(transform.position, 5);
-        }
-    }
-
-    public void GenerateNoise(Vector3 pos, float radius)
-    {
-        pos += new Vector3(Random.Range(-15, 15), 0, Random.Range(-15, 15));
-        Noise noise = Instantiate(_noisePrefab, pos, Quaternion.identity);
-        noise.Initialize(radius, 3);
+        Noise noise = ObjectPooler.SpawnFromPool<Noise>("Noise", pos);
+        noise.Initialize(_radius, _disableTime);
     }
 }

@@ -6,11 +6,16 @@ using Grid;
 using Grid.Pathfinder;
 using BehaviorTree.Nodes;
 using System;
+using AI.Component;
+using AI.FSM;
 
 namespace AI
 {
-    public class Zombie : MonoBehaviour
+    public class Zombie : MonoBehaviour, IDamageable
     {
+        [SerializeField] float _maxHp;
+        [SerializeField] float _destoryDelay = 5;
+
         [SerializeField] Animator _animator;
         [SerializeField] float _angleOffset;
         [SerializeField] float _angleChangeAmount;
@@ -31,27 +36,27 @@ namespace AI
         [SerializeField] int _maxNoiseQueueSize = 3;
 
         [SerializeField] Transform _attackPoint;
-        [SerializeField] float _attackRadius = 1f;
-        [SerializeField] float _canAttackRange = 1.5f;
+        [SerializeField] float _additiveAttackRadius = 0.3f;
+        [SerializeField] float _attackRange = 1.2f;
+        [SerializeField] float _attackCircleRadius = 1.5f; 
         [SerializeField] LayerMask _attackLayer;
 
         [SerializeField] float _delayForNextAttack = 3;
         [SerializeField] float _pathFindDelay = 0.5f;
 
-        public enum State
+        public enum LifeState
         {
-            Idle,
-            TargetFollowing,
-            NoiseTracking
+            Alive,
+            Die
         }
 
-        StateMachine<State> _fsm = new StateMachine<State>();
+        StateMachine<LifeState> _lifeFsm = new StateMachine<LifeState>();
 
         public TargetType MyType { get; set; }
 
-        private void Start() => Invoke("Initialize", 1);
+        Blackboard _blackboard;
 
-        void Initialize()
+        public void Initialize()
         {
             MyType = TargetType.Zombie;
 
@@ -74,29 +79,23 @@ namespace AI
             RouteTrackingComponent routeTrackingComponent = GetComponent<RouteTrackingComponent>();
             routeTrackingComponent.Initialize(_pathFindDelay, moveComponent.Move, moveComponent.Stop, viewComponent.View, pathfinder.FindPath);
 
-            IdleStateParameter idleStateParameter = new IdleStateParameter(
-                 _angleOffset, _angleChangeAmount, _wanderOffset, _stateChangeDelay, viewCaptureComponent.transform, transform, SetState,
-                 routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, viewCaptureComponent.IsTargetInSight, gridManager.ReturnNodePos);
+            _blackboard = new Blackboard(
+                _angleOffset, _angleChangeAmount, _wanderOffset, _stateChangeDelay, viewCaptureComponent.transform, transform, _targetCaptureAdditiveRadius,
+                _additiveAttackRadius, _attackRange, _attackCircleRadius, _delayForNextAttack, _attackLayer, _attackPoint, _destoryDelay, _maxHp,
 
-            NoiseTrackingStateParameter noiseTrackingStateParameter = new NoiseTrackingStateParameter(
-                SetState, noiseListener.ClearAllNoise, routeTrackingComponent.FollowPath, viewCaptureComponent.IsTargetInSight,
-                noiseListener.IsQueueEmpty, noiseListener.ReturnFrontNoise, routeTrackingComponent.IsFollowingFinish);
+                routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, viewCaptureComponent.IsTargetInSight, gridManager.ReturnNodePos,
+                noiseListener.ClearAllNoise, noiseListener.IsQueueEmpty, noiseListener.ReturnFrontNoise, routeTrackingComponent.IsFollowingFinish, viewCaptureComponent.ModifyCaptureRadius,
+                ResetAnimatorValue, ResetAnimatorValue, viewCaptureComponent.ReturnTargetInSight
+            );
 
-            TargetFollowingStateParameter targetFollowingStateParameter = new TargetFollowingStateParameter(
-                _targetCaptureAdditiveRadius, _canAttackRange, _delayForNextAttack, _canAttackRange, _flockingMoveSpeed, _attackLayer,
-                _attackPoint, transform, SetState, viewCaptureComponent.ModifyCaptureRadius, routeTrackingComponent.FollowPath,
-                viewComponent.View, moveComponent.Move, moveComponent.Stop, ResetAnimatorValue, viewCaptureComponent.IsTargetInSight
-                , viewCaptureComponent.ReturnTargetInSight);
-
-            Dictionary<State, BaseState> states = new Dictionary<State, BaseState>
-            {
-                {State.Idle, new IdleState(idleStateParameter) },
-                {State.NoiseTracking, new NoiseTrackingState(noiseTrackingStateParameter) },
-                {State.TargetFollowing, new TargetFollowingState(targetFollowingStateParameter) }
-            };
-
-            _fsm.Initialize(states);
-            SetState(State.Idle);
+            _lifeFsm.Initialize(
+               new Dictionary<LifeState, BaseState>
+               {
+                    {LifeState.Alive, new AliveState(_blackboard, (state) => {_lifeFsm.SetState(state); }) },
+                    {LifeState.Die, new DieState(_blackboard) },
+               }
+            );
+            _lifeFsm.SetState(LifeState.Alive);
         }
 
         void ResetAnimatorValue(string triggerName) { _animator.SetTrigger(triggerName); }
@@ -106,20 +105,24 @@ namespace AI
             _animator.SetBool(boolName, value); 
         }
 
-        void SetState(State state)
-        {
-            _fsm.SetState(state);
-        }
-       
         void OnNoiseReceived()
         {
-            _fsm.OnNoiseReceived();
+            _lifeFsm.OnNoiseReceived();
         }
 
         private void Update()
         {
-            if (_fsm == null) return;
-            _fsm.OnUpdate();
+            _lifeFsm.OnUpdate();
+        }
+
+        public Vector3 GetFowardVector()
+        {
+            return transform.forward;
+        }
+
+        public void GetDamage(float damage)
+        {
+            _lifeFsm.OnDamaged(damage);
         }
     }
 }

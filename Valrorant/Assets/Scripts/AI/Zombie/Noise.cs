@@ -19,7 +19,18 @@ public class Noise : MonoBehaviour, ITarget
         _sphereDrawer.ResetData(radius);
         _sphereCollider.radius = radius;
 
-        Destroy(gameObject, disableTime);
+        Invoke("DisableObject", disableTime);
+    }
+
+    public void DisableObject()
+    {
+        CancelInvoke();
+        gameObject.SetActive(false);
+    }
+
+    private void OnDisable()
+    {
+        ObjectPooler.ReturnToPool(gameObject);
     }
 
     public Vector3 ReturnPos()

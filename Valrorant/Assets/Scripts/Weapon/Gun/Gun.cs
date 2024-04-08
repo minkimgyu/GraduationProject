@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Agent.Controller;
 
 abstract public class Gun : BaseWeapon, IInteractable
 {
@@ -43,6 +44,8 @@ abstract public class Gun : BaseWeapon, IInteractable
     bool _nowAttachToGround;
 
     public Action<bool, string, Vector3> OnViewEventRequest;
+
+    protected Action<Vector3> OnGenerateNoiseRequest;
 
     public override bool CanDrop() { return true; }
 
@@ -141,6 +144,9 @@ abstract public class Gun : BaseWeapon, IInteractable
         if (weaponInfoViwer == null) return; 
 
         OnViewEventRequest = weaponInfoViwer.OnViewEventReceived; // 드랍 시 해제 필요
+
+        NoiseGenerator noiseGenerator = FindObjectOfType<NoiseGenerator>();
+        OnGenerateNoiseRequest = noiseGenerator.GenerateNoise;
     }
 
     protected override void OnMainActionEventCallRequsted()
