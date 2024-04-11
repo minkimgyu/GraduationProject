@@ -20,7 +20,7 @@ namespace BehaviorTree.Nodes
         StateMachine<State> _fsm;
         public StateMachine<State> FSM { get { return _fsm; } }
 
-        public WanderingFSM(Blackboard blackboard)
+        public WanderingFSM(ZombieBlackboard blackboard)
         {
             _fsm = new StateMachine<State>();
             Dictionary<State, BaseState> states = new Dictionary<State, BaseState>()

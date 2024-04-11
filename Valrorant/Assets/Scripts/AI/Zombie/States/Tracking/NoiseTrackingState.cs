@@ -9,7 +9,7 @@ namespace AI.FSM
 {
     public class NoiseTrackingState : State
     {
-        Action<AliveState.ActionState> SetState;
+        Action<Zombie.ActionState> SetState;
         Func<Vector3> ReturnFrontNoise;
         Func<bool> IsQueueEmpty;
         Action ClearAllNoise;
@@ -21,7 +21,7 @@ namespace AI.FSM
 
         Vector3 _noisePos;
 
-        public NoiseTrackingState(Blackboard blackboard, Action<AliveState.ActionState> SetState)
+        public NoiseTrackingState(ZombieBlackboard blackboard, Action<Zombie.ActionState> SetState)
         {
             IsTargetInSight = blackboard.IsTargetInSight;
 
@@ -45,7 +45,7 @@ namespace AI.FSM
             bool isInSight = IsTargetInSight();
             if (isInSight == false) return;
 
-            SetState?.Invoke(AliveState.ActionState.TargetFollowing);
+            SetState?.Invoke(Zombie.ActionState.TargetFollowing);
         }
 
         public override void OnStateUpdate()
@@ -59,7 +59,7 @@ namespace AI.FSM
 
             if (isEmpty == true)
             {
-                SetState?.Invoke(AliveState.ActionState.Idle);
+                SetState?.Invoke(Zombie.ActionState.Idle);
                 return;
             }
 

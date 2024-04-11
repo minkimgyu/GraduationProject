@@ -4,38 +4,41 @@ using UnityEngine;
 using System;
 using Agent.Controller;
 
-public class Shop : MonoBehaviour
+namespace Shop
 {
-    [SerializeField] GameObject _slotContainer;
-
-    public Action<BaseWeapon> AddWeapon;
-    ItemSlot[] itemSlots;
-
-    private void Start() => Initialized();
-
-    private void Update()
+    public class Shop : MonoBehaviour
     {
-        if(Input.GetKeyDown(KeyCode.B))
+        [SerializeField] GameObject _slotContainer;
+
+        public Action<BaseWeapon> AddWeapon;
+        ItemSlot[] itemSlots;
+
+        private void Start() => Initialized();
+
+        private void Update()
         {
-            if(_slotContainer.activeSelf == true) _slotContainer.SetActive(false);
-            else _slotContainer.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                if (_slotContainer.activeSelf == true) _slotContainer.SetActive(false);
+                else _slotContainer.SetActive(true);
+            }
         }
-    }
 
-    private void Initialized()
-    {
-        WeaponController weaponController = GameObject.FindWithTag("Player").GetComponent<WeaponController>();
-        AddWeapon = weaponController.AddWeapon;
-
-        itemSlots = _slotContainer.GetComponentsInChildren<ItemSlot>();
-        for (int i = 0; i < itemSlots.Length; i++)
+        private void Initialized()
         {
-            itemSlots[i].OnSlotClickRequested = Buy;
-        }
-    }
+            WeaponController weaponController = GameObject.FindWithTag("Player").GetComponent<WeaponController>();
+            AddWeapon = weaponController.AddWeapon;
 
-    public void Buy(BaseWeapon baseWeapon)
-    {
-        AddWeapon(baseWeapon);
+            itemSlots = _slotContainer.GetComponentsInChildren<ItemSlot>();
+            for (int i = 0; i < itemSlots.Length; i++)
+            {
+                //itemSlots[i].OnSlotClickRequested = Buy;
+            }
+        }
+
+        public void Buy(BaseWeapon baseWeapon)
+        {
+            AddWeapon(baseWeapon);
+        }
     }
 }

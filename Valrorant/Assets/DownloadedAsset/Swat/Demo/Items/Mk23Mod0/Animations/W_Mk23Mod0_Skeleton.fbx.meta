@@ -1,0 +1,195 @@
+fileFormatVersion: 2
+guid: 664d4d7408d76494c988d5eccd4610eb
+ModelImporter:
+  serializedVersion: 22200
+  internalIDToNameTable:
+  - first:
+      74: 8160926584457405020
+    second: W_Mk23Mod0_Skeleton
+  - first:
+      74: 8160926584457405020
+    second: Mk23Mod0Rig|pistol_action
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: finish
+    second: {fileID: 2100000, guid: 92406f84f58b6dc47aa6e50b28063935, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: finish_barrel
+    second: {fileID: 2100000, guid: c69d97da26060fd43b762e5c1d060403, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: finish_bright
+    second: {fileID: 2100000, guid: de9077ba1d802b341999c698ed99ee1c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: finish_slide
+    second: {fileID: 2100000, guid: 53e45165a8181bd49b1f45a545c0ce42, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: polymer_rough
+    second: {fileID: 2100000, guid: 24ab7614c554dd94fbcd4a7f3e897372, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: polymer_smooth
+    second: {fileID: 2100000, guid: 89ec7514b17cc2b42a9f2ee69c070c40, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: red
+    second: {fileID: 2100000, guid: c7a645f89088b114a8f41ddc31dd5758, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: rubber_o-ring
+    second: {fileID: 2100000, guid: 7d539972cc2793540b55b014b2a33ffa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sights
+    second: {fileID: 2100000, guid: aa6dca0693aada04691a282bf58713e6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: white
+    second: {fileID: 2100000, guid: 54968532ae2e43641923d08230ab46ca, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 3
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton:
+    - name: W_Mk23Mod0_Skeleton(Clone)
+      parentName: 
+      position: {x: 0, y: 0, z: 0}
+      rotation: {x: 0, y: 0, z: 0, w: 1}
+      scale: {x: 1, y: 1, z: 1}
+    - name: Mk23Mod0Mesh
+      parentName: W_Mk23Mod0_Skeleton(Clone)
+      position: {x: 1.8187382e-12, y: 1.1305965, z: 0.2957788}
+      rotation: {x: 0.00001887257, y: 0.7089848, z: 0.7052238, w: -0.000018772464}
+      scale: {x: 100, y: 100.00001, z: 100.00001}
+    - name: Mk23Mod0Rig
+      parentName: W_Mk23Mod0_Skeleton(Clone)
+      position: {x: -2.5104286e-16, y: 1.1305965, z: 0.2957788}
+      rotation: {x: 0.000018875653, y: 0.7089848, z: 0.7052238, w: -0.000018787501}
+      scale: {x: 100, y: 100.00001, z: 100.00001}
+    - name: Root
+      parentName: Mk23Mod0Rig
+      position: {x: -0.00023504581, y: -0.0003866562, z: 0.002966368}
+      rotation: {x: -0.03290713, y: 0.000000024482688, z: -0.0000000034879122, w: 0.99945843}
+      scale: {x: 1.0000004, y: 1.0000001, z: 1.0000001}
+    - name: Mag
+      parentName: Root
+      position: {x: 2.7939677e-11, y: -0.00009519836, z: -0.00040228962}
+      rotation: {x: 0.6427875, y: -0.000000008339302, z: 0.000000008898403, w: 0.7660446}
+      scale: {x: 1.0000001, y: 0.9999998, z: 0.9999998}
+    - name: Slider
+      parentName: Root
+      position: {x: -1.03609635e-10, y: -0.0003783368, z: 0.00060804066}
+      rotation: {x: 6.252776e-13, y: 0.000000023281245, z: 7.294117e-10, w: 1}
+      scale: {x: 1.0000002, y: 1, z: 1}
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 1
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 1
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 0
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

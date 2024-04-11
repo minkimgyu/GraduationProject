@@ -13,7 +13,7 @@ namespace AI.FSM
         Action<string, bool> ResetAnimatorBool;
         StopwatchTimer _stopwatchTimer = new StopwatchTimer();
 
-        public DieState(Blackboard blackboard)
+        public DieState(ZombieBlackboard blackboard)
         {
             _myGameObject = blackboard.MyTrasform.gameObject;
             _destoryDelay = blackboard.DestoryDelay;

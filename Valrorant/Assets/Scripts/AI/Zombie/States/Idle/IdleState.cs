@@ -13,10 +13,10 @@ namespace AI.FSM
     public class IdleState : State
     {
         protected Tree _bt;
-        Action<AliveState.ActionState> SetState;
+        Action<Zombie.ActionState> SetState;
         Func<bool> IsTargetInSight;
 
-        public IdleState(Blackboard blackboard, Action<AliveState.ActionState> SetState)
+        public IdleState(ZombieBlackboard blackboard, Action<Zombie.ActionState> SetState)
         {
             this.SetState = SetState;
             IsTargetInSight = blackboard.IsTargetInSight;
@@ -27,26 +27,26 @@ namespace AI.FSM
             _bt = new Tree();
             List<Node> _childNodes;
             _childNodes = new List<Node>()
-        {
-            new Sequencer
-            (
-                new List<Node>()
-                {
-                    new ChangeAngleOfSight(blackboard.CaptureTransform, blackboard.AngleOffset, blackboard.AngleChangeAmount),
-                    wanderingFSM,
+            {
+                new Sequencer
+                (
+                    new List<Node>()
+                    {
+                        new ChangeAngleOfSight(blackboard.CaptureTransform, blackboard.AngleOffset, blackboard.AngleChangeAmount),
+                        wanderingFSM,
 
-                    new Sequencer
-                    (
-                        new List<Node>()
-                        {
-                            new WaitForStateChange(blackboard.StateChangeDelay),
-                            changeState,
-                            // Wander에 이벤트를 보내는 방식으로 방향을 돌려준다.
-                        }
-                    ),
-                }
-            )
-        };
+                        new Sequencer
+                        (
+                            new List<Node>()
+                            {
+                                new WaitForStateChange(blackboard.StateChangeDelay),
+                                changeState,
+                                // Wander에 이벤트를 보내는 방식으로 방향을 돌려준다.
+                            }
+                        ),
+                    }
+                )
+            };
 
             Node rootNode = new Selector(_childNodes);
             _bt.SetUp(rootNode);
@@ -56,7 +56,7 @@ namespace AI.FSM
         // 만약 소리를 감지했다면 루프 탈출
         public override void OnNoiseReceived()
         {
-            SetState?.Invoke(AliveState.ActionState.NoiseTracking);
+            SetState?.Invoke(Zombie.ActionState.NoiseTracking);
         }
 
         public override void CheckStateChange()
@@ -64,7 +64,7 @@ namespace AI.FSM
             bool isInSight = IsTargetInSight();
             if (isInSight == false) return;
 
-            SetState?.Invoke(AliveState.ActionState.TargetFollowing);
+            SetState?.Invoke(Zombie.ActionState.TargetFollowing);
         }
 
         public override void OnStateEnter()

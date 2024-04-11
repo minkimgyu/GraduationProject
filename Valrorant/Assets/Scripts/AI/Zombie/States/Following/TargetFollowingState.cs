@@ -13,13 +13,13 @@ namespace AI.FSM
     public class TargetFollowingState : State
     {
         protected Tree _bt;
-        Action<AliveState.ActionState> SetState;
+        Action<Zombie.ActionState> SetState;
         Action<float> ModifyCaptureRadius;
         float _additiveCaptureRadius;
 
         Func<bool> IsTargetInSight;
 
-        public TargetFollowingState(Blackboard blackboard, Action<AliveState.ActionState> SetState)
+        public TargetFollowingState(ZombieBlackboard blackboard, Action<Zombie.ActionState> SetState)
         {
             this.SetState = SetState;
             ModifyCaptureRadius = blackboard.ModifyCaptureRadius;
@@ -68,7 +68,7 @@ namespace AI.FSM
             bool isInSight = IsTargetInSight();
             if (isInSight == true) return;
 
-            SetState?.Invoke(AliveState.ActionState.Idle);
+            SetState?.Invoke(Zombie.ActionState.Idle);
         }
 
         public override void OnStateEnter()

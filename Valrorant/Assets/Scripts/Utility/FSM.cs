@@ -129,14 +129,19 @@ namespace FSM
 
         //현재 상태를 담는 프로퍼티.
         BaseState _previousState;
+        T _currentStateName;
+        public T CurrentStateName { get { return _currentStateName; } }
         
         public void Initialize(Dictionary<T, BaseState> stateDictionary)
         {
             _currentState = null;
             _previousState = null;
 
+            _currentStateName = default;
+
             _stateDictionary = stateDictionary;
         }
+
 
         public bool RevertToPreviousState()
         {
@@ -147,16 +152,19 @@ namespace FSM
 
         public bool SetState(T stateName)
         {
+            _currentStateName = stateName;
             return ChangeState(_stateDictionary[stateName]);
         }
 
         public bool SetState(T stateName, BaseWeapon.Type weaponType)
         {
+            _currentStateName = stateName;
             return ChangeState(_stateDictionary[stateName], weaponType);
         }
 
         public bool SetState(T stateName, bool isTrue)
         {
+            _currentStateName = stateName;
             return ChangeState(_stateDictionary[stateName], isTrue);
         }
 

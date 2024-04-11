@@ -52,9 +52,18 @@ namespace AI
 
         StateMachine<LifeState> _lifeFsm = new StateMachine<LifeState>();
 
+        public enum ActionState
+        {
+            Idle,
+            TargetFollowing,
+            NoiseTracking,
+        }
+
+        StateMachine<ActionState> _actionFsm = new StateMachine<ActionState>();
+
         public TargetType MyType { get; set; }
 
-        Blackboard _blackboard;
+        ZombieBlackboard _blackboard;
 
         public void Initialize()
         {
@@ -79,7 +88,7 @@ namespace AI
             RouteTrackingComponent routeTrackingComponent = GetComponent<RouteTrackingComponent>();
             routeTrackingComponent.Initialize(_pathFindDelay, moveComponent.Move, moveComponent.Stop, viewComponent.View, pathfinder.FindPath);
 
-            _blackboard = new Blackboard(
+            _blackboard = new ZombieBlackboard(
                 _angleOffset, _angleChangeAmount, _wanderOffset, _stateChangeDelay, viewCaptureComponent.transform, transform, _targetCaptureAdditiveRadius,
                 _additiveAttackRadius, _attackRange, _attackCircleRadius, _delayForNextAttack, _attackLayer, _attackPoint, _destoryDelay, _maxHp,
 
@@ -96,6 +105,17 @@ namespace AI
                }
             );
             _lifeFsm.SetState(LifeState.Alive);
+
+            _actionFsm.Initialize(
+            new Dictionary<ActionState, BaseState>
+            {
+                {ActionState.Idle, new IdleState(_blackboard, (state) => {_actionFsm.SetState(state); }) },
+                {ActionState.NoiseTracking, new NoiseTrackingState(_blackboard, (state) => {_actionFsm.SetState(state); }) },
+                {ActionState.TargetFollowing, new TargetFollowingState(_blackboard, (state) => {_actionFsm.SetState(state); }) },
+            }
+        );
+
+            _actionFsm.SetState(ActionState.Idle);
         }
 
         void ResetAnimatorValue(string triggerName) { _animator.SetTrigger(triggerName); }
@@ -107,12 +127,15 @@ namespace AI
 
         void OnNoiseReceived()
         {
-            _lifeFsm.OnNoiseReceived();
+            _actionFsm.OnNoiseReceived();
         }
 
         private void Update()
         {
             _lifeFsm.OnUpdate();
+            if (_lifeFsm.CurrentStateName == LifeState.Die) return;
+
+            _actionFsm.OnUpdate();
         }
 
         public Vector3 GetFowardVector()
