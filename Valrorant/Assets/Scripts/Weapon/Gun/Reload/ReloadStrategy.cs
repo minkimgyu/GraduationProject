@@ -70,6 +70,9 @@ abstract public class BaseReload : ReloadStrategy
     protected Animator _weaponAnimator;
     protected Animator _ownerAnimator;
 
+    // 현재 무기의 총알 수를 받아오는 Func 이벤트 추가
+    // 이걸로 장전 가능한지 유무 판단 진행
+
     protected Action<int, int> OnReloadRequested;
 
     public BaseReload(float reloadExitDuration, string weaponName, int maxAmmoCountInMagazine,

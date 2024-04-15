@@ -4,7 +4,7 @@ using UnityEngine;
 using FSM;
 using System;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class StopState : State
     {

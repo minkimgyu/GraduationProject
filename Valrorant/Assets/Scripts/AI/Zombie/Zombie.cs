@@ -7,7 +7,7 @@ using Grid.Pathfinder;
 using BehaviorTree.Nodes;
 using System;
 using AI.Component;
-using AI.FSM;
+using AI.ZombieFSM;
 
 namespace AI
 {
@@ -34,6 +34,8 @@ namespace AI
 
         [SerializeField] float _noiseCaptureRadius = 11;
         [SerializeField] int _maxNoiseQueueSize = 3;
+
+        [SerializeField] Transform _sightPoint;
 
         [SerializeField] Transform _attackPoint;
         [SerializeField] float _additiveAttackRadius = 0.3f;
@@ -89,8 +91,9 @@ namespace AI
             routeTrackingComponent.Initialize(_pathFindDelay, moveComponent.Move, moveComponent.Stop, viewComponent.View, pathfinder.FindPath);
 
             _blackboard = new ZombieBlackboard(
-                _angleOffset, _angleChangeAmount, _wanderOffset, _stateChangeDelay, viewCaptureComponent.transform, transform, _targetCaptureAdditiveRadius,
-                _additiveAttackRadius, _attackRange, _attackCircleRadius, _delayForNextAttack, _attackLayer, _attackPoint, _destoryDelay, _maxHp,
+                _angleOffset, _angleChangeAmount, _wanderOffset, _stateChangeDelay, viewCaptureComponent.transform, transform, _sightPoint, 
+                _targetCaptureAdditiveRadius, _additiveAttackRadius, _attackRange, _attackCircleRadius, _delayForNextAttack, _attackLayer, 
+                _attackPoint, _destoryDelay, _maxHp,
 
                 routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, viewCaptureComponent.IsTargetInSight, gridManager.ReturnNodePos,
                 noiseListener.ClearAllNoise, noiseListener.IsQueueEmpty, noiseListener.ReturnFrontNoise, routeTrackingComponent.IsFollowingFinish, viewCaptureComponent.ModifyCaptureRadius,

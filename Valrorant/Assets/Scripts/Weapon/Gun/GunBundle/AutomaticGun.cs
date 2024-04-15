@@ -59,13 +59,13 @@ abstract public class AutomaticGun : ActionAndRecoilVariationGun
         _storedMainActionWhenZoomIn = new AutoAttackAction(_mainActionDelayWhenZoomIn);
         _storedMainActionWhenZoomOut = new AutoAttackAction(_mainActionDelayWhenZoomOut);
 
-        _subActionStrategy = new ManualAction(_subActionDelay);
+        _subEventStrategy = new ManualAction(_subActionDelay);
 
-        _mainResultStrategy = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false,
+        _mainActionStrategy = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false,
             _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _displacementSpreadMultiplyRatio, 
             _damageDictionary, OnGenerateNoiseRequest);
 
-        _subResultStrategy = new ZoomStrategy(_scope, _cameraPositionWhenZoom, _zoomDuration, _delayUntilScopeActivated, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall);
+        _subActionStrategy = new ZoomStrategy(_scope, _cameraPositionWhenZoom, _zoomDuration, _delayUntilScopeActivated, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall);
 
         RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
         RecoilMapData recoilData = storage.OnRecoilDataSendRequested<RecoilMapData>(_weaponName, EventCallPart.Both);

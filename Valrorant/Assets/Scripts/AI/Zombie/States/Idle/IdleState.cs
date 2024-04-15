@@ -8,7 +8,7 @@ using BehaviorTree.Nodes;
 using Tree = BehaviorTree.Tree;
 using Node = BehaviorTree.Node;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class IdleState : State
     {

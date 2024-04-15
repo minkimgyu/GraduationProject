@@ -5,7 +5,7 @@ using FSM;
 using AI;
 using System;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class NoiseTrackingState : State
     {

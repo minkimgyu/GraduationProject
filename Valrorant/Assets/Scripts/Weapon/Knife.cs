@@ -37,14 +37,14 @@ public class Knife : NoVariationWeapon
     {
         base.Initialize(player, armMesh, cam, ownerAnimator);
 
-        _mainResultStrategy = new LeftKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, true, WeaponName.ToString(), 
+        _mainActionStrategy = new LeftKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, true, WeaponName.ToString(), 
             mainAttackEffectDelayTime, _subAttackDelay, attackLinkTime, _mainAttackDamageData);
 
-        _subResultStrategy = new RightKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, false, WeaponName.ToString(),
+        _subActionStrategy = new RightKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, false, WeaponName.ToString(),
             subAttackEffectDelayTime, _mainAttackDelay, _subAttackDamageData);
 
-        _mainActionStrategy = new AutoAttackAction(_mainAttackDelay);
-        _subActionStrategy = new AutoAttackAction(_subAttackDelay);
+        _mainEventStrategy = new AutoAttackAction(_mainAttackDelay);
+        _subEventStrategy = new AutoAttackAction(_subAttackDelay);
 
         _mainRecoilStrategy = new NoRecoilGenerator();
         _subRecoilStrategy = new NoRecoilGenerator();

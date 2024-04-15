@@ -15,6 +15,7 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
     {
         _captureRadius = radius;
         _captureAngle = angle;
+        OnModifyData();
     }
 
     bool canRaycastTarget(Vector3 sightPoint, Transform target)

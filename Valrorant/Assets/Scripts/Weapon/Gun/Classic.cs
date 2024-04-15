@@ -41,15 +41,15 @@ public class Classic : NoVariationGun
     {
         base.Initialize(player, armMesh, cam, ownerAnimator);
 
-        _mainResultStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
+        _mainActionStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
             true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
 
-        _subResultStrategy = new ScatterProjectileAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
+        _subActionStrategy = new ScatterProjectileAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
             false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _subAttackBulletCounts, _bulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _subWeightApplier);
 
 
-        _mainActionStrategy = new ManualAttackAction(_mainActionDelay);
-        _subActionStrategy = new ManualAttackAction(_subActionDelay);
+        _mainEventStrategy = new ManualAttackAction(_mainActionDelay);
+        _subEventStrategy = new ManualAttackAction(_subActionDelay);
 
         RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
         RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);

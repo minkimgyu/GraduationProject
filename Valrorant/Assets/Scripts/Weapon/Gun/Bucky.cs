@@ -76,15 +76,15 @@ public class Bucky : NoVariationGun
         Vector3 frontPosition = new Vector3(0, 0, _findRange);
 
         // 여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
-        _mainActionStrategy = new ManualAction(_mainActionDelay);
-        _subActionStrategy = new ManualAction(_subActionDelay);
+        _mainEventStrategy = new ManualAction(_mainActionDelay);
+        _subEventStrategy = new ManualAction(_subActionDelay);
 
-        _mainResultStrategy = new ScatterProjectileAttack(_camTransform, _range, _targetLayer, _mainActionBulletCountInOneShoot, ownerAnimator, _animator, _muzzleFlash, false,
+        _mainActionStrategy = new ScatterProjectileAttack(_camTransform, _range, _targetLayer, _mainActionBulletCountInOneShoot, ownerAnimator, _animator, _muzzleFlash, false,
             _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _pelletCount, _bulletSpreadPowerDecreaseRatio, 
             _damageDictionary, OnGenerateNoiseRequest);
 
         // 무기를 버릴 경우, 제거해야함
-        _subResultStrategy = new SingleAndExplosionScatterAttackCombination(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, 
+        _subActionStrategy = new SingleAndExplosionScatterAttackCombination(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, 
             _emptyCartridgeSpawner, false, _weaponName.ToString(), _muzzle, _trajectoryLineEffect, _findRange, _subActionSinglePenetratePower, _subActionBulletCountInOneShoot, 
             _subSingleActionBulletSpreadPowerDecreaseRatio, _damageDictionary, frontPosition, _explosionEffectName, _subActionScatterPenetratePower, _subActionSpreadOffset, 
             _subActionPelletCount, _subScatterActionBulletSpreadPowerDecreaseRatio, _subSingleAttackDamageDictionary, OnGenerateNoiseRequest);

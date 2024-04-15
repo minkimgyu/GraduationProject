@@ -160,7 +160,7 @@ namespace Agent.Controller
         {
             if (weapon.CanDrop() == false) return false;
 
-            weapon.ThrowGun(_weaponThrowPower);
+            weapon.Drop(_weaponThrowPower);
 
             if (activateWeapon == true) weapon.gameObject.SetActive(true);
             weapon.OnDrop(); // 드랍 함수 호출

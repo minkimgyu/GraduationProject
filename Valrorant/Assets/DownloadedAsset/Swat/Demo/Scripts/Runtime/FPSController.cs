@@ -753,10 +753,10 @@ namespace Demo.Scripts.Runtime
             {
                 Application.Quit(0);
             }
-            
-            //UpdateActionInput();
-            //UpdateLookInput();
-            //UpdateRecoil();
+
+            UpdateActionInput();
+            UpdateLookInput();
+            UpdateRecoil();
 
             charAnimData.moveInput = movementComponent.AnimatorVelocity;
             UpdateAnimController();

@@ -15,6 +15,7 @@ public struct ZombieBlackboard
     public float StateChangeDelay { get; }
     public Transform CaptureTransform { get; }
     public Transform MyTrasform { get; }
+    public Transform SightPoint { get; }
 
     public Action<Vector3, bool> FollowPath { get; }
     public Action<Vector3> View { get; }
@@ -61,7 +62,7 @@ public struct ZombieBlackboard
     public float DestoryDelay { get; }
 
     public ZombieBlackboard(float angleOffset, float angleChangeAmount, int wanderOffset, float stateChangeDelay, 
-        Transform captureTransform, Transform myTrasform, float additiveCaptureRadius, float additiveAttackRange, 
+        Transform captureTransform, Transform myTrasform, Transform sightPoint, float additiveCaptureRadius, float additiveAttackRange, 
         float attackRange, float attackCircleRadius, float delayDuration, LayerMask attackLayer, Transform attackPoint,
         float destoryDelay, float maxHP,
 
@@ -78,6 +79,7 @@ public struct ZombieBlackboard
         StateChangeDelay = stateChangeDelay;
         CaptureTransform = captureTransform;
         MyTrasform = myTrasform;
+        SightPoint = sightPoint;
 
         DestoryDelay = destoryDelay;
 

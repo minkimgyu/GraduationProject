@@ -36,14 +36,9 @@ abstract public class BaseCaptureComponent<T> : MonoBehaviour where T : ITarget
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Paladin")
-        {
-            Debug.Log("Paladin");
-        }
-
         if (IsRightLayer(other) == false) return;
 
-        T component =  other.GetComponent<T>();
+        T component =  other.gameObject.GetComponent<T>();
         if (component == null || component.MyType != _targetType) return;
 
         if (IsAlreadyContaining(component) == true) return;
@@ -55,7 +50,7 @@ abstract public class BaseCaptureComponent<T> : MonoBehaviour where T : ITarget
     {
         if (IsRightLayer(other) == false) return;
 
-        T component = other.GetComponent<T>();
+        T component = other.gameObject.GetComponent<T>();
         if (component == null || component.MyType != _targetType) return;
 
         if (IsAlreadyContaining(component) == false) return;

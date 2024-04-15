@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using System;
-using AI.FSM;
+using AI.ZombieFSM;
 
 namespace BehaviorTree.Nodes
 {

@@ -62,7 +62,7 @@ public class Operator : AllVariationGun
         _storedMainActionWhenZoomIn = new ManualAttackAction(_mainActionDelayWhenZoomIn);
         _storedMainActionWhenZoomOut = new ManualAttackAction(_mainActionDelayWhenZoomOut);
 
-        _subActionStrategy = new ManualAttackAction(_subActionDelay);
+        _subEventStrategy = new ManualAttackAction(_subActionDelay);
 
         _storedMainResultWhenZoomOut = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
             true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
@@ -74,7 +74,7 @@ public class Operator : AllVariationGun
         GameObject scopeContainer = GameObject.FindWithTag("ScopeContainer");
         _scope = scopeContainer.GetComponent<ScopeContainer>().ReturnScope(); // 찾아서 넘겨줌
 
-        _subResultStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall, _meshDisableDelay);
+        _subActionStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall, _meshDisableDelay);
 
         RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
         RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);

@@ -14,6 +14,7 @@ public class NoiseListener : BaseCaptureComponent<ITarget>
         _captureRadius = radius;
         _maxQueueSize = maxQueueSize;
         this.OnNoiseReceived = OnNoiseReceived;
+        OnModifyData();
     }
 
     protected override bool IsAlreadyContaining(ITarget target)

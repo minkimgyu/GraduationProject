@@ -49,20 +49,20 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     public override bool CanDrop() { return true; }
 
-    public override bool NowNeedToRefillAmmo() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession == 0; }
+    //public override bool NowNeedToRefillAmmo() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession == 0; }
 
-    public override bool NeedToReload() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession > 0; }
+    //public override bool NeedToReload() { return _ammoCountsInMagazine == 0 && _ammoCountsInPossession > 0; }
 
     public override bool CanAttack() { return _ammoCountsInMagazine > 0; }
 
-    public override void RefillAmmo() 
-    {
-        //_reloadStrategy.OnResetReload(); // 리로드 중이면 취소하고 진행
+    //public override void RefillAmmo() 
+    //{
+    //    //_reloadStrategy.OnResetReload(); // 리로드 중이면 취소하고 진행
 
-        _ammoCountsInMagazine = _maxAmmoCountInMagazine;
-        _ammoCountsInPossession = _maxAmmoCountsInPossession;
-        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
-    }
+    //    _ammoCountsInMagazine = _maxAmmoCountInMagazine;
+    //    _ammoCountsInPossession = _maxAmmoCountsInPossession;
+    //    OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+    //}
 
     /// AutoReload 이벤트
     ////////////////////////////////////////////////////////////////////////////////////
@@ -84,8 +84,8 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     public override void OnReload()
     {
-        _mainResultStrategy.OnReload(); // 에임 해제
-        _subResultStrategy.OnReload();
+        _mainActionStrategy.OnReload(); // 에임 해제
+        _subActionStrategy.OnReload();
         _reloadStrategy.Reload(_ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
@@ -99,7 +99,7 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     ////////////////////////////////////////////////////////////////////////////////////
 
-    public override void ThrowGun(float force)
+    public override void Drop(float force)
     {
         PositionWeaponMesh(true);
         _gunRigidbody.AddForce(_camTransform.forward * force, ForceMode.Impulse);
@@ -149,26 +149,26 @@ abstract public class Gun : BaseWeapon, IInteractable
         OnGenerateNoiseRequest = noiseGenerator.GenerateNoise;
     }
 
-    protected override void OnMainActionEventCallRequsted()
+    protected override void OnMainEventCallRequsted()
     {
-        _mainResultStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
+        _mainActionStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
 
-        base.OnMainActionEventCallRequsted();
-        _ammoCountsInMagazine = _mainResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
+        base.OnMainEventCallRequsted();
+        _ammoCountsInMagazine = _mainActionStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
         OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
 
-        _subResultStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
+        _subActionStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
     }
 
-    protected override void OnSubActionEventCallRequsted()
+    protected override void OnSubEventCallRequsted()
     {
-        _subResultStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
+        _subActionStrategy.CheckBulletLeftCount(_ammoCountsInMagazine); // 여기서 남은 총알을 체크함
 
-        base.OnSubActionEventCallRequsted();
-        _ammoCountsInMagazine = _subResultStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
+        base.OnSubEventCallRequsted();
+        _ammoCountsInMagazine = _subActionStrategy.DecreaseBullet(_ammoCountsInMagazine); // 발사 시 총알 감소 적용
         OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
 
-        _mainResultStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
+        _mainActionStrategy.TurnOffZoomWhenOtherExecute(); // 발사 후 줌 해제 적용
     }
 
     public override void OnEquip()

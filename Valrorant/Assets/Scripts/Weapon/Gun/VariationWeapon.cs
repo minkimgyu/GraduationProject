@@ -9,34 +9,34 @@ using UnityEngine;
 
 abstract public class BaseVariationGun : Gun
 {
-    protected virtual void LinkEventWhenZoom(ActionStrategy actionStrategy, ResultStrategy resultStrategy, RecoilStrategy recoilStrategy) { }
+    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy, RecoilStrategy recoilStrategy) { }
 
-    protected virtual void LinkEventWhenZoom(ActionStrategy actionStrategy, ResultStrategy resultStrategy) { }
+    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy) { }
 
-    protected virtual void LinkEventWhenZoom(ActionStrategy actionStrategy, RecoilStrategy recoilStrategy) { }
+    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, RecoilStrategy recoilStrategy) { }
 
     protected virtual void LinkEventWhenZoom(RecoilStrategy recoilStrategy) { }
 
-    protected void ChangeActionStrategy(ActionStrategy actionStrategy)
+    protected void ChangeActionStrategy(EventStrategy actionStrategy)
     {
-        if (_mainActionStrategy != null)
+        if (_mainEventStrategy != null)
         {
             LinkActionEvent(true, false); // 링크 끊어줌
-            _mainActionStrategy.OnChange(); // 초기화 함수
+            _mainEventStrategy.OnChange(); // 초기화 함수
         }
 
-        _mainActionStrategy = actionStrategy; // 새로 할당
+        _mainEventStrategy = actionStrategy; // 새로 할당
 
-        if (_mainActionStrategy != null) LinkActionEvent(true, true); // 링크 끊어줌
+        if (_mainEventStrategy != null) LinkActionEvent(true, true); // 링크 끊어줌
     }
 
-    protected void ChangeResultStrategy(ResultStrategy resultStrategy)
+    protected void ChangeResultStrategy(ActionStrategy resultStrategy)
     {
-        if (_mainResultStrategy != null) _mainResultStrategy.OnUnLink(_player); // 링크 끊어줌
+        if (_mainActionStrategy != null) _mainActionStrategy.OnUnLink(_player); // 링크 끊어줌
 
-        _mainResultStrategy = resultStrategy; // 새로 할당
+        _mainActionStrategy = resultStrategy; // 새로 할당
 
-        if (_mainResultStrategy != null) _mainResultStrategy.OnLink(_player); // 링크 끊어줌
+        if (_mainActionStrategy != null) _mainActionStrategy.OnLink(_player); // 링크 끊어줌
     }
 
     protected void ChangeRecoilStrategy(RecoilStrategy recoilStrategy)
@@ -62,16 +62,16 @@ abstract public class BaseVariationGun : Gun
 /// </summary>
 abstract public class AllVariationGun : BaseVariationGun
 {
-    protected ActionStrategy _storedMainActionWhenZoomIn;
-    protected ActionStrategy _storedMainActionWhenZoomOut;
+    protected EventStrategy _storedMainActionWhenZoomIn;
+    protected EventStrategy _storedMainActionWhenZoomOut;
 
-    protected ResultStrategy _storedMainResultWhenZoomIn;
-    protected ResultStrategy _storedMainResultWhenZoomOut;
+    protected ActionStrategy _storedMainResultWhenZoomIn;
+    protected ActionStrategy _storedMainResultWhenZoomOut;
 
     protected RecoilStrategy _storedMainRecoilWhenZoomIn;
     protected RecoilStrategy _storedMainRecoilWhenZoomOut;
 
-    protected override void LinkEventWhenZoom(ActionStrategy actionStrategy, ResultStrategy resultStrategy, RecoilStrategy recoilStrategy)
+    protected override void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy, RecoilStrategy recoilStrategy)
     {
         ChangeActionStrategy(actionStrategy);
         ChangeResultStrategy(resultStrategy);
@@ -93,7 +93,7 @@ abstract public class AllVariationGun : BaseVariationGun
         OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
 
         LinkActionEvent(false, true); // subAction Link
-        _subResultStrategy.OnLink(player); // subResult
+        _subActionStrategy.OnLink(player); // subResult
         _subRecoilStrategy.OnLink(player); // subRecoil
     }
 }
@@ -103,13 +103,13 @@ abstract public class AllVariationGun : BaseVariationGun
 /// </summary>
 abstract public class ActionAndRecoilVariationGun : BaseVariationGun
 {
-    protected ActionStrategy _storedMainActionWhenZoomIn; // 네이밍을 zoom or nozoom 이런 식으로 가져가자
-    protected ActionStrategy _storedMainActionWhenZoomOut;
+    protected EventStrategy _storedMainActionWhenZoomIn; // 네이밍을 zoom or nozoom 이런 식으로 가져가자
+    protected EventStrategy _storedMainActionWhenZoomOut;
 
     protected RecoilStrategy _storedMainRecoilWhenZoomIn;
     protected RecoilStrategy _storedMainRecoilWhenZoomOut;
 
-    protected override void LinkEventWhenZoom(ActionStrategy actionStrategy, RecoilStrategy recoilStrategy)
+    protected override void LinkEventWhenZoom(EventStrategy actionStrategy, RecoilStrategy recoilStrategy)
     {
         ChangeActionStrategy(actionStrategy);
         ChangeRecoilStrategy(recoilStrategy);
@@ -131,8 +131,8 @@ abstract public class ActionAndRecoilVariationGun : BaseVariationGun
 
         LinkActionEvent(false, true); // subAction
 
-        _mainResultStrategy.OnLink(player);
-        _subResultStrategy.OnLink(player); // subResult
+        _mainActionStrategy.OnLink(player);
+        _subActionStrategy.OnLink(player); // subResult
 
         _subRecoilStrategy.OnLink(player);
     }
@@ -168,8 +168,8 @@ abstract public class RecoilVariationGun : BaseVariationGun
         LinkActionEvent(true, true); // mainAction Link
         LinkActionEvent(false, true); // subAction
 
-        _mainResultStrategy.OnLink(player);
-        _subResultStrategy.OnLink(player); // subResult
+        _mainActionStrategy.OnLink(player);
+        _subActionStrategy.OnLink(player); // subResult
 
         _subRecoilStrategy.OnLink(player);
     }
@@ -182,8 +182,8 @@ abstract public class NoVariationGun : Gun
         LinkActionEvent(true, true); // mainAction Link
         LinkActionEvent(false, true); // subAction Link
 
-        _mainResultStrategy.OnLink(player);
-        _subResultStrategy.OnLink(player);
+        _mainActionStrategy.OnLink(player);
+        _subActionStrategy.OnLink(player);
 
         _mainRecoilStrategy.OnLink(player);
         _subRecoilStrategy.OnLink(player);
@@ -197,8 +197,8 @@ abstract public class NoVariationWeapon : BaseWeapon
         LinkActionEvent(true, true); // mainAction Link
         LinkActionEvent(false, true); // subAction Link
 
-        _mainResultStrategy.OnLink(player);
-        _subResultStrategy.OnLink(player);
+        _mainActionStrategy.OnLink(player);
+        _subActionStrategy.OnLink(player);
 
         _mainRecoilStrategy.OnLink(player);
         _subRecoilStrategy.OnLink(player);

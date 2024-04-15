@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 using FSM;
 using System;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class MoveState : State
     {

@@ -24,6 +24,12 @@ abstract public class BaseWeapon : MonoBehaviour
        Melee
     }
 
+    public enum StrategyType
+    {
+        Main,
+        Sub
+    }
+
     protected Transform _camTransform;
 
     [SerializeField]
@@ -38,7 +44,19 @@ abstract public class BaseWeapon : MonoBehaviour
     public Name WeaponName { get { return _weaponName; } }
     public Type WeaponType { get { return _weaponType; } }
 
-    protected int _targetLayer;
+
+    protected int _targetLayer; // 공격 대상 레이어
+
+
+    protected Dictionary<StrategyType, EventStrategy> _eventStrategies;
+    protected Dictionary<StrategyType, ActionStrategy> _actionStrategies;
+    protected Dictionary<StrategyType, RecoilStrategy> _recoilStrategies;
+
+    protected ReloadStrategy _reloadStrategy;
+
+    protected EventStrategy _mainEventStrategy;
+
+    protected EventStrategy _subEventStrategy;
 
 
     protected ActionStrategy _mainActionStrategy;
@@ -46,26 +64,39 @@ abstract public class BaseWeapon : MonoBehaviour
     protected ActionStrategy _subActionStrategy;
 
 
-    protected ResultStrategy _mainResultStrategy;
-
-    protected ResultStrategy _subResultStrategy;
-
-
     protected RecoilStrategy _mainRecoilStrategy;
 
     protected RecoilStrategy _subRecoilStrategy;
 
-    protected ReloadStrategy _reloadStrategy;
+
+    //protected ReloadStrategy _reloadStrategy;
 
     [SerializeField]
     protected float _equipFinishTime;
     public float EquipFinishTime { get { return _equipFinishTime; } }
 
-    protected Animator _ownerAnimator;
+    /// <summary>
+    /// 무기를 보유한 대상의 애니메이터
+    /// </summary>
+    protected Animator _ownerAnimator; 
     public Animator OwnerAnimator { get { return _ownerAnimator; } }
 
+    /// <summary>
+    /// 무기의 에니메이터
+    /// </summary>
     protected Animator _animator;
     public Animator Animator { get { return _animator; } }
+
+    /// <summary>
+    /// 무기의 애니메이션을 실행시킬 때 호출
+    /// </summary>
+    Action<string, int, float> OnPlayWeaponAnimation;
+
+    /// <summary>
+    /// 무기를 소유한 대상의 애니메이션을 실행시킬 때 호출
+    /// </summary>
+    Action<string, int, float> OnPlayOwnerAnimation;
+
 
     protected GameObject _player;
 
@@ -76,27 +107,38 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public void RunUpdateInController() // --> WeaponFSM에 연결시켜주자
     {
-        _mainActionStrategy.OnUpdate();
-        _subActionStrategy.OnUpdate();
+        _eventStrategies[StrategyType.Main].OnUpdate();
+        _eventStrategies[StrategyType.Sub].OnUpdate();
 
-        _mainResultStrategy.OnUpdate();
-        _subResultStrategy.OnUpdate();
+        _actionStrategies[StrategyType.Main].OnUpdate();
+        _actionStrategies[StrategyType.Sub].OnUpdate();
 
-        _mainRecoilStrategy.OnUpdate();
-        _subRecoilStrategy.OnUpdate();
+        _recoilStrategies[StrategyType.Main].OnUpdate();
+        _recoilStrategies[StrategyType.Sub].OnUpdate();
 
         _reloadStrategy.OnUpdate();
+
+        //_mainEventStrategy.OnUpdate();
+        //_subEventStrategy.OnUpdate();
+
+        //_mainActionStrategy.OnUpdate();
+        //_subActionStrategy.OnUpdate();
+
+        //_mainRecoilStrategy.OnUpdate();
+        //_subRecoilStrategy.OnUpdate();
+
+        //_reloadStrategy.OnUpdate();
     }
 
     public virtual bool CanDrop() { return false; }
 
     protected virtual void OnCollisionEnter(Collision collision) { }
 
-    public virtual void ThrowGun(float force) { }
+    public virtual void Drop(float force) { }
 
-    public virtual void RefillAmmo() {  }
+    //public virtual void RefillAmmo() {  } --> 이거는 ReloadStrategy를 보고 참고해야할 듯
 
-    public virtual bool NowNeedToRefillAmmo() { return false; }
+    //public virtual bool NowNeedToRefillAmmo() { return false; }
 
     //////////////////////////////////////////////////////////////////////////////////////////// 이벤트 모음
 
@@ -122,6 +164,9 @@ abstract public class BaseWeapon : MonoBehaviour
         _ownerAnimator = ownerAnimator;
         _animator = GetComponent<Animator>();
 
+        OnPlayOwnerAnimation += _ownerAnimator.Play; // 무기 버릴 때 빼줘야함
+        OnPlayWeaponAnimation = _animator.Play;
+
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget");
 
         if (player.tag != "Player") return;
@@ -136,14 +181,14 @@ abstract public class BaseWeapon : MonoBehaviour
         LinkRoundViewer(false);
 
         _mainRecoilStrategy.OnUnlink(_player);
-        _mainResultStrategy.TurnOffAim();
+        _mainActionStrategy.TurnOffAim();
 
-        _mainResultStrategy.OnUnLink(_player);
+        _mainActionStrategy.OnUnLink(_player);
 
-        _subResultStrategy.TurnOffAim();
+        _subActionStrategy.TurnOffAim();
 
-        _subResultStrategy.OnUnLink(_player);
-        _subResultStrategy.TurnOffAim();
+        _subActionStrategy.OnUnLink(_player);
+        _subActionStrategy.TurnOffAim();
 
         _subRecoilStrategy.OnUnlink(_player);
 
@@ -168,10 +213,10 @@ abstract public class BaseWeapon : MonoBehaviour
         LinkRoundViewer(true);
 
         _mainRecoilStrategy.OnLink(player);
-        _mainResultStrategy.OnLink(player);
+        _mainActionStrategy.OnLink(player);
 
         _subRecoilStrategy.OnLink(player);
-        _subResultStrategy.OnLink(player);
+        _subActionStrategy.OnLink(player);
     }
 
     public virtual void PositionWeaponMesh(bool nowDrop) { }
@@ -188,8 +233,8 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public virtual void OnUnEquip()
     {
-        _mainResultStrategy.OnReload();
-        _subResultStrategy.OnReload();
+        _mainActionStrategy.OnReload();
+        _subActionStrategy.OnReload();
         gameObject.SetActive(false);
     }
 
@@ -234,7 +279,7 @@ abstract public class BaseWeapon : MonoBehaviour
         return _reloadStrategy.CancelReloadAndGoToSubAction();
     }
 
-    public virtual bool NeedToReload() { return true; }
+    //public virtual bool NeedToReload() { return true; }
 
     public virtual bool CanReload() { return false; }
 
@@ -245,52 +290,52 @@ abstract public class BaseWeapon : MonoBehaviour
     /// ActionStrategy 이벤트
     ////////////////////////////////////////////////////////////////////////////////////
 
-    protected virtual void OnMainActionEventCallRequsted()
+    protected virtual void OnMainEventCallRequsted()
     {
-        if (_mainResultStrategy.CanDo() == false) return; // ResultStrategy에서 진행 가능하다면
+        if (_mainActionStrategy.CanAct() == false) return; // ResultStrategy에서 진행 가능하다면
 
         _mainRecoilStrategy.OnEventRequested();
         _subRecoilStrategy.OnOtherActionEventRequested();
 
-        _mainResultStrategy.Do(); // --> 여기서 사용가능한지 체크
-        _subResultStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
+        _mainActionStrategy.Do(); // --> 여기서 사용가능한지 체크
+        _subActionStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
     }
 
-    protected virtual void OnSubActionEventCallRequsted()
+    protected virtual void OnSubEventCallRequsted()
     {
-        if (_subResultStrategy.CanDo() == false) return; // ResultStrategy에서 진행 가능하다면
+        if (_subActionStrategy.CanAct() == false) return; // ResultStrategy에서 진행 가능하다면
 
         _subRecoilStrategy.OnEventRequested();
         _mainRecoilStrategy.OnOtherActionEventRequested();
 
-        _subResultStrategy.Do();
-        _mainResultStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
+        _subActionStrategy.Do();
+        _mainActionStrategy.OnOtherActionEventRequested(); // 칼 쿨타임 적용
     }
 
-    protected virtual void OnMainActionEventCallFinished()
+    protected virtual void OnMainEventFinished()
     {
         _mainRecoilStrategy.OnEventFinished();
     }
 
-    protected virtual void OnSubActionEventCallFinished()
+    protected virtual void OnSubEventFinished()
     {
         _subRecoilStrategy.OnEventFinished();
     }
 
-    protected virtual void OnMainActionClickStart() { }
+    protected virtual void OnMainEventStart() { }
 
-    protected virtual void OnMainActionClickProgress() { }
+    protected virtual void OnMainEventProgress() { }
 
-    protected virtual void OnMainActionClickEnd() 
+    protected virtual void OnMainEventEnd() 
     {
         _mainRecoilStrategy.OnClickEnd();
     }
 
-    protected virtual void OnSubActionClickStart() { }
+    protected virtual void OnSubEventStart() { }
 
-    protected virtual void OnSubActionClickProgress() { }
+    protected virtual void OnSubEventProgress() { }
 
-    protected virtual void OnSubActionClickEnd() 
+    protected virtual void OnSubEventEnd() 
     {
         _subRecoilStrategy.OnClickEnd();
     }
@@ -300,32 +345,32 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public void OnLeftClickStart()
     {
-        _mainActionStrategy.OnMouseClickStart();
+        _mainEventStrategy.OnMouseClickStart();
     }
 
     public void OnLeftClickProgress()
     {
-        _mainActionStrategy.OnMouseClickProgress();
+        _mainEventStrategy.OnMouseClickProgress();
     }
 
     public void OnLeftClickEnd()
     {
-        _mainActionStrategy.OnMouseClickEnd();
+        _mainEventStrategy.OnMouseClickEnd();
     }
 
     public void OnRightClickStart()
     {
-        _subActionStrategy.OnMouseClickStart();
+        _subEventStrategy.OnMouseClickStart();
     }
 
     public void OnRightClickProgress()
     {
-        _subActionStrategy.OnMouseClickProgress();
+        _subEventStrategy.OnMouseClickProgress();
     }
 
     public void OnRightClickEnd()
     {
-        _subActionStrategy.OnMouseClickEnd();
+        _subEventStrategy.OnMouseClickEnd();
     }
 
     protected virtual void LinkEvent(GameObject player)
@@ -339,38 +384,39 @@ abstract public class BaseWeapon : MonoBehaviour
         {
             if(nowLink)
             {
-                _mainActionStrategy.OnActionStart += OnMainActionClickStart;
-                _mainActionStrategy.OnActionProgress += OnMainActionClickProgress;
-                _mainActionStrategy.OnActionEnd += OnMainActionClickEnd;
-                _mainActionStrategy.OnEventCallRequsted += OnMainActionEventCallRequsted;
-                _mainActionStrategy.OnEventCallFinished += OnMainActionEventCallFinished;
+                _mainEventStrategy.OnActionStart += OnMainEventStart;
+                _mainEventStrategy.OnActionProgress += OnMainEventProgress;
+                _mainEventStrategy.OnActionEnd += OnMainEventEnd;
+                _mainEventStrategy.OnEventCallRequsted += OnMainEventCallRequsted;
+                _mainEventStrategy.OnEventCallFinished += OnMainEventFinished;
             }
             else
             {
-                _mainActionStrategy.OnActionStart -= OnMainActionClickStart;
-                _mainActionStrategy.OnActionProgress -= OnMainActionClickProgress;
-                _mainActionStrategy.OnActionEnd -= OnMainActionClickEnd;
-                _mainActionStrategy.OnEventCallRequsted -= OnMainActionEventCallRequsted;
-                _mainActionStrategy.OnEventCallFinished -= OnMainActionEventCallFinished;
+                _mainEventStrategy.OnActionStart -= OnMainEventStart;
+                _mainEventStrategy.OnActionProgress -= OnMainEventProgress;
+                _mainEventStrategy.OnActionEnd -= OnMainEventEnd;
+                _mainEventStrategy.OnEventCallRequsted -= OnMainEventCallRequsted;
+                _mainEventStrategy.OnEventCallFinished -= OnMainEventFinished;
             }
         }
         else
         {
             if (nowLink)
             {
-                _subActionStrategy.OnActionStart += OnSubActionClickStart;
-                _subActionStrategy.OnActionProgress += OnSubActionClickProgress;
-                _subActionStrategy.OnActionEnd += OnSubActionClickEnd;
-                _subActionStrategy.OnEventCallRequsted += OnSubActionEventCallRequsted;
-                _subActionStrategy.OnEventCallFinished += OnSubActionEventCallFinished;
+                _subEventStrategy.OnActionStart += OnSubEventStart;
+                _subEventStrategy.OnActionProgress += OnSubEventProgress;
+                _subEventStrategy.OnActionEnd += OnSubEventEnd;
+
+                _subEventStrategy.OnEventCallRequsted += OnSubEventCallRequsted;
+                _subEventStrategy.OnEventCallFinished += OnSubEventFinished;
             }
             else
             {
-                _subActionStrategy.OnActionStart -= OnSubActionClickStart;
-                _subActionStrategy.OnActionProgress -= OnSubActionClickProgress;
-                _subActionStrategy.OnActionEnd -= OnSubActionClickEnd;
-                _subActionStrategy.OnEventCallRequsted -= OnSubActionEventCallRequsted;
-                _subActionStrategy.OnEventCallFinished -= OnSubActionEventCallFinished;
+                _subEventStrategy.OnActionStart -= OnSubEventStart;
+                _subEventStrategy.OnActionProgress -= OnSubEventProgress;
+                _subEventStrategy.OnActionEnd -= OnSubEventEnd;
+                _subEventStrategy.OnEventCallRequsted -= OnSubEventCallRequsted;
+                _subEventStrategy.OnEventCallFinished -= OnSubEventFinished;
             }
         }
     }

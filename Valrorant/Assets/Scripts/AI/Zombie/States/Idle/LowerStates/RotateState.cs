@@ -5,7 +5,7 @@ using FSM;
 using System;
 using Random = UnityEngine.Random;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class RotateState : State
     {

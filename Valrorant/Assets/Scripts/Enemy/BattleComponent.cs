@@ -28,7 +28,7 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
         InitializeWeapons();
     }
 
-    public bool NeedToReload() { return _nowEquipedWeapon.NeedToReload(); }
+    //public bool NeedToReload() { return _nowEquipedWeapon.NeedToReload(); }
 
     public bool IsAttackFinish()
     {
@@ -41,7 +41,7 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
         _ownerAnimator.Play("AKIdle");
     }
 
-    public bool NowNeedToRefillAmmo() { return _nowEquipedWeapon.NowNeedToRefillAmmo(); }
+    //public bool NowNeedToRefillAmmo() { return _nowEquipedWeapon.NowNeedToRefillAmmo(); }
 
     public bool CanAttack() { return _nowEquipedWeapon.CanAttack(); }
 

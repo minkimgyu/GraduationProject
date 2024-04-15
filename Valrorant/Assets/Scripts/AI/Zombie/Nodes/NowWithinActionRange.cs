@@ -5,7 +5,7 @@ using System;
 
 namespace BehaviorTree.Nodes
 {
-    public class IsCloseToTarget : Node
+    public class NowWithinActionRange : Node
     {
         enum State
         {
@@ -21,7 +21,7 @@ namespace BehaviorTree.Nodes
         Transform _myTransform;
         Func<ITarget> ReturnTargetInSight;
 
-        public IsCloseToTarget(Transform myTransform, Func<ITarget> ReturnTargetInSight, float range, float rangeOffset)
+        public NowWithinActionRange(Transform myTransform, Func<ITarget> ReturnTargetInSight, float range, float rangeOffset)
         {
             this.ReturnTargetInSight = ReturnTargetInSight;
 

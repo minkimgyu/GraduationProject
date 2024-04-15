@@ -8,7 +8,7 @@ using BehaviorTree.Nodes;
 using Tree = BehaviorTree.Tree;
 using Node = BehaviorTree.Node;
 
-namespace AI.FSM
+namespace AI.ZombieFSM
 {
     public class TargetFollowingState : State
     {
@@ -39,8 +39,8 @@ namespace AI.FSM
                          (
                              new List<Node>()
                              {
-                                new RotateTowardTarget(blackboard.MyTrasform, blackboard.View, blackboard.ReturnTargetInSight), // 정지 하는 코드 넣기
-                                new IsCloseToTarget(blackboard.MyTrasform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
+                                new RotateTowardTarget(blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View), // 정지 하는 코드 넣기
+                                new NowWithinActionRange(blackboard.MyTrasform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
                                 new Sequencer
                                 (
                                     new List<Node>()
