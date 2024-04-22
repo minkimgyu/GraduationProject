@@ -42,6 +42,8 @@ namespace Agent.Controller
         ViewComponent _viewComponent;
         public ViewComponent ViewComponent { get { return _viewComponent; } }
 
+        ZoomComponent _zoomComponent;
+
         InteractionController _interactionComponent;
         public InteractionController InteractionComponent { get { return _interactionComponent; } }
 
@@ -95,6 +97,7 @@ namespace Agent.Controller
             _interactionComponent = GetComponent<InteractionController>();
             _movementComponent = GetComponent<MovementComponent>();
             _viewComponent = GetComponent<ViewComponent>();
+            _zoomComponent = GetComponent<ZoomComponent>();
 
             _movementFSM = new StateMachine<MovementState>();
             _postureFSM = new StateMachine<PostureState>();
@@ -121,6 +124,8 @@ namespace Agent.Controller
 
         private void Update()
         {
+            _zoomComponent.OnUpdate();
+
             _movementFSM.OnUpdate();
             _postureFSM.OnUpdate();
         }

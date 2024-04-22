@@ -1,206 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 // Pistol, Shotgun은 없음
 // LMG, AR, AK는 연사 속도 변경, 반동 변경 --> Action, Recoil 변화
 // SMG는 발사 방식 변경, 연사 속도 변경, 반동 변경 ---> Action, Recoil, Result 변화
 // Sniper는 탄 퍼짐 변화, 공격 속도 변화 ---> Action, Recoil 변화
 
-abstract public class BaseVariationGun : Gun
+abstract public class VariationGun : Gun
 {
-    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy, RecoilStrategy recoilStrategy) { }
-
-    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy) { }
-
-    protected virtual void LinkEventWhenZoom(EventStrategy actionStrategy, RecoilStrategy recoilStrategy) { }
-
-    protected virtual void LinkEventWhenZoom(RecoilStrategy recoilStrategy) { }
-
-    protected void ChangeActionStrategy(EventStrategy actionStrategy)
+    public enum Conditon
     {
-        if (_mainEventStrategy != null)
-        {
-            LinkActionEvent(true, false); // 링크 끊어줌
-            _mainEventStrategy.OnChange(); // 초기화 함수
-        }
-
-        _mainEventStrategy = actionStrategy; // 새로 할당
-
-        if (_mainEventStrategy != null) LinkActionEvent(true, true); // 링크 끊어줌
+        Both, // 모든 조건에서 사용됨
+        ZoomIn, // 줌 적용 시에만 사용됨
+        ZoomOut // 줌 해제 시에만 사용됨
     }
 
-    protected void ChangeResultStrategy(ActionStrategy resultStrategy)
+    protected Dictionary<Tuple<EventType, Conditon>, EventStrategy> _eventStorage = new();
+    protected Dictionary<Tuple<EventType, Conditon>, ActionStrategy> _actionStorage = new();
+    protected Dictionary<Tuple<EventType, Conditon>, BaseRecoilStrategy> _recoilStorage = new();
+
+    protected void OnZoomRequested(bool nowZoom)
     {
-        if (_mainActionStrategy != null) _mainActionStrategy.OnUnLink(_player); // 링크 끊어줌
-
-        _mainActionStrategy = resultStrategy; // 새로 할당
-
-        if (_mainActionStrategy != null) _mainActionStrategy.OnLink(_player); // 링크 끊어줌
+        if (nowZoom) OnZoomIn();
+        else OnZoomOut();
     }
 
-    protected void ChangeRecoilStrategy(RecoilStrategy recoilStrategy)
+    void ResetStrategy(EventStrategy strategy)
     {
-        if (_mainRecoilStrategy != null)
-        {
-            _mainRecoilStrategy.OnUnlink(_player); // 링크 끊어줌
-            _mainRecoilStrategy.ResetValues(); // 여기서 기존 리코일 초기화
-        }
-
-        _mainRecoilStrategy = recoilStrategy; // 새로 할당
-
-        if (_mainRecoilStrategy != null)
-        {
-            _mainRecoilStrategy.OnLink(_player); // 링크 끊어줌
-            _mainRecoilStrategy.RecoverRecoil(); // 여기서 반동회복 넣어줌
-        }
-    }
-}
-
-/// <summary>
-/// 줌을 적용하거나 해제할 때 스테이트 패턴에 변화가 있는 클레스
-/// </summary>
-abstract public class AllVariationGun : BaseVariationGun
-{
-    protected EventStrategy _storedMainActionWhenZoomIn;
-    protected EventStrategy _storedMainActionWhenZoomOut;
-
-    protected ActionStrategy _storedMainResultWhenZoomIn;
-    protected ActionStrategy _storedMainResultWhenZoomOut;
-
-    protected RecoilStrategy _storedMainRecoilWhenZoomIn;
-    protected RecoilStrategy _storedMainRecoilWhenZoomOut;
-
-    protected override void LinkEventWhenZoom(EventStrategy actionStrategy, ActionStrategy resultStrategy, RecoilStrategy recoilStrategy)
-    {
-        ChangeActionStrategy(actionStrategy);
-        ChangeResultStrategy(resultStrategy);
-        ChangeRecoilStrategy(recoilStrategy);
+        _eventStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
+        strategy.LinkEvent(_weaponEventBlackboard);
+        _eventStrategies[EventType.Main] = strategy;
     }
 
-    protected override void OnZoomIn() 
+    void ResetStrategy(ActionStrategy strategy)
     {
-        LinkEventWhenZoom(_storedMainActionWhenZoomIn, _storedMainResultWhenZoomIn, _storedMainRecoilWhenZoomIn);
+        _actionStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
+        strategy.LinkEvent(_weaponEventBlackboard);
+        _actionStrategies[EventType.Main] = strategy;
     }
 
-    protected override void OnZoomOut() 
+    void ResetStrategy(BaseRecoilStrategy strategy)
     {
-        LinkEventWhenZoom(_storedMainActionWhenZoomOut, _storedMainResultWhenZoomOut, _storedMainRecoilWhenZoomOut);
+        _recoilStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
+        strategy.LinkEvent(_weaponEventBlackboard);
+        _recoilStrategies[EventType.Main] = strategy;
     }
 
-    protected override void LinkEvent(GameObject player)
+    protected virtual void OnZoomIn() 
     {
-        OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
+        Tuple<EventType, Conditon> zoomInKey = new(EventType.Main, Conditon.ZoomIn);
 
-        LinkActionEvent(false, true); // subAction Link
-        _subActionStrategy.OnLink(player); // subResult
-        _subRecoilStrategy.OnLink(player); // subRecoil
-    }
-}
-
-/// <summary>
-/// 탄 퍼짐, 연사 속도의 변화가 있는 경우
-/// </summary>
-abstract public class ActionAndRecoilVariationGun : BaseVariationGun
-{
-    protected EventStrategy _storedMainActionWhenZoomIn; // 네이밍을 zoom or nozoom 이런 식으로 가져가자
-    protected EventStrategy _storedMainActionWhenZoomOut;
-
-    protected RecoilStrategy _storedMainRecoilWhenZoomIn;
-    protected RecoilStrategy _storedMainRecoilWhenZoomOut;
-
-    protected override void LinkEventWhenZoom(EventStrategy actionStrategy, RecoilStrategy recoilStrategy)
-    {
-        ChangeActionStrategy(actionStrategy);
-        ChangeRecoilStrategy(recoilStrategy);
+        if (_eventStorage.ContainsKey(zoomInKey)) ResetStrategy(_eventStorage[zoomInKey]);
+        if (_actionStorage.ContainsKey(zoomInKey)) ResetStrategy(_actionStorage[zoomInKey]);
+        if (_recoilStorage.ContainsKey(zoomInKey)) ResetStrategy(_recoilStorage[zoomInKey]);
     }
 
-    protected override void OnZoomIn() 
+    protected virtual void OnZoomOut() 
     {
-        LinkEventWhenZoom(_storedMainActionWhenZoomIn, _storedMainRecoilWhenZoomIn);
+        Tuple<EventType, Conditon> zoomOutKey = new(EventType.Main, Conditon.ZoomOut);
+
+        if (_eventStorage.ContainsKey(zoomOutKey)) ResetStrategy(_eventStorage[zoomOutKey]);
+        if (_actionStorage.ContainsKey(zoomOutKey)) ResetStrategy(_actionStorage[zoomOutKey]);
+        if (_recoilStorage.ContainsKey(zoomOutKey)) ResetStrategy(_recoilStorage[zoomOutKey]);
     }
 
-    protected override void OnZoomOut() // --> Initialize에서는 이거 사용
+    public override void MatchStrategy()
     {
-        LinkEventWhenZoom(_storedMainActionWhenZoomOut, _storedMainRecoilWhenZoomOut);
-    }
+        Tuple<EventType, Conditon> mainBothKey = new(EventType.Main, Conditon.Both);
+        Tuple<EventType, Conditon> subBothKey = new(EventType.Sub, Conditon.Both);
 
-    protected override void LinkEvent(GameObject player)
-    {
-        OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
+        Tuple<EventType, Conditon> mainZoomOutKey = new(EventType.Main, Conditon.ZoomOut);
+        Tuple<EventType, Conditon> subZoomOutKey = new(EventType.Sub, Conditon.ZoomOut);
 
-        LinkActionEvent(false, true); // subAction
 
-        _mainActionStrategy.OnLink(player);
-        _subActionStrategy.OnLink(player); // subResult
+        if (_eventStorage.ContainsKey(mainBothKey)) _eventStrategies[EventType.Main] = _eventStorage[mainBothKey];
+        else _eventStrategies[EventType.Main] = _eventStorage[mainZoomOutKey];
 
-        _subRecoilStrategy.OnLink(player);
-    }
-}
+        if (_eventStorage.ContainsKey(subBothKey)) _eventStrategies[EventType.Sub] = _eventStorage[subBothKey];
+        else _eventStrategies[EventType.Sub] = _eventStorage[subZoomOutKey];
 
-/// <summary>
-/// 탄 퍼짐, 연사 속도의 변화가 있는 경우
-/// </summary>
-abstract public class RecoilVariationGun : BaseVariationGun
-{
-    protected RecoilStrategy _storedMainRecoilWhenZoomIn;
-    protected RecoilStrategy _storedMainRecoilWhenZoomOut;
 
-    protected override void LinkEventWhenZoom(RecoilStrategy recoilStrategy)
-    {
-        ChangeRecoilStrategy(recoilStrategy);
-    }
+        if (_actionStorage.ContainsKey(mainBothKey)) _actionStrategies[EventType.Main] = _actionStorage[mainBothKey];
+        else _actionStrategies[EventType.Main] = _actionStorage[mainZoomOutKey];
 
-    protected override void OnZoomIn()
-    {
-        LinkEventWhenZoom(_storedMainRecoilWhenZoomIn);
-    }
+        if (_actionStorage.ContainsKey(subBothKey)) _actionStrategies[EventType.Sub] = _actionStorage[subBothKey];
+        else _actionStrategies[EventType.Sub] = _actionStorage[subZoomOutKey];
 
-    protected override void OnZoomOut() // --> Initialize에서는 이거 사용
-    {
-        LinkEventWhenZoom(_storedMainRecoilWhenZoomOut);
-    }
 
-    protected override void LinkEvent(GameObject player)
-    {
-        OnZoomOut(); // 초기 할당에는 OnZoomOut 적용
+        if (_recoilStorage.ContainsKey(mainBothKey)) _recoilStrategies[EventType.Main] = _recoilStorage[mainBothKey];
+        else _recoilStrategies[EventType.Main] = _recoilStorage[mainZoomOutKey];
 
-        LinkActionEvent(true, true); // mainAction Link
-        LinkActionEvent(false, true); // subAction
-
-        _mainActionStrategy.OnLink(player);
-        _subActionStrategy.OnLink(player); // subResult
-
-        _subRecoilStrategy.OnLink(player);
-    }
-}
-
-abstract public class NoVariationGun : Gun
-{
-    protected override void LinkEvent(GameObject player)
-    {
-        LinkActionEvent(true, true); // mainAction Link
-        LinkActionEvent(false, true); // subAction Link
-
-        _mainActionStrategy.OnLink(player);
-        _subActionStrategy.OnLink(player);
-
-        _mainRecoilStrategy.OnLink(player);
-        _subRecoilStrategy.OnLink(player);
-    }
-}
-
-abstract public class NoVariationWeapon : BaseWeapon
-{
-    protected override void LinkEvent(GameObject player)
-    {
-        LinkActionEvent(true, true); // mainAction Link
-        LinkActionEvent(false, true); // subAction Link
-
-        _mainActionStrategy.OnLink(player);
-        _subActionStrategy.OnLink(player);
-
-        _mainRecoilStrategy.OnLink(player);
-        _subRecoilStrategy.OnLink(player);
+        if (_recoilStorage.ContainsKey(subBothKey)) _recoilStrategies[EventType.Sub] = _recoilStorage[subBothKey];
+        else _recoilStrategies[EventType.Sub] = _recoilStorage[subZoomOutKey];
     }
 }

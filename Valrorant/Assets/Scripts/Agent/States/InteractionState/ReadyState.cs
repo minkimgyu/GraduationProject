@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class ReadyState : State
     {
-        InteractionController _storedInteractionController;
+        Action<InteractionController.State> SetState;
+        Action<IInteractable> ResetTarget;
+        Func<IInteractable> ReturnTarget;
 
-        public ReadyState(InteractionController interactionController)
+        public ReadyState(Action<InteractionController.State> SetState, Action<IInteractable> ResetTarget, Func<IInteractable> ReturnTarget)
         {
-            _storedInteractionController = interactionController;
+            this.SetState = SetState;
+            this.ResetTarget = ResetTarget;
+            this.ReturnTarget = ReturnTarget;
         }
 
         public override void CheckStateChange()
@@ -21,35 +26,38 @@ namespace Agent.States
             {
                 if (CanInteract() == false) return;
 
-                _storedInteractionController.InteractionFSM.SetState(InteractionController.InteractionState.Interact);
+                SetState?.Invoke(InteractionController.State.Interact);
             }
         }
 
         bool CanInteract()
         {
-            return _storedInteractionController.InteractableTarget != null && _storedInteractionController.InteractableTarget.IsInteractable() == true;
+            IInteractable target = ReturnTarget();
+            return target != null && target.IsInteractable() == true;
         }
 
         public override void OnStateTriggerEnter(Collider collider)
         {
-            IInteractable interactableTarget = collider.GetComponent<IInteractable>();
-            if (interactableTarget.IsInteractable() == false) return; // IsInteractable 거짓이면 리턴
+            IInteractable newTarget = collider.GetComponent<IInteractable>();
+            if (newTarget.IsInteractable() == false) return; // IsInteractable 거짓이면 리턴
 
-            if (_storedInteractionController.InteractableTarget != null)
+            IInteractable oldTarget = ReturnTarget();
+            if (oldTarget != null)
             {
-                _storedInteractionController.InteractableTarget.OnSightExit();
-                _storedInteractionController.InteractableTarget = null;
+                oldTarget.OnSightExit();
+                ResetTarget(null);
             }
 
-            _storedInteractionController.InteractableTarget = interactableTarget;
-            _storedInteractionController.InteractableTarget.OnSightEnter();
+            ResetTarget(newTarget);
+            oldTarget.OnSightEnter();
         }
 
         public override void OnStateTriggerExit(Collider collision)
         {
             if (CanInteract() == false) return;
 
-            _storedInteractionController.InteractableTarget.OnSightExit();
+            IInteractable oldTarget = ReturnTarget();
+            oldTarget.OnSightExit();
         }
     }
 

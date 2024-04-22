@@ -20,37 +20,44 @@ namespace Agent.Controller
 
     public class InteractionController : MonoBehaviour
     {
-        public enum InteractionState
+        public enum State
         {
             Ready,
             Interact,
         }
 
-        StateMachine<InteractionState> _interactionFSM;
-        public StateMachine<InteractionState> InteractionFSM { get { return _interactionFSM; } }
-
+        StateMachine<State> _interactionFSM;
         IInteractable _interactableTarget;
-        public IInteractable InteractableTarget { get { return _interactableTarget; } set { _interactableTarget = value; } }
+
+        IInteractable ReturnTarget() { return _interactableTarget; }
+        void ResetTarget(IInteractable newTarget) { _interactableTarget = newTarget; }
+
+        Action<BaseWeapon> SendWeaponToController;
+
+        void SetState(State state) { _interactionFSM.SetState(state); }
+        void RevertToPreviousState() { _interactionFSM.RevertToPreviousState(); }
 
         private void Start()
         {
-            _interactionFSM = new StateMachine<InteractionState>();
+            _interactionFSM = new StateMachine<State>();
             InitializeFSM();
+
+            WeaponController weaponController = GetComponentInParent<WeaponController>();
+            SendWeaponToController = weaponController.OnWeaponReceived;
         }
 
         void InitializeFSM()
         {
-            Dictionary<InteractionState, BaseState> interactionStates = new Dictionary<InteractionState, BaseState>();
+            Dictionary<State, BaseState> interactionStates = new Dictionary<State, BaseState>();
 
-            BaseState ready = new ReadyState(this);
-            BaseState interact = new InteractState(this);
+            BaseState ready = new ReadyState(SetState, ResetTarget, ReturnTarget);
+            BaseState interact = new InteractState(RevertToPreviousState, SendWeaponToController, ResetTarget, ReturnTarget);
 
-
-            interactionStates.Add(InteractionState.Ready, ready);
-            interactionStates.Add(InteractionState.Interact, interact);
+            interactionStates.Add(State.Ready, ready);
+            interactionStates.Add(State.Interact, interact);
 
             _interactionFSM.Initialize(interactionStates);
-            _interactionFSM.SetState(InteractionState.Ready);
+            _interactionFSM.SetState(State.Ready);
         }
 
         private void Update()
@@ -58,20 +65,6 @@ namespace Agent.Controller
             _interactionFSM.OnUpdate();
         }
 
-        private void FixedUpdate()
-        {
-            _interactionFSM.OnFixedUpdate();
-        }
-
-        private void LateUpdate()
-        {
-            _interactionFSM.OnLateUpdate();
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            _interactionFSM.OnCollisionEnter(collision);
-        }
         private void OnTriggerEnter(Collider collider)
         {
             _interactionFSM.OnTriggerEnter(collider);
@@ -82,5 +75,4 @@ namespace Agent.Controller
             _interactionFSM.OnTriggerExit(collider);
         }
     }
-
 }

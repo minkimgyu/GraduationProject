@@ -4,14 +4,20 @@ using UnityEngine;
 using DamageUtility;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class Operator : AllVariationGun
+public class Operator : VariationGun
 {
     [SerializeField]
     float _mainActionDelayWhenZoomIn;
 
     [SerializeField]
     float _mainActionDelayWhenZoomOut;
+
+    [SerializeField] protected int _fireCnt;
+
+    [SerializeField] float _penetratePower;
+
+    [SerializeField] protected float _recoveryDuration;
+
 
     [SerializeField]
     float _subActionDelay;
@@ -48,45 +54,52 @@ public class Operator : AllVariationGun
     [SerializeField]
     WeightApplier _mainWeightApplier;
 
-    Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _attackDamageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
+    Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
         { DistanceAreaData.HitArea.Head, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 255) } },
         { DistanceAreaData.HitArea.Body, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 150) } },
         { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 120) } },
     };
 
-    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
+    public override void Initialize(OperatorData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData)
     {
-        base.Initialize(player, armMesh, cam, ownerAnimator);
+        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
+        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
 
-        _storedMainActionWhenZoomIn = new ManualAttackAction(_mainActionDelayWhenZoomIn);
-        _storedMainActionWhenZoomOut = new ManualAttackAction(_mainActionDelayWhenZoomOut);
+        _reloadFinishDuration = data.reloadFinishDuration;
+        _reloadExitDuration = data.reloadExitDuration;
 
-        _subEventStrategy = new ManualAttackAction(_subActionDelay);
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new ManualEvent(EventType.Main, _mainActionDelayWhenZoomIn, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
-        _storedMainResultWhenZoomOut = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+            new ManualEvent(EventType.Main, _mainActionDelayWhenZoomOut, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
-        _storedMainResultWhenZoomIn = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _mainActionbulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest);
+        _eventStorage.Add(new(EventType.Sub, Conditon.Both),
+            new ManualEvent(EventType.Sub, _subActionDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
 
-        GameObject scopeContainer = GameObject.FindWithTag("ScopeContainer");
-        _scope = scopeContainer.GetComponent<ScopeContainer>().ReturnScope(); // 찾아서 넘겨줌
+        _actionStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new SingleProjectileAttack(_weaponName, _range, _targetLayer, _fireCnt,
+            _penetratePower, _mainActionbulletSpreadPowerRatio, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
 
-        _subActionStrategy = new DoubleZoomStrategy(_scope, armMesh, _gunMesh, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomEventCall, _meshDisableDelay);
+        _actionStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+            new SingleProjectileAttackWithWeight(_weaponName, _range, _targetLayer, _fireCnt,
+            _penetratePower, _mainActionbulletSpreadPowerRatio, _mainWeightApplier, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
 
-        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
-        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
-        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+        _actionStorage.Add(new(EventType.Sub, Conditon.Both),
+            new DoubleZoomStrategy(_zoomCameraPosition, _zoomDuration, _normalFieldOfView, _zoomFieldOfView, _doubleZoomFieldOfView, OnZoomRequested));
 
-        _storedMainRecoilWhenZoomIn = new ManualRecoilGenerator(_mainActionDelayWhenZoomIn, mainRecoilData);
-        _storedMainRecoilWhenZoomOut = new ManualRecoilGenerator(_mainActionDelayWhenZoomOut, subRecoilData);
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new ManualRecoilGenerator(_mainActionDelayWhenZoomIn, _recoveryDuration, mainRangeData));
 
-        _subRecoilStrategy = new NoRecoilGenerator();
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+            new ManualRecoilGenerator(_mainActionDelayWhenZoomOut, _recoveryDuration, subRangeData));
 
-        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
+        _recoilStorage.Add(new(EventType.Sub, Conditon.Both), new NoRecoilGenerator());
 
-        LinkEvent(player);
+        _reloadStrategy = new MagazineReload(_weaponName, _reloadFinishDuration, _reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
     }
 }

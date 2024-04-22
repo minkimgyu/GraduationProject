@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEditor;
+using Newtonsoft.Json;
 
 public class JsonAssetGenerator
 {
@@ -64,20 +65,20 @@ public class JsonAssetGenerator
         return path;
     }
 
-
+    // newtonSoft로 대체해주기
     string ToJson(object objectToParse)
     {
-        return JsonUtility.ToJson(objectToParse);
+        return JsonConvert.SerializeObject(objectToParse);
     }
 
 
     public T JsonToObject<T>(string json)
     {
-        return JsonUtility.FromJson<T>(json);
+        return JsonConvert.DeserializeObject<T>(json);
     }
 
     public T JsonToObject<T>(TextAsset tmpAsset)
     {
-        return JsonUtility.FromJson<T>(tmpAsset.text);
+        return JsonConvert.DeserializeObject<T>(tmpAsset.text);
     }
 }

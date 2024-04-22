@@ -43,7 +43,7 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
 
     //public bool NowNeedToRefillAmmo() { return _nowEquipedWeapon.NowNeedToRefillAmmo(); }
 
-    public bool CanAttack() { return _nowEquipedWeapon.CanAttack(); }
+    //public bool CanAttack() { return _nowEquipedWeapon.CanAttack(); }
 
     public void Attack()
     {
@@ -59,7 +59,7 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
 
         if (_attackTimer.IsRunning)
         {
-            _nowEquipedWeapon.OnLeftClickProgress();
+            _nowEquipedWeapon.OnLeftClickProcess();
         }
 
         if (_attackTimer.IsFinish)
@@ -73,10 +73,10 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
         return _nowEquipedWeapon.IsReloadFinish();
     }
 
-    public bool IsReloadRunning()
-    {
-        return _nowEquipedWeapon.IsReloadRunning();
-    }
+    //public bool IsReloadRunning()
+    //{
+    //    return _nowEquipedWeapon.IsReloadRunning();
+    //}
 
     public void ResetReload()
     {
@@ -95,7 +95,7 @@ public class BattleComponent : MonoBehaviour//, IEquipedWeapon
 
     private void Update()
     {
-        _nowEquipedWeapon.RunUpdateInController();
+        _nowEquipedWeapon.OnUpdate();
     }
 
     void InitializeWeapons()

@@ -27,7 +27,7 @@ namespace Shop
         private void Initialized()
         {
             WeaponController weaponController = GameObject.FindWithTag("Player").GetComponent<WeaponController>();
-            AddWeapon = weaponController.AddWeapon;
+            //AddWeapon = weaponController.AddWeapon;
 
             itemSlots = _slotContainer.GetComponentsInChildren<ItemSlot>();
             for (int i = 0; i < itemSlots.Length; i++)

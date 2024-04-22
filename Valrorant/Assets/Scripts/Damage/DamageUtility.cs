@@ -14,6 +14,7 @@ namespace DamageUtility
             _damage = damage;
         }
 
+        [SerializeField]
         public enum HitArea
         {
             Head,
@@ -21,11 +22,11 @@ namespace DamageUtility
             Leg,
         }
 
-        float _minDistance;
+        [SerializeField] float _minDistance;
 
-        float _maxDistance;
+        [SerializeField] float _maxDistance;
 
-        float _damage;
+        [SerializeField] float _damage;
 
         public float Damage { get { return _damage; } }
 

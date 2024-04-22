@@ -6,47 +6,22 @@ using FSM;
 using Agent.Component;
 using Agent.States;
 
-//public interface IEquipedWeapon
-//{
-//    BaseWeapon ReturnNowEquipedWeapon();
-//}
-
 namespace Agent.Controller
 {
-    public class WeaponController : MonoBehaviour//, IEquipedWeapon
+    public class WeaponController : MonoBehaviour
     {
-        [SerializeField]
-        Transform _cameraHolder;
-
-        [SerializeField]
-        GameObject armMesh;
-
-        [SerializeField]
-        Transform _weaponParent;
-
-        [SerializeField]
-        float _weaponThrowPower = 3;
-
-
-
-        BaseWeapon _storedWeaponWhenInteracting; // Interacting을 위해 해당 무기를 잠깐 저장해두는 변수
-        public BaseWeapon StoredWeaponWhenInteracting { get { return _storedWeaponWhenInteracting; } set { _storedWeaponWhenInteracting = value; } }
+        [SerializeField] Transform _weaponParent;
+        [SerializeField] float _weaponThrowPower = 3;
 
         BaseWeapon _nowEquipedWeapon = null;
-        public BaseWeapon NowEquipedWeapon { get { return _nowEquipedWeapon; }}
-
-
-
         Dictionary<BaseWeapon.Type, BaseWeapon> _weaponsContainers = new Dictionary<BaseWeapon.Type, BaseWeapon>();
-        public Dictionary<BaseWeapon.Type, BaseWeapon> WeaponsContainers { get { return _weaponsContainers; } }
 
+        [SerializeField] Animator _ownerAnimator;
+        void PlayAnimation(string stateName, int layer, float nomalizedTime) => _ownerAnimator.Play(stateName, layer, nomalizedTime);
 
+        WeaponEventBlackboard _eventBlackboard;
 
-        [SerializeField]
-        Animator _ownerAnimator;
-        public Animator OwnerAnimator { get { return _ownerAnimator; } }
-
-        public enum WeaponState
+        public enum State
         {
             Idle,
             Equip,
@@ -58,16 +33,29 @@ namespace Agent.Controller
             Drop
         }
 
-        StateMachine<WeaponState> _weaponFSM;
-        public StateMachine<WeaponState> WeaponFSM { get { return _weaponFSM; } }
-
+        StateMachine<State> _weaponFSM;
         public Action<float> OnWeaponChangeRequested;
 
-
-
-        public bool CanChangeWeapon(BaseWeapon.Type weaponType)
+        private void Start()
         {
-            return _weaponsContainers.ContainsKey(weaponType);
+            ZoomComponent zoomComponent = GetComponent<ZoomComponent>();
+            ViewComponent viewComponent = GetComponent<ViewComponent>();
+            MovementComponent movementComponent = GetComponent<MovementComponent>();
+
+            _eventBlackboard = new WeaponEventBlackboard(
+                zoomComponent.OnZoomCalled,
+                movementComponent.OnDisplacementRequested,
+                viewComponent.OnRecoilRequested, 
+                PlayAnimation,
+                viewComponent.ReturnRaycastPos,
+                viewComponent.ReturnRaycastDir
+            );
+
+            InitializeEvent();
+            InitializeWeapons();
+
+            _weaponFSM = new StateMachine<State>();
+            InitializeFSM();
         }
 
         void InitializeWeapons()
@@ -75,7 +63,7 @@ namespace Agent.Controller
             BaseWeapon[] weapons = _weaponParent.GetComponentsInChildren<BaseWeapon>();
             for (int i = 0; i < weapons.Length; i++)
             {
-                weapons[i].Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
+                //weapons[i].Initialize(_eventBlackboard);
                 _weaponsContainers.Add(weapons[i].WeaponType, weapons[i]);
             }
         }
@@ -86,243 +74,88 @@ namespace Agent.Controller
             OnWeaponChangeRequested = movementComponent.OnWeaponChangeRequested; // 할당
         }
 
-        private void Start()
-        {
-            InitializeEvent();
-            InitializeWeapons();
+        /// 이벤트 모음
 
-            _weaponFSM = new StateMachine<WeaponState>();
-            InitializeFSM();
+
+        Transform ReturnWeaponParent() { return _weaponParent; }
+        BaseWeapon ReturnEquipedWeapon() { return _nowEquipedWeapon; }
+        void ResetEquipedWeapon(BaseWeapon weapon) { _nowEquipedWeapon = weapon; }
+
+        bool IsContainerHasSameType(BaseWeapon.Type weaponType) { return _weaponsContainers.ContainsKey(weaponType) == false; }
+        void GoToEquipState(BaseWeapon.Type typeToEquip) 
+        {
+            if (_nowEquipedWeapon.WeaponType == typeToEquip) return; // 이미 같은 타입의 아이템이 장착되어 있으면 리턴
+
+            _weaponFSM.SetState(State.Equip, "SendWeaponTypeToEquip", typeToEquip);
         }
+
+        void SwitchToNewWeapon(BaseWeapon newWeapon)
+        {
+            if (IsContainerHasSameType(newWeapon.WeaponType))
+            {
+                _weaponFSM.SetState(State.Drop, "DropSameTypeWeaponAndRootNewWeapon", newWeapon);
+            }
+            else
+            {
+                _weaponFSM.SetState(State.Root, "RootNewWeapon", newWeapon);
+            }
+        }
+
+        void RevertToPreviousState() => _weaponFSM.RevertToPreviousState();
+        void SetState(State state) => _weaponFSM.SetState(state);
+        void SetState(State state, string message, BaseWeapon newWeapon) => _weaponFSM.SetState(state, message, newWeapon);
+        void SetState(State state, string message, BaseWeapon.Type weaponType) => _weaponFSM.SetState(state, message, weaponType);
+
+        // InteractionController에서 받아온 경우
+        public void OnWeaponReceived(BaseWeapon weapon) => _weaponFSM.OnWeaponReceived(weapon);
+
+        WeaponEventBlackboard ReturnEventBlackboard() { return _eventBlackboard; }
+
+        void RemoveWeaponInContainer(BaseWeapon.Type type) { _weaponsContainers.Remove(type); }
+
+        void AddWeaponToContainer(BaseWeapon weapon) { _weaponsContainers.Add(weapon.WeaponType, weapon); }
+
+        BaseWeapon ReturnSameTypeWeapon(BaseWeapon.Type type) { return _weaponsContainers[type]; }
+
+        bool HaveSameTypeWeapon(BaseWeapon.Type type) { return _weaponsContainers.ContainsKey(type); }
+
+        ///
 
         void InitializeFSM()
         {
-            Dictionary<WeaponState, BaseState> weaponStates = new Dictionary<WeaponState, BaseState>();
+            Dictionary<State, BaseState> weaponStates = new Dictionary<State, BaseState>();
 
-            BaseState idle = new IdleState(this);
-            BaseState equip = new EquipState(this);
-            BaseState reload = new ReloadState(this);
+            BaseState idle = new IdleState(SetState, GoToEquipState, SwitchToNewWeapon, ReturnEquipedWeapon);
 
-            BaseState leftAction = new LeftActionState(this);
-            BaseState rightAction = new RightActionState(this);
+            BaseState equip = new EquipState(SetState, SwitchToNewWeapon, ResetEquipedWeapon, ReturnSameTypeWeapon, OnWeaponChangeRequested, ReturnEquipedWeapon);
 
-            BaseState root = new RootState(this);
-            BaseState drop = new DropState(this);
+            BaseState reload = new ReloadState(SetState, GoToEquipState, SwitchToNewWeapon, ReturnEquipedWeapon);
 
-            weaponStates.Add(WeaponState.Idle, idle);
-            weaponStates.Add(WeaponState.Equip, equip);
-            weaponStates.Add(WeaponState.Reload, reload);
+            BaseState leftAction = new LeftActionState(SetState, ReturnEquipedWeapon);
+            BaseState rightAction = new RightActionState(SetState, ReturnEquipedWeapon);
 
-            weaponStates.Add(WeaponState.LeftAction, leftAction);
-            weaponStates.Add(WeaponState.RightAction, rightAction);
+            BaseState root = new RootState(SetState, SetState, AddWeaponToContainer, ReturnEquipedWeapon, ReturnWeaponParent, ReturnEventBlackboard);
+            BaseState drop = new DropState(_weaponThrowPower, RevertToPreviousState, RemoveWeaponInContainer, SetState, SetState, ReturnEquipedWeapon, HaveSameTypeWeapon,
+                ReturnSameTypeWeapon, ReturnEventBlackboard);
 
-            weaponStates.Add(WeaponState.Root, root);
-            weaponStates.Add(WeaponState.Drop, drop);
+            weaponStates.Add(State.Idle, idle);
+            weaponStates.Add(State.Equip, equip);
+            weaponStates.Add(State.Reload, reload);
+
+            weaponStates.Add(State.LeftAction, leftAction);
+            weaponStates.Add(State.RightAction, rightAction);
+
+            weaponStates.Add(State.Root, root);
+            weaponStates.Add(State.Drop, drop);
 
             _weaponFSM.Initialize(weaponStates);
-            _weaponFSM.SetState(WeaponState.Equip, BaseWeapon.Type.Melee); // 초기 State 설정
+            _weaponFSM.SetState(State.Equip, "EquipKnifeFirst", BaseWeapon.Type.Melee); // 초기 State 설정
         }
 
         private void Update()
         {
             _weaponFSM.OnUpdate();
-            foreach (var weapon in _weaponsContainers)
-            {
-                weapon.Value.RunUpdateInController(); // 무기 루틴 돌려주기
-            }
+            foreach (var weapon in _weaponsContainers) weapon.Value.OnUpdate(); // 무기 루틴 돌려주기
         }
-
-        private void FixedUpdate()
-        {
-            _weaponFSM.OnFixedUpdate();
-        }
-
-        private void LateUpdate()
-        {
-            _weaponFSM.OnLateUpdate();
-        }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            _weaponFSM.OnCollisionEnter(collision);
-        }
-
-        #region WeaponInteracting
-
-        public bool IsInteractingAndEquipedWeaponSameType() { return _storedWeaponWhenInteracting.WeaponType == _nowEquipedWeapon.WeaponType; }
-
-        #endregion
-
-        #region WeaponDrop
-
-
-        bool DropWeapon(BaseWeapon weapon, bool activateWeapon = false)
-        {
-            if (weapon.CanDrop() == false) return false;
-
-            weapon.Drop(_weaponThrowPower);
-
-            if (activateWeapon == true) weapon.gameObject.SetActive(true);
-            weapon.OnDrop(); // 드랍 함수 호출
-
-            _weaponsContainers.Remove(weapon.WeaponType);
-            return true;
-        }
-
-
-        public bool DropWeaponSameTypeWithNowInteracting()
-        {
-            bool canDrop = DropWeapon(WeaponsContainers[_storedWeaponWhenInteracting.WeaponType], true);
-            return canDrop;
-        }
-
-        public bool DropNowEquipedWeapon()
-        {
-            bool canDrop = DropWeapon(_nowEquipedWeapon);
-
-            _nowEquipedWeapon = null; // 현재 장착하고 있는 무기를 null로 바꿔줌
-            return canDrop;
-        }
-
-        public BaseWeapon.Type ReturnNextEquipWeaponTypeWhenDrop()
-        {
-            if (_nowEquipedWeapon.WeaponType == BaseWeapon.Type.Main)
-            {
-                if (_weaponsContainers.ContainsKey(BaseWeapon.Type.Sub))
-                {
-                    return BaseWeapon.Type.Sub;
-                }
-                else
-                {
-                    return BaseWeapon.Type.Melee;
-                }
-            }
-            else
-            {
-                return BaseWeapon.Type.Melee;
-            }
-        }
-
-        #endregion
-
-        #region WeaponDrop
-
-        public void CheckChangeStateForRooting()
-        {
-            if (IsInteractingWeaponExist()) // 할당된 경우
-            {
-                if (CheckContainerHaveSameType()) // 같은 종류의 무기를 이미 가지고 있는 경우
-                {
-                    _weaponFSM.SetState(WeaponState.Drop, true);
-                }
-                else
-                {
-                    _weaponFSM.SetState(WeaponState.Root);
-                }
-            }
-        }
-
-        public bool CheckContainerHaveSameType()
-        {
-            return _weaponsContainers.ContainsKey(_storedWeaponWhenInteracting.WeaponType);
-        }
-
-        #endregion
-
-
-        #region AddingWeapon
-
-        public void AddWeapon(BaseWeapon weapon)
-        {
-            weapon.Initialize(gameObject, armMesh, _cameraHolder, _ownerAnimator);
-            _storedWeaponWhenInteracting = weapon;
-        }
-
-        #endregion
-
-        #region WeaponInteracting
-
-        public bool IsInteractingWeaponExist() { return _storedWeaponWhenInteracting != null; }
-
-        #endregion
-
-        #region WeaponRooting
-
-        void AttachWeaponToArm(BaseWeapon weapon)
-        {
-            weapon.transform.SetParent(_weaponParent);
-            weapon.PositionWeaponMesh(false);
-        }
-
-        public BaseWeapon.Type RootWeaponAndReturnType()
-        {
-            _storedWeaponWhenInteracting.OnRooting(gameObject, _cameraHolder, _ownerAnimator);
-            _weaponsContainers.Add(_storedWeaponWhenInteracting.WeaponType, _storedWeaponWhenInteracting);
-
-            AttachWeaponToArm(_storedWeaponWhenInteracting);
-
-            BaseWeapon.Type tmpType = _storedWeaponWhenInteracting.WeaponType;
-            _storedWeaponWhenInteracting = null;
-
-            return tmpType;
-        }
-
-        #endregion
-
-        #region WeaponChange
-
-        public void GetWeaponChangeInput()
-        {
-            // 이부분은 타입을 보고 장착하도록 변경해준다.
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                _weaponFSM.SetState(WeaponState.Equip, BaseWeapon.Type.Main);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-                _weaponFSM.SetState(WeaponState.Equip, BaseWeapon.Type.Sub);
-            }
-            else if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                _weaponFSM.SetState(WeaponState.Equip, BaseWeapon.Type.Melee);
-            }
-        }
-
-        public void ChangeWeapon(BaseWeapon.Type weaponType)
-        {
-            if (_nowEquipedWeapon != null)
-            {
-                _nowEquipedWeapon.OnUnEquip();
-            }
-
-            _nowEquipedWeapon = _weaponsContainers[weaponType];
-            _weaponsContainers[weaponType].OnEquip();
-
-            ActivateEquipedWeapon();
-
-            OnWeaponChangeRequested?.Invoke(_nowEquipedWeapon.SlowDownRatioByWeaponWeight);
-        }
-
-        void ActivateEquipedWeapon()
-        {
-            foreach (var weapon in _weaponsContainers)
-            {
-                if (weapon.Key == _nowEquipedWeapon.WeaponType)
-                {
-                    weapon.Value.gameObject.SetActive(true);
-                }
-                else
-                {
-                    weapon.Value.gameObject.SetActive(false);
-                }
-            }
-        }
-
-        public BaseWeapon ReturnNowEquipedWeapon()
-        {
-            return _nowEquipedWeapon;
-        }
-
-        #endregion
     }
 }

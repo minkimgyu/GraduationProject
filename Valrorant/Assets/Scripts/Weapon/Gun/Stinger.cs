@@ -3,14 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
 
-[System.Serializable]
-public class Stinger : AllVariationGun
+public class Stinger : VariationGun
 {
     [SerializeField]
-    float _autoAttackActionDelay;
+    float _autoFireInterval;
 
     [SerializeField]
-    float _burstAttackActionDelay;
+    float _burstFireInterval;
+
+    [SerializeField] protected float _penetratePower;
+
+    [SerializeField] protected float _recoveryDuration;
+
+    [SerializeField]
+    float _zoomDelay;
+
+    [SerializeField] int _burstFireCntInOneAction;
+
+    [SerializeField] int _mainFireCnt;
 
     [SerializeField]
     float _burstAttackRecoverDuration; // 이게 좀 더 길어야함
@@ -53,39 +63,49 @@ public class Stinger : AllVariationGun
     [SerializeField]
     WeightApplier _weightApplier;
 
-    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
+    public override void Initialize(StingerData data, RecoilMapData mainMapData, RecoilRangeData subRangeData)
     {
-        base.Initialize(player, armMesh, cam, ownerAnimator);
+        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
+        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
 
-        // 여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
-        _storedMainActionWhenZoomOut = new AutoAttackAction(_autoAttackActionDelay);
-        _storedMainActionWhenZoomIn = new BurstAttackAction(_burstAttackActionDelay, _burstAttackRecoverDuration, 4);
-        // 두 개를 스위칭해서 사용하자
+        _reloadFinishDuration = data.reloadFinishDuration;
+        _reloadExitDuration = data.reloadExitDuration;
 
-        _subEventStrategy = new ManualAction(_subActionDelay); // 줌 액션
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new BurstEvent(EventType.Main, _burstFireInterval, _burstFireCntInOneAction, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+            new AutoEvent(EventType.Main, _autoFireInterval, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
-        _storedMainResultWhenZoomOut = new SingleProjectileAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false,
-            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _damageDictionary, OnGenerateNoiseRequest);
-
-        _storedMainResultWhenZoomIn = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false,
-            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _damageDictionary, OnGenerateNoiseRequest, 
-            _weightApplier);
+        _eventStorage.Add(new(EventType.Sub, Conditon.Both),
+            new ManualEvent(EventType.Sub, _zoomDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
 
-        // 무기를 버릴 경우, 제거해야함
-        _subActionStrategy = new ZoomStrategy(_scope, _zoomCameraPosition, _zoomDuration, _scopeOnDelay, _normalFieldOfView, _zoomFieldOfView, OnZoomEventCall); // OnZoomRequested 함수 넣어도 괜찮을 듯
+        _actionStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new SingleProjectileAttackWithWeight(_weaponName, _range, _targetLayer, _mainFireCnt,
+            _penetratePower, _bulletSpreadPowerDecreaseRatio, _weightApplier, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
 
-        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
-        RecoilMapData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilMapData>(_weaponName, EventCallPart.Left);
-        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+        _actionStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+             new SingleProjectileAttack(_weaponName, _range, _targetLayer, _mainFireCnt,
+             _penetratePower, _bulletSpreadPowerDecreaseRatio, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+             SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
 
-        _storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(_autoAttackActionDelay, _recoilRatio, mainRecoilData);
-        _storedMainRecoilWhenZoomIn = new BurstRecoilGenerator(_burstAttackActionDelay, subRecoilData);
 
-        _subRecoilStrategy = new NoRecoilGenerator();
+        _actionStorage.Add(new(EventType.Sub, Conditon.Both),
+            new ZoomStrategy(_zoomCameraPosition, _zoomDuration, _normalFieldOfView, _zoomFieldOfView, OnZoomRequested));
 
-        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
-        LinkEvent(player); // 이거 없애고 매개변수로 넘겨서 링크시키는 방식으로 진행
+
+
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+            new AutoRecoilGenerator(_autoFireInterval, _recoveryDuration, _recoilRatio, mainMapData));
+
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new BurstRecoilGenerator(_burstFireInterval, _recoveryDuration, subRangeData));
+
+        _recoilStorage.Add(new(EventType.Sub, Conditon.Both), new NoRecoilGenerator());
+
+
+        _reloadStrategy = new MagazineReload(_weaponName, _reloadFinishDuration, _reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
     }
 }

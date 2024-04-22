@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomPropertyDrawer(typeof(WeaponNameTextAssetDictionary))]
-[CustomPropertyDrawer(typeof(AssetDictionary))]
+[CustomPropertyDrawer(typeof(RecoilDataDictionary))]
+[CustomPropertyDrawer(typeof(WeaponDataDictionary))]
+[CustomPropertyDrawer(typeof(DamageDictionary))]
+
+
 [CustomPropertyDrawer(typeof(StringStringDictionary))]
 [CustomPropertyDrawer(typeof(ObjectColorDictionary))]
 [CustomPropertyDrawer(typeof(StringColorArrayDictionary))]

@@ -9,50 +9,91 @@ namespace Agent.States
 {
     public class EquipState : State
     {
-        WeaponController _sWC;
-        Timer _timer;
+        StopwatchTimer _timer;
+        BaseWeapon.Type _weaponTypeToEquip;
 
-        BaseWeapon.Type _weaponType;
+        Action<WeaponController.State> SetState;
+        Action<BaseWeapon> SwitchToNewWeapon;
 
-        public EquipState(WeaponController weaponController)
+        Action<BaseWeapon> ResetEquipedWeapon;
+
+        Action<float> OnWeaponChangeRequested;
+
+        Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon;
+
+        Func<BaseWeapon> ReturnEquipedWeapon;
+
+
+        public EquipState(
+            Action<WeaponController.State> SetState,
+            Action<BaseWeapon> SwitchToNewWeapon,
+            Action<BaseWeapon> ResetEquipedWeapon,
+
+            Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon,
+
+            Action<float> OnWeaponChangeRequested,
+
+            Func<BaseWeapon> ReturnEquipedWeapon)
         {
-            _sWC = weaponController;
-            _timer = new Timer();
+            _timer = new StopwatchTimer();
+
+            this.SetState = SetState;
+            this.SwitchToNewWeapon = SwitchToNewWeapon;
+            this.ResetEquipedWeapon = ResetEquipedWeapon;
+
+            this.ReturnSameTypeWeapon = ReturnSameTypeWeapon;
+
+            this.OnWeaponChangeRequested = OnWeaponChangeRequested;
+
+            this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
-        public override void OnMessageReceived(BaseWeapon.Type weaponType)
+        public override void OnMessageReceived(string message, BaseWeapon.Type weaponTypeToEquip)
         {
-            _weaponType = weaponType;
+            Debug.Log(message);
+            _weaponTypeToEquip = weaponTypeToEquip;
         }
 
         public override void CheckStateChange()
         {
-            if (_timer.IsFinish) _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
-
-            _sWC.CheckChangeStateForRooting();
+            if (_timer.CurrentState == StopwatchTimer.State.Finish) SetState.Invoke(WeaponController.State.Idle);
         }
 
-        public override void OnStateExit()
+        /// <summary>
+        /// 이거는 공통 이벤트로 WeaponController에서 작성하자
+        /// </summary>
+        public override void OnWeaponReceived(BaseWeapon weapon)
         {
-            _timer.Reset();
+            SwitchToNewWeapon?.Invoke(weapon);
+        }
+
+        public void EquipWeapon(BaseWeapon.Type weaponType)
+        {
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+
+            if(equipedWeapon != null)
+            {
+                equipedWeapon.OnUnEquip();
+                equipedWeapon.gameObject.SetActive(false);
+            }
+
+            BaseWeapon weaponToEquip = ReturnSameTypeWeapon(weaponType);
+            ResetEquipedWeapon?.Invoke(weaponToEquip);
+
+            weaponToEquip.gameObject.SetActive(true);
+            weaponToEquip.OnEquip();
+
+            OnWeaponChangeRequested?.Invoke(weaponToEquip.SlowDownRatioByWeaponWeight);
         }
 
         public override void OnStateEnter()
         {
-            if (_sWC.NowEquipedWeapon != null && _weaponType == _sWC.NowEquipedWeapon.WeaponType)
-            {
-                _sWC.WeaponFSM.RevertToPreviousState();
-                return;
-            }
+            EquipWeapon(_weaponTypeToEquip);
 
-            _sWC.ChangeWeapon(_weaponType);
-            _timer.Start(_sWC.NowEquipedWeapon.EquipFinishTime); // 딜레이
-            _weaponType = BaseWeapon.Type.None;
+            BaseWeapon weapon = ReturnEquipedWeapon();
+            _timer.Start(weapon.EquipFinishTime); // 딜레이
         }
 
-        public override void OnStateUpdate()
-        {
-            _timer.Update();
-        }
+        public override void OnStateExit() => _timer.Reset();
     }
 }

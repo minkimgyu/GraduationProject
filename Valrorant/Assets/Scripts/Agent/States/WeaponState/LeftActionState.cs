@@ -3,48 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class LeftActionState : State
     {
-        WeaponController _sWC;
+        Action<WeaponController.State> SetState;
+        Func<BaseWeapon> ReturnEquipedWeapon;
 
-        public LeftActionState(WeaponController storedWeaponController)
+        public LeftActionState(Action<WeaponController.State> SetState, Func<BaseWeapon> ReturnEquipedWeapon)
         {
-            _sWC = storedWeaponController;
+            this.SetState = SetState;
+            this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
         public override void OnStateEnter()
         {
-            _sWC.NowEquipedWeapon.OnLeftClickStart();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnLeftClickStart();
         }
 
         public override void OnStateExit()
         {
-            _sWC.NowEquipedWeapon.OnLeftClickEnd();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnLeftClickEnd();
         }
 
         public override void CheckStateChange()
         {
             // 사격 도중 총알이 떨어진 경우, State에 들어왔을 때는 총알이 존재했지만
             // Update 중 총알이 다 떨어진 경우
-            if (_sWC.NowEquipedWeapon.CanAutoReload())
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
-            }
 
-            if (Input.GetMouseButtonUp(0))
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
-            }
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
-            _sWC.CheckChangeStateForRooting();
+            if (equipedWeapon.CanAutoReload()) SetState?.Invoke(WeaponController.State.Reload);
+            if (Input.GetMouseButtonUp(0)) SetState?.Invoke(WeaponController.State.Idle);
         }
 
         public override void OnStateUpdate()
         {
-            _sWC.NowEquipedWeapon.OnLeftClickProgress();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnLeftClickProcess();
         }
     }
 }

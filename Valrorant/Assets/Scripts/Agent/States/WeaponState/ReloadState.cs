@@ -1,51 +1,78 @@
 using FSM;
 using UnityEngine;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class ReloadState : State
     {
-        WeaponController _sWC;
+        Action<WeaponController.State> SetState;
+        Func<BaseWeapon> ReturnEquipedWeapon;
 
-        public ReloadState(WeaponController player)
+        Action<BaseWeapon.Type> GoToEquipState;
+        Action<BaseWeapon> SwitchToNewWeapon;
+
+        public ReloadState(
+            Action<WeaponController.State> SetState,
+            Action<BaseWeapon.Type> GoToEquipState,
+            Action<BaseWeapon> SwitchToNewWeapon,
+
+            Func<BaseWeapon> ReturnEquipedWeapon
+             )
         {
-            _sWC = player;
+            this.SetState = SetState;
+            this.GoToEquipState = GoToEquipState;
+            this.SwitchToNewWeapon = SwitchToNewWeapon;
+
+            this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
         public override void CheckStateChange()
         {
-            _sWC.GetWeaponChangeInput();
-
-            bool nowCancelMainAction = _sWC.NowEquipedWeapon.CancelReloadAndGoToMainAction();
-            if (nowCancelMainAction)
+            // 이부분은 타입을 보고 장착하도록 변경해준다.
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
+                GoToEquipState?.Invoke(BaseWeapon.Type.Main);
             }
 
-            bool nowCancelSubAction = _sWC.NowEquipedWeapon.CancelReloadAndGoToSubAction();
-            if (nowCancelSubAction)
+            if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
+                GoToEquipState?.Invoke(BaseWeapon.Type.Sub);
             }
 
-            bool canExit = _sWC.NowEquipedWeapon.IsReloadFinish();
-            if (canExit)
+            if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
+                GoToEquipState?.Invoke(BaseWeapon.Type.Melee);
             }
 
-            _sWC.CheckChangeStateForRooting();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+
+            bool nowCancelMainAction = equipedWeapon.CanCancelReloadAndGoToMainAction();
+            if (nowCancelMainAction) SetState?.Invoke(WeaponController.State.LeftAction);
+
+            bool nowCancelSubAction = equipedWeapon.CanCancelReloadAndGoToSubAction();
+            if (nowCancelSubAction) SetState?.Invoke(WeaponController.State.RightAction);
+
+            bool isFinish = equipedWeapon.IsReloadFinish();
+            if (isFinish) SetState?.Invoke(WeaponController.State.Idle);
+        }
+
+        public override void OnWeaponReceived(BaseWeapon weapon)
+        {
+            SwitchToNewWeapon?.Invoke(weapon);
         }
 
         public override void OnStateExit()
         {
-            if (_sWC.NowEquipedWeapon != null) _sWC.NowEquipedWeapon.ResetReload();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.ResetReload();
         }
 
         public override void OnStateEnter()
         {
-            _sWC.NowEquipedWeapon.OnReload();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnReload();
         }
     }
 }

@@ -8,7 +8,7 @@ public class RecoilReceiver : MonoBehaviour
 
     [SerializeField] protected Vector2 _firePointRotationMultiplier;
 
-    public virtual void OnRecoilProgress(Vector2 recoilForce)
+    public virtual void OnRecoilRequested(Vector2 recoilForce)
     {
         _firePointRotationMultiplier = recoilForce;
     }

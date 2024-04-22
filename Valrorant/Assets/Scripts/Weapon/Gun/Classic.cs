@@ -3,9 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
 
-[System.Serializable]
-public class Classic : NoVariationGun
+public class Classic : Gun
 {
+    [SerializeField] protected float _mainShootInterval;
+    [SerializeField] protected float _subShootInterval;
+
+    [SerializeField] protected int _mainFireCnt;
+    [SerializeField] protected int _subFireCnt;
+
+    [SerializeField] protected float _recoveryDuration;
+
+    [SerializeField] protected float _penetratePower;
+
+    [SerializeField] int _subActionPelletCount;
+    [SerializeField] float _subActionSpreadOffset;
+
+    [SerializeField] WeightApplier _mainWeightApplier;
+    [SerializeField] WeightApplier _subWeightApplier;
+
+    [SerializeField] protected float _displacementSpreadMultiplyRatio = 1f;
+
+
     [SerializeField]
     int _subAttackBulletCounts;
 
@@ -24,42 +42,39 @@ public class Classic : NoVariationGun
     [SerializeField]
     float _bulletSpreadPowerDecreaseRatio;
 
-    [SerializeField]
-    WeightApplier _mainWeightApplier;
-
-    [SerializeField]
-    WeightApplier _subWeightApplier;
-
-    Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _attackDamageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
+    Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary = new Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]>()
     {
         { DistanceAreaData.HitArea.Head, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 78), new DistanceAreaData(30, 50, 66) } },
         { DistanceAreaData.HitArea.Body, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 26), new DistanceAreaData(30, 50, 22) } },
         { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 30, 22), new DistanceAreaData(30, 50, 18) } },
     };
 
-    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
+    public override void Initialize(ClassicData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData)
     {
-        base.Initialize(player, armMesh, cam, ownerAnimator);
+        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
+        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
 
-        _mainActionStrategy = new SingleProjectileAttackWithWeight(_camTransform, _range, _targetLayer, ownerAnimator,_animator, _muzzleFlash, false, _emptyCartridgeSpawner, 
-            true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _bulletSpreadPowerDecreaseRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _mainWeightApplier);
+        _reloadFinishDuration = data.reloadFinishDuration;
+        _reloadExitDuration = data.reloadExitDuration;
 
-        _subActionStrategy = new ScatterProjectileAttackWithWeight(_camTransform, _range, _targetLayer, _subAttackBulletCounts, ownerAnimator, _animator, _muzzleFlash, false, _emptyCartridgeSpawner,
-            false, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _subAttackBulletCounts, _bulletSpreadPowerRatio, _attackDamageDictionary, OnGenerateNoiseRequest, _subWeightApplier);
+        _eventStrategies[EventType.Main] = new ManualEvent(EventType.Main, _mainShootInterval, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
+        _eventStrategies[EventType.Sub] = new ManualEvent(EventType.Sub, _subShootInterval, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
+
+        _actionStrategies[EventType.Main] = new SingleProjectileAttackWithWeight(_weaponName, _range, _targetLayer, _mainFireCnt,
+            _penetratePower, _displacementSpreadMultiplyRatio, _mainWeightApplier, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest);
 
 
-        _mainEventStrategy = new ManualAttackAction(_mainActionDelay);
-        _subEventStrategy = new ManualAttackAction(_subActionDelay);
+        _actionStrategies[EventType.Sub] = new ScatterProjectileAttackWithWeight(_weaponName, _range, _targetLayer, _subFireCnt,
+            _penetratePower, _displacementSpreadMultiplyRatio, _subActionPelletCount, _subActionSpreadOffset, _subWeightApplier, _damageDictionary,
+            OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest);
 
-        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
-        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
-        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
 
-        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, mainRecoilData);
-        _subRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, subRecoilData);
 
-        _reloadStrategy = new MagazineReload(_reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
+        _recoilStrategies[EventType.Main] = new ManualRecoilGenerator(_mainShootInterval, _recoveryDuration, mainRangeData);
+        _recoilStrategies[EventType.Sub] = new ManualRecoilGenerator(_subShootInterval, _recoveryDuration, subRangeData);
 
-        LinkEvent(player);
+
+        _reloadStrategy = new MagazineReload(_weaponName, _reloadFinishDuration, _reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
     }
 }

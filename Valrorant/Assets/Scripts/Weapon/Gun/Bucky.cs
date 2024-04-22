@@ -3,32 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
 
-[System.Serializable]
-public class Bucky : NoVariationGun
+public class Bucky : VariationGun
 {
-    [SerializeField]
-    float _mainActionDelay;
+    [SerializeField] float _mainFireInterval;
+    [SerializeField] float _subFireInterval;
 
-    [SerializeField]
-    int _mainActionBulletCountInOneShoot;
 
-    [SerializeField]
-    int _subActionBulletCountInOneShoot;
+    [SerializeField] protected int _mainFireCnt;
+    [SerializeField] protected int _subFireCnt;
 
-    [SerializeField]
-    int _pelletCount;
+    [SerializeField] protected float _recoveryDuration;
 
-    [SerializeField]
-    float _subActionDelay;
+    [SerializeField] protected float _penetratePower;
 
-    [SerializeField]
-    float _spreadOffset;
+    [SerializeField] int _pelletCount;
+    [SerializeField] float _spreadOffset;
+
 
     [SerializeField]
     float _bulletSpreadPowerDecreaseRatio;
 
-    [SerializeField]
-    float _reloadBeforeDuration;
+    [SerializeField] float _reloadBeforeDuration;
+
+
+    [SerializeField] float _frontDistance;
 
 
     [SerializeField]
@@ -69,35 +67,34 @@ public class Bucky : NoVariationGun
         { DistanceAreaData.HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 20) } },
     };
 
-    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
+    public override void Initialize(BuckyData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData)
     {
-        base.Initialize(player, armMesh, cam, ownerAnimator);
+        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
+        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
 
-        Vector3 frontPosition = new Vector3(0, 0, _findRange);
+        _reloadFinishDuration = data.reloadFinishDuration;
+        _reloadExitDuration = data.reloadExitDuration;
 
-        // 여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
-        _mainEventStrategy = new ManualAction(_mainActionDelay);
-        _subEventStrategy = new ManualAction(_subActionDelay);
+        //여기에 Action 연결해서 총알이 소모되는 부분을 구현해보자
+        _eventStrategies[EventType.Main] = new ManualEvent(EventType.Main, _mainFireInterval, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
+        _eventStrategies[EventType.Sub] = new ManualEvent(EventType.Sub, _subFireInterval, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
 
-        _mainActionStrategy = new ScatterProjectileAttack(_camTransform, _range, _targetLayer, _mainActionBulletCountInOneShoot, ownerAnimator, _animator, _muzzleFlash, false,
-            _emptyCartridgeSpawner, true, _weaponName.ToString(), _muzzle, _penetratePower, _trajectoryLineEffect, _spreadOffset, _pelletCount, _bulletSpreadPowerDecreaseRatio, 
-            _damageDictionary, OnGenerateNoiseRequest);
+
+        _actionStrategies[EventType.Main] = new ScatterProjectileAttack(_weaponName, _range, _targetLayer, _mainFireCnt,
+            _penetratePower, _bulletSpreadPowerDecreaseRatio, _pelletCount, _spreadOffset, _damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest);
 
         // 무기를 버릴 경우, 제거해야함
-        _subActionStrategy = new SingleAndExplosionScatterAttackCombination(_camTransform, _range, _targetLayer, ownerAnimator, _animator, _muzzleFlash, false, 
-            _emptyCartridgeSpawner, false, _weaponName.ToString(), _muzzle, _trajectoryLineEffect, _findRange, _subActionSinglePenetratePower, _subActionBulletCountInOneShoot, 
-            _subSingleActionBulletSpreadPowerDecreaseRatio, _damageDictionary, frontPosition, _explosionEffectName, _subActionScatterPenetratePower, _subActionSpreadOffset, 
-            _subActionPelletCount, _subScatterActionBulletSpreadPowerDecreaseRatio, _subSingleAttackDamageDictionary, OnGenerateNoiseRequest);
+        _actionStrategies[EventType.Sub] = new SingleAndExplosionScatterAttackCombination(
 
-        RecoilStorage storage = GameObject.FindWithTag("RecoilStorage").GetComponent<RecoilStorage>();
-        RecoilRangeData mainRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Left);
-        RecoilRangeData subRecoilData = storage.OnRecoilDataSendRequested<RecoilRangeData>(_weaponName, EventCallPart.Right);
+            _weaponName, _range, _targetLayer, _mainFireCnt, _subActionSinglePenetratePower, _subScatterActionBulletSpreadPowerDecreaseRatio, _subFireCnt,
+            _subActionScatterPenetratePower, _subSingleActionBulletSpreadPowerDecreaseRatio, _pelletCount, _spreadOffset, _frontDistance, _explosionEffectName, _damageDictionary,
+            _subSingleAttackDamageDictionary, _findRange, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest);
 
-        _mainRecoilStrategy = new ManualRecoilGenerator(_mainActionDelay, mainRecoilData);
-        _subRecoilStrategy = new ManualRecoilGenerator(_subActionDelay, subRecoilData);
+        _recoilStrategies[EventType.Main] = new ManualRecoilGenerator(_mainFireInterval, _recoveryDuration, mainRangeData);
+        _recoilStrategies[EventType.Sub] = new ManualRecoilGenerator(_subFireInterval, _recoveryDuration, subRangeData);
 
-        _reloadStrategy = new RoundByRoundReload(_reloadBeforeDuration, _reloadFinishTime, _reloadExitTime, _weaponName.ToString(), _maxAmmoCountInMagazine, _animator, _ownerAnimator, OnReloadRequested);
-
-        LinkEvent(player);
+        _reloadStrategy = new RoundByRoundReload(_weaponName, _reloadBeforeDuration, _reloadFinishDuration, _reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
     }
 }

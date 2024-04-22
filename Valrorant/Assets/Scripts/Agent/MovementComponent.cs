@@ -50,7 +50,6 @@ namespace Agent.Component
         public void OnWeaponChangeRequested(float slowDownRatio)
         {
             _slowDownRatioByWeaponWeight = slowDownRatio;
-            Debug.Log(_slowDownRatioByWeaponWeight);
         }
 
         // Start is called before the first frame update

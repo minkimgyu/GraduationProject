@@ -3,38 +3,47 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class InteractState : State
     {
-        InteractionController _storedInteractionController;
+        Action RevertToPreviousState;
+        Action<BaseWeapon> SendWeaponToController;
 
-        WeaponController _weaponController;
+        Action<IInteractable> ResetTarget;
+        Func<IInteractable> ReturnTarget;
 
-        public InteractState(InteractionController interactionController)
+        public InteractState(Action RevertToPreviousState, Action<BaseWeapon> SendWeaponToController, Action<IInteractable> ResetTarget, Func<IInteractable> ReturnTarget)
         {
-            _storedInteractionController = interactionController;
+            this.RevertToPreviousState = RevertToPreviousState;
+            this.SendWeaponToController = SendWeaponToController;
 
-            _weaponController = interactionController.GetComponentInParent<WeaponController>();
+            this.ResetTarget = ResetTarget;
+            this.ReturnTarget = ReturnTarget;
         }
 
         public override void OnStateEnter()
         {
             AcquireWeapon();
 
-            _storedInteractionController.InteractableTarget.OnSightExit();
-            _storedInteractionController.InteractableTarget = null;
+            IInteractable target = ReturnTarget();
 
-            _storedInteractionController.InteractionFSM.RevertToPreviousState(); // 이전 스테이트로 돌아감
+            target.OnSightExit();
+            ResetTarget(null);
+
+            RevertToPreviousState(); // 이전 스테이트로 돌아감
         }
 
         void AcquireWeapon()
         {
-            BaseWeapon weapon = _storedInteractionController.InteractableTarget.ReturnComponent<BaseWeapon>();
+            IInteractable target = ReturnTarget();
+
+            BaseWeapon weapon = target.ReturnComponent<BaseWeapon>();
             if (weapon == null) return;
 
-            _weaponController.StoredWeaponWhenInteracting = weapon;
+            SendWeaponToController?.Invoke(weapon);
         }
     }
 }

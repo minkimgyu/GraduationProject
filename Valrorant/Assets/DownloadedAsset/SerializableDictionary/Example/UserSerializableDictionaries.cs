@@ -4,10 +4,14 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class WeaponNameTextAssetDictionary : SerializableDictionary<EventCallPart, TextAsset> { }
+public class RecoilDataDictionary : SerializableDictionary<BaseWeapon.EventType, TextAsset> { }
 
 [Serializable]
-public class AssetDictionary : SerializableDictionary<BaseWeapon.Name, WeaponNameTextAssetDictionary> { }
+public class WeaponDataDictionary : SerializableDictionary<BaseWeapon.Name, WeaponFactoryData> { }
+
+[Serializable]
+public class DamageDictionary : SerializableDictionary<DamageUtility.DistanceAreaData.HitArea, DamageUtility.DistanceAreaData[]> { }
+
 
 [Serializable]
 public class StringStringDictionary : SerializableDictionary<string, string> {}

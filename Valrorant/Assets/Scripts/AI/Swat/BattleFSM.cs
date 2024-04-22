@@ -29,8 +29,6 @@ public class BattleFSM : MonoBehaviour
 
     public void Initialize(SwatBlackboard bloackboard)
     {
-        _equipedWeapon.Initialize(gameObject, gameObject, transform, _animator);
-
         _battleFSM = new StateMachine<State>();
 
         _battleFSM.Initialize(
@@ -38,23 +36,12 @@ public class BattleFSM : MonoBehaviour
             {
                 {State.Idle, new IdleState(bloackboard, SetState) },
                 {
-                    State.Attack, new AttackState(bloackboard, SetState,
-                    _equipedWeapon.OnLeftClickStart, 
-                    _equipedWeapon.OnLeftClickProgress, 
-                    _equipedWeapon.OnLeftClickEnd) 
+                    State.Attack, new AttackState(bloackboard, SetState)
                 }
             }
         );
         _battleFSM.SetState(State.Idle);
     }
-
-    void Fire()
-    {
-        _equipedWeapon.OnLeftClickStart();
-        _equipedWeapon.OnLeftClickProgress();
-        _equipedWeapon.OnLeftClickEnd();
-    }
-
     void SetState(State state)
     {
         _battleFSM.SetState(state);

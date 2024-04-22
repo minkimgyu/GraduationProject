@@ -9,8 +9,13 @@ namespace FSM
     {
         public override void CheckStateChange() { }
 
-        public override void OnMessageReceived(BaseWeapon.Type weaponType) { } // 여러 개 만들어서 상속
-        public override void OnMessageReceived(bool containSameType) { }
+        public override void OnMessageReceived(string message, BaseWeapon.Type weaponType) { } // 여러 개 만들어서 상속
+        public override void OnMessageReceived(string message, bool containSameType) { }
+        public override void OnMessageReceived(string message, BaseWeapon newWeapon) { }
+
+
+
+        public override void OnMessageReceived(string message, float multiplier) { }
 
         public override void OnStateFixedUpdate() { }
 
@@ -28,6 +33,9 @@ namespace FSM
         public override void OnStateTriggerExit(Collider collider) { }
 
 
+        public override void OnWeaponReceived(BaseWeapon weapon) { }
+
+
         public override void OnStateEnter() { }
 
         public override void OnStateUpdate() { }
@@ -37,9 +45,11 @@ namespace FSM
 
     abstract public class BaseState
     {
-        public abstract void OnMessageReceived(BaseWeapon.Type weaponType);
+        public abstract void OnMessageReceived(string message, BaseWeapon.Type weaponType);
+        public abstract void OnMessageReceived(string message, bool containSameType);
+        public abstract void OnMessageReceived(string message, BaseWeapon newWeapon);
 
-        public abstract void OnMessageReceived(bool containSameType);
+        public abstract void OnMessageReceived(string message, float multiplier);
 
         public abstract void CheckStateChange();
 
@@ -51,12 +61,13 @@ namespace FSM
 
         public abstract void OnDamaged(float damage);
 
-
         public abstract void OnStateCollisionEnter(Collision collision);
 
         public abstract void OnStateTriggerEnter(Collider collider);
 
         public abstract void OnStateTriggerExit(Collider collider);
+
+        public abstract void OnWeaponReceived(BaseWeapon weapon);
 
 
         public abstract void OnStateEnter();
@@ -64,7 +75,6 @@ namespace FSM
         public abstract void OnStateUpdate();
 
         public abstract void OnStateExit();
-
     }
 
     // 콜백 함수를 넣어놓는다.
@@ -77,6 +87,12 @@ namespace FSM
         {
             if (_currentState == null) return;
             _currentState.OnDamaged(damage);
+        }
+
+        public void OnWeaponReceived(BaseWeapon weapon)
+        {
+            if (_currentState == null) return;
+            _currentState.OnWeaponReceived(weapon);
         }
 
         public void OnNoiseReceived()
@@ -156,16 +172,22 @@ namespace FSM
             return ChangeState(_stateDictionary[stateName]);
         }
 
-        public bool SetState(T stateName, BaseWeapon.Type weaponType)
+        public bool SetState(T stateName, string message, BaseWeapon.Type weaponType)
         {
             _currentStateName = stateName;
-            return ChangeState(_stateDictionary[stateName], weaponType);
+            return ChangeState(_stateDictionary[stateName], message, weaponType);
         }
 
-        public bool SetState(T stateName, bool isTrue)
+        public bool SetState(T stateName, string message, bool isTrue)
         {
             _currentStateName = stateName;
-            return ChangeState(_stateDictionary[stateName], isTrue);
+            return ChangeState(_stateDictionary[stateName], message, isTrue);
+        }
+
+        public bool SetState(T stateName, string message, BaseWeapon weapon)
+        {
+            _currentStateName = stateName;
+            return ChangeState(_stateDictionary[stateName], message, weapon);
         }
 
         #endregion
@@ -197,7 +219,7 @@ namespace FSM
             return true;
         }
 
-        bool ChangeState(BaseState state, BaseWeapon.Type weaponType)
+        bool ChangeState(BaseState state, string message, BaseWeapon.Type weaponType)
         {
             if (_stateDictionary.ContainsValue(state) == false) return false;
 
@@ -216,14 +238,14 @@ namespace FSM
 
             if (_currentState != null) //새 상태의 Enter를 호출한다.
             {
-                _currentState.OnMessageReceived(weaponType);
+                _currentState.OnMessageReceived(message, weaponType);
                 _currentState.OnStateEnter();
             }
 
             return true;
         }
 
-        bool ChangeState(BaseState state, bool isTrue)
+        bool ChangeState(BaseState state, string message, bool isTrue)
         {
             if (_stateDictionary.ContainsValue(state) == false) return false;
 
@@ -242,7 +264,33 @@ namespace FSM
 
             if (_currentState != null) //새 상태의 Enter를 호출한다.
             {
-                _currentState.OnMessageReceived(isTrue);
+                _currentState.OnMessageReceived(message, isTrue);
+                _currentState.OnStateEnter();
+            }
+
+            return true;
+        }
+
+        bool ChangeState(BaseState state, string message, BaseWeapon baseWeapon)
+        {
+            if (_stateDictionary.ContainsValue(state) == false) return false;
+
+            if (_currentState == state) // 같은 State로 전환하지 못하게 막기
+            {
+                return false;
+            }
+
+            if (_currentState != null) //상태가 바뀌기 전에, 이전 상태의 Exit를 호출
+                _currentState.OnStateExit();
+
+            _previousState = _currentState;
+
+            _currentState = state;
+
+
+            if (_currentState != null) //새 상태의 Enter를 호출한다.
+            {
+                _currentState.OnMessageReceived(message, baseWeapon);
                 _currentState.OnStateEnter();
             }
 

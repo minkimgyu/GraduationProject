@@ -27,12 +27,16 @@ namespace Agent.Component
         private Vector2 ActorBoneViewRotation { get { return _viewRotation + _actorBoneRotationMultiplier; } } // 모델링 회전 프로퍼티
         private Vector2 FireViewRotation { get { return _viewRotation + _firePointRotationMultiplier; } } // 총 발사 시작 지점 회전 값 프로퍼티
 
-        public override void OnRecoilProgress(Vector2 recoilForce)
+        public Vector3 ReturnRaycastPos() { return _cam.position; }
+        public Vector3 ReturnRaycastDir() { return _cam.forward; }
+
+        public override void OnRecoilRequested(Vector2 recoilForce)
         {
-            base.OnRecoilProgress(recoilForce);
+            base.OnRecoilRequested(recoilForce);
+
+            //Debug.Log(recoilForce);
 
             _cameraRotationMultiplier = recoilForce * 0.5f; // 카메라만 영향을 반만 받음
-
             _actorBoneRotationMultiplier = recoilForce * 0.5f;
         }
 

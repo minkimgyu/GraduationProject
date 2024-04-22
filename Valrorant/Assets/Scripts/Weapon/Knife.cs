@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DamageUtility;
 
-[System.Serializable]
-public class Knife : NoVariationWeapon
+public class Knife : BaseWeapon
 {
     [SerializeField]
     float _mainAttackDelay;
@@ -12,11 +11,16 @@ public class Knife : NoVariationWeapon
     [SerializeField]
     float _subAttackDelay;
 
-    [SerializeField]
-    float attackLinkTime = 2.8f;
+    [SerializeField] float _delayWhenOtherSideAttack;
 
     [SerializeField]
-    float[] mainAttackEffectDelayTime;
+    float attackLinkDuration = 2.8f;
+
+    [SerializeField]
+    int mainAnimationCount;
+
+    [SerializeField]
+    float mainAttackEffectDelayTime;
 
     [SerializeField]
     float subAttackEffectDelayTime;
@@ -33,23 +37,19 @@ public class Knife : NoVariationWeapon
         OnRoundChangeRequested?.Invoke(false, 0, 0);
     }
 
-    public override void Initialize(GameObject player, GameObject armMesh, Transform cam, Animator ownerAnimator)
+    public override void Initialize(KnifeData data)
     {
-        base.Initialize(player, armMesh, cam, ownerAnimator);
+        _eventStrategies[EventType.Main] = new AutoEvent(EventType.Main, _mainAttackDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
+        _eventStrategies[EventType.Sub] = new AutoEvent(EventType.Sub, _subAttackDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
 
-        _mainActionStrategy = new LeftKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, true, WeaponName.ToString(), 
-            mainAttackEffectDelayTime, _subAttackDelay, attackLinkTime, _mainAttackDamageData);
+        _actionStrategies[EventType.Main] = new LeftKnifeAttack(_weaponName, _range, _targetLayer,
+           mainAnimationCount, mainAttackEffectDelayTime, attackLinkDuration, _mainAttackDamageData, OnPlayWeaponAnimation);
 
-        _subActionStrategy = new RightKnifeAttack(_camTransform, _range, _targetLayer, ownerAnimator, _animator, false, WeaponName.ToString(),
-            subAttackEffectDelayTime, _mainAttackDelay, _subAttackDamageData);
+        _actionStrategies[EventType.Sub] = new RightKnifeAttack(_weaponName, _range, _targetLayer,
+           subAttackEffectDelayTime, _mainAttackDamageData, OnPlayWeaponAnimation);
 
-        _mainEventStrategy = new AutoAttackAction(_mainAttackDelay);
-        _subEventStrategy = new AutoAttackAction(_subAttackDelay);
-
-        _mainRecoilStrategy = new NoRecoilGenerator();
-        _subRecoilStrategy = new NoRecoilGenerator();
+        _recoilStrategies[EventType.Main] = new NoRecoilGenerator();
+        _recoilStrategies[EventType.Sub] = new NoRecoilGenerator();
         _reloadStrategy = new NoReload();
-
-        LinkEvent(player);
     }
 }

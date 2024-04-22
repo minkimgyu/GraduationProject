@@ -19,13 +19,18 @@ public class StopwatchTimer
     {
         get
         {
-            if (_state == State.Ready) return _state;
-            else
-            {
-                if(_duration <= Time.time - _startTime) _state = State.Finish;
-                return _state;
-            }
+            if (_state == State.Running && _duration <= Time.time - _startTime) _state = State.Finish;
+            return _state;
         }
+    }
+
+    public float Ratio 
+    {
+        get
+        { 
+            if(_state == State.Ready) return 0;
+            else return Mathf.Clamp((Time.time - _startTime) / _duration, 0, 1);
+        } 
     }
 
     public StopwatchTimer()

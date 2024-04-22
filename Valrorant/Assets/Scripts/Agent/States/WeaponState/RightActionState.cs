@@ -3,46 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class RightActionState : State
     {
-        WeaponController _sWC;
+        Action<WeaponController.State> SetState;
+        Func<BaseWeapon> ReturnEquipedWeapon;
 
-        public RightActionState(WeaponController player)
+        public RightActionState(Action<WeaponController.State> SetState, Func<BaseWeapon> ReturnEquipedWeapon)
         {
-            _sWC = player;
+            this.SetState = SetState;
+            this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
         public override void OnStateEnter()
         {
-            _sWC.NowEquipedWeapon.OnRightClickStart();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnRightClickStart();
         }
 
         public override void OnStateExit()
         {
-            _sWC.NowEquipedWeapon.OnRightClickEnd();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnRightClickEnd();
         }
 
         public override void CheckStateChange()
         {
-            if (_sWC.NowEquipedWeapon.CanAutoReload())
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
-            }
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
-            if (Input.GetMouseButtonUp(1))
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Idle);
-            }
-
-            _sWC.CheckChangeStateForRooting();
+            if (equipedWeapon.CanAutoReload()) SetState?.Invoke(WeaponController.State.Reload);
+            if (Input.GetMouseButtonUp(0)) SetState?.Invoke(WeaponController.State.Idle);
         }
 
         public override void OnStateUpdate()
         {
-            _sWC.NowEquipedWeapon.OnRightClickProgress();
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            equipedWeapon.OnRightClickProgress();
         }
     }
 }

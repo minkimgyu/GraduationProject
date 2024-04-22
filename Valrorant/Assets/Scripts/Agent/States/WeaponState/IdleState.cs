@@ -3,51 +3,87 @@ using System.Collections.Generic;
 using UnityEngine;
 using FSM;
 using Agent.Controller;
+using System;
 
 namespace Agent.States
 {
     public class IdleState : State
     {
-        WeaponController _sWC;
+        Action<WeaponController.State> SetState;
 
-        public IdleState(WeaponController weaponController)
+        Action<BaseWeapon.Type> GoToEquipState;
+        Action<BaseWeapon> SwitchToNewWeapon;
+
+        Func<BaseWeapon> ReturnEquipedWeapon;
+
+
+        public IdleState(
+            Action<WeaponController.State> SetState,
+            Action<BaseWeapon.Type> GoToEquipState,
+            Action<BaseWeapon> SwitchToNewWeapon,
+
+            Func<BaseWeapon> ReturnEquipedWeapon)
         {
-            _sWC = weaponController;
-        }
+            this.SetState = SetState;
+            this.GoToEquipState = GoToEquipState;
+            this.SwitchToNewWeapon = SwitchToNewWeapon;
 
-        public override void CheckStateChange()
-        {
-            _sWC.GetWeaponChangeInput();
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.LeftAction);
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.RightAction);
-            }
-
-            if (Input.GetKeyDown(KeyCode.R) && _sWC.NowEquipedWeapon.CanReload())
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
-            }
-
-            if (Input.GetKeyDown(KeyCode.G) && _sWC.NowEquipedWeapon.CanDrop() == true)
-            {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Drop, false);
-            }
-
-            _sWC.CheckChangeStateForRooting();
+            this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
         public override void OnStateEnter()
         {
-            if (_sWC.NowEquipedWeapon.CanAutoReload())
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            if (equipedWeapon.CanAutoReload() == false) return;
+
+            SetState.Invoke(WeaponController.State.Reload);
+        }
+
+        public override void CheckStateChange()
+        {
+            // 이부분은 타입을 보고 장착하도록 변경해준다.
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _sWC.WeaponFSM.SetState(WeaponController.WeaponState.Reload);
+                GoToEquipState?.Invoke(BaseWeapon.Type.Main);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                GoToEquipState?.Invoke(BaseWeapon.Type.Sub);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                GoToEquipState?.Invoke(BaseWeapon.Type.Melee);
+            }
+
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                SetState?.Invoke(WeaponController.State.LeftAction);
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                SetState?.Invoke(WeaponController.State.RightAction);
+            }
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+                if (equipedWeapon.CanReload() == false) return;
+
+                SetState?.Invoke(WeaponController.State.Reload);
+            }
+
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                SetState?.Invoke(WeaponController.State.Drop);
             }
         }
-    }
 
+        public override void OnWeaponReceived(BaseWeapon weapon)
+        {
+            SwitchToNewWeapon?.Invoke(weapon);
+        }
+    }
 }
