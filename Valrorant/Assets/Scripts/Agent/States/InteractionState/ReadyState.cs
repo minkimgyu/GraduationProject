@@ -20,15 +20,19 @@ namespace Agent.States
             this.ReturnTarget = ReturnTarget;
         }
 
-        public override void CheckStateChange()
+        public override void OnHandleInteract()
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                if (CanInteract() == false) return;
-
-                SetState?.Invoke(InteractionController.State.Interact);
-            }
+            if (CanInteract() == false) return;
+            SetState?.Invoke(InteractionController.State.Interact);
         }
+
+        //public override void CheckStateChange()
+        //{
+        //    if (Input.GetKeyDown(KeyCode.F))
+        //    {
+                
+        //    }
+        //}
 
         bool CanInteract()
         {

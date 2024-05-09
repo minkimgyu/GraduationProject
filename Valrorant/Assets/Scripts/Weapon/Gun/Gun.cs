@@ -24,21 +24,13 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     protected string _trajectoryLineEffect = "TrajectoryLine";
 
-    [SerializeField]
     protected int _maxAmmoCountInMagazine = 30;
 
-    [SerializeField]
     protected int _maxAmmoCountsInPossession = 60;
 
     [SerializeField] protected int _ammoCountsInMagazine;
 
     [SerializeField] protected int _ammoCountsInPossession;
-
-    [SerializeField]
-    protected float _reloadFinishDuration;
-
-    [SerializeField]
-    protected float _reloadExitDuration;
 
     [SerializeField]
     Transform _objectMesh;
@@ -72,10 +64,10 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     public override bool CanReload() { return _reloadStrategy.CanReload(_ammoCountsInMagazine, _ammoCountsInPossession, _maxAmmoCountInMagazine); }
 
-    public override void OnReload()
+    public override void OnReload(bool isTPS)
     {
-        foreach (var action in _actionStrategies) action.Value.TurnOffZoomDirectly();
-        _reloadStrategy.Execute(_ammoCountsInMagazine, _ammoCountsInPossession);
+        for (int i = 0; i < _actionStrategies.Count; i++) _actionStrategies[(EventType)i].TurnOffZoomDirectly();
+        _reloadStrategy.Execute(isTPS, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
     // 장전이 끝나면 여기 이벤트 호출됨

@@ -29,7 +29,10 @@ public class StopwatchTimer
         get
         { 
             if(_state == State.Ready) return 0;
-            else return Mathf.Clamp((Time.time - _startTime) / _duration, 0, 1);
+            else
+            {
+                return Mathf.Clamp((Time.time - _startTime) / _duration, 0, 1);
+            }
         } 
     }
 
@@ -53,9 +56,6 @@ public class StopwatchTimer
     public void Reset()
     {
         if (_state == State.Ready) return;
-
         _state = State.Ready;
-        _startTime = 0;
-        _duration = 0;
     }
 }

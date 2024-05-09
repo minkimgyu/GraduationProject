@@ -40,7 +40,7 @@ namespace AI.ZombieFSM
                              new List<Node>()
                              {
                                 new RotateTowardTarget(blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View), // 정지 하는 코드 넣기
-                                new NowWithinActionRange(blackboard.MyTrasform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
+                                new NowWithinActionRange(blackboard.MyTransform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
                                 new Sequencer
                                 (
                                     new List<Node>()

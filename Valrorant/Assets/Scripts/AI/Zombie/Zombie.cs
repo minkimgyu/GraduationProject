@@ -11,7 +11,7 @@ using AI.ZombieFSM;
 
 namespace AI
 {
-    public class Zombie : MonoBehaviour, IDamageable
+    public class Zombie : MonoBehaviour, IDamageable, ISightTarget
     {
         [SerializeField] float _maxHp;
         [SerializeField] float _destoryDelay = 5;
@@ -66,6 +66,11 @@ namespace AI
         public TargetType MyType { get; set; }
 
         ZombieBlackboard _blackboard;
+
+        private void Start()
+        {
+            MyType = TargetType.Zombie;
+        }
 
         public void Initialize()
         {
@@ -149,6 +154,21 @@ namespace AI
         public void GetDamage(float damage)
         {
             _lifeFsm.OnDamaged(damage);
+        }
+
+        public Transform ReturnSightPoint()
+        {
+            return _sightPoint;
+        }
+
+        public Transform ReturnTransform()
+        {
+            return transform;
+        }
+
+        public Vector3 ReturnPos()
+        {
+            return transform.position;
         }
     }
 }

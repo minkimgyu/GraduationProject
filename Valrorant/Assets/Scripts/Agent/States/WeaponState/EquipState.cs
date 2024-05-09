@@ -56,7 +56,11 @@ namespace Agent.States
 
         public override void CheckStateChange()
         {
-            if (_timer.CurrentState == StopwatchTimer.State.Finish) SetState.Invoke(WeaponController.State.Idle);
+            if (_timer.CurrentState == StopwatchTimer.State.Finish)
+            {
+                SetState.Invoke(WeaponController.State.Idle);
+                return;
+            }
         }
 
         /// <summary>

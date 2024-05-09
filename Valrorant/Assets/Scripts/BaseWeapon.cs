@@ -13,8 +13,10 @@ abstract public class BaseWeapon : MonoBehaviour
         LMG,
         Pistol,
         Shotgun,
+        AutoShotgun,
         SMG,
-        Sniper
+        Sniper,
+        DMR
     }
 
     public enum Type
@@ -31,7 +33,7 @@ abstract public class BaseWeapon : MonoBehaviour
         Sub
     }
 
-    [SerializeField] protected float _range;
+    protected float _range;
 
     [SerializeField] protected Name _weaponName;
 
@@ -48,7 +50,6 @@ abstract public class BaseWeapon : MonoBehaviour
     protected ReloadStrategy _reloadStrategy;
 
 
-    [SerializeField]
     protected float _equipFinishTime;
     public float EquipFinishTime { get { return _equipFinishTime; } }
 
@@ -79,10 +80,10 @@ abstract public class BaseWeapon : MonoBehaviour
     public virtual void Initialize(KnifeData data) { }
     public virtual void Initialize(ClassicData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData) { }
     public virtual void Initialize(BuckyData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData) { }
+    public virtual void Initialize(JudgeData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData) { }
     public virtual void Initialize(StingerData data, RecoilMapData mainMapData, RecoilRangeData subRangeData) { }
-    public virtual void Initialize(OperatorData data, RecoilRangeData mainMapData, RecoilRangeData subRangeData) { }
-
-
+    public virtual void Initialize(OperatorData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData) { }
+    public virtual void Initialize(GuardianData data, RecoilRangeData mainRangeData) { }
 
     // 여기에서 Strategy 추가해준다.
     //public virtual void AddStrategies(OdinData data, RecoilMapData recoilData) { } // 이걸 여러 개 만들어주기
@@ -144,7 +145,7 @@ abstract public class BaseWeapon : MonoBehaviour
     public virtual bool CanReload() { return false; }
 
     // 내부에 전략패턴 넣어서 구현해주기
-    public virtual void OnReload() { }
+    public virtual void OnReload(bool isTPS) { }
 
 
     // 장전 하는 도중에 마우스 입력을 통한 장전 캔슬
@@ -155,7 +156,7 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public bool CanCancelReloadAndGoToSubAction()
     {
-        return _reloadStrategy.CanCancelReloadingByLeftClick();
+        return _reloadStrategy.CanCancelReloadingByRightClick();
     }
 
     public bool IsReloadFinish() // 재장전이 끝난 경우

@@ -5,7 +5,8 @@ using UnityEditor;
 
 [CustomPropertyDrawer(typeof(RecoilDataDictionary))]
 [CustomPropertyDrawer(typeof(WeaponDataDictionary))]
-[CustomPropertyDrawer(typeof(DamageDictionary))]
+//[CustomPropertyDrawer(typeof(Dictionary<HitArea, DistanceAreaData[]>))]
+//[CustomPropertyDrawer(typeof(Dictionary<HitArea, DistanceAreaData[]>1))]
 
 
 [CustomPropertyDrawer(typeof(StringStringDictionary))]
@@ -13,5 +14,6 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(StringColorArrayDictionary))]
 public class AnySerializableDictionaryPropertyDrawer : SerializableDictionaryPropertyDrawer {}
 
+//[CustomPropertyDrawer(typeof(DistanceAreaStorage))]
 [CustomPropertyDrawer(typeof(ColorArrayStorage))]
 public class AnySerializableDictionaryStoragePropertyDrawer: SerializableDictionaryStoragePropertyDrawer {}

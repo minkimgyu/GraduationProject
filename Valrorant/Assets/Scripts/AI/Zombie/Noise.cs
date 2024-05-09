@@ -42,4 +42,9 @@ public class Noise : MonoBehaviour, ITarget
     {
         return transform;
     }
+
+    public Transform ReturnSightPoint()
+    {
+        return null;
+    }
 }

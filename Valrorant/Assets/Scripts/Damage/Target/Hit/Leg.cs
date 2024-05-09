@@ -9,6 +9,6 @@ public class Leg : SeparateHitTarget
     {
         base.Start();
         _durability = 1.5f;
-        hitArea = DistanceAreaData.HitArea.Leg;
+        hitArea = HitArea.Leg;
     }
 }

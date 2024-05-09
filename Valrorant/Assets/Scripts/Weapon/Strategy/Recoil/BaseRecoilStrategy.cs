@@ -7,38 +7,10 @@ abstract public class BaseRecoilStrategy : BaseStrategy
 {
     public BaseRecoilStrategy() { }
 
-    //public abstract void RecoverRecoil();
-
-    //public abstract void ResetValues();
-
-    //public abstract void LinkEvent(GameObject player);
-
-    //public abstract void UnlinkEvent(GameObject player);
-
-    //public abstract void OnInintialize(GameObject player);
-
-    // 마우스에 손을 때는 경우 반동 회복 시퀀스 작동
-    // Create는 이밴트에 따라 작동하는 위치가 다르지만
-    // Recover은 같으므로 여기에 넣자
-
     /// <summary>
     /// Action 이벤트가 호출되는 타이밍에 실행
     /// </summary>
     public virtual void Execute() { }
-
-    /// <summary>
-    /// Action 이벤트가 종료되는 타이밍에 실행
-    /// </summary>
-    //public virtual void OnActionFinishRequested() { }
-
-    //public virtual void OnEventStartRequested() { } // 이거는 Manual 반동에 적용
-
-    //public virtual void OnEventEndRequested() { }
-
-    /// <summary>
-    /// 다른 리코일 패턴이 실행된 경우
-    /// </summary>
-    //public abstract void OnOtherActionEventRequested();
 }
 
 abstract public class RecoilGenerator : BaseRecoilStrategy
@@ -46,17 +18,11 @@ abstract public class RecoilGenerator : BaseRecoilStrategy
     protected Vector2 _viewRotationMultiplier;
     protected Vector2 _goalMultiplier;
 
-    //protected const float _cameraRecoilMultiplier = 0.5f;
-    //protected const float _firePointRecoilMultiplier = 1.0f;
-    //protected const float _actorBoneRecoilMultiplier = 0.5f;
-
     public Action<Vector2> OnRecoil;
 
     protected float _shootIntervalDuration;
     protected float _recoveryDuration;
     protected StopwatchTimer _timer;
-
-    //StateMachine<State> _recoilFSM;
 
     /// <summary>
     /// 반동 이벤트가 호출될 때 실행
@@ -144,30 +110,4 @@ abstract public class RecoilGenerator : BaseRecoilStrategy
     {
         OnRecoil -= blackboard.OnRecoilRequested;
     }
-
-
-    /// <summary>
-    /// 다른 리코일 패턴이 실행된 경우
-    /// </summary>
-    //public abstract void OnOtherActionEventRequested();
-
-
-    /// <summary>
-    /// Action 이벤트가 호출되는 타이밍에 실행
-    /// </summary>
-    //public override void OnActionRequested() 
-    //{ 
-
-    //}
-
-    /// <summary>
-    /// Action 이벤트가 종료되는 타이밍에 실행
-    /// </summary>
-    //public override void OnActionFinishRequested() 
-    //{ 
-
-    //}
-
-
-
 }

@@ -19,7 +19,7 @@
                     <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px;">
                         <ui:TextField picking-mode="Ignore" label="Name" value="Enter Name" text="name" name="name-field" style="font-size: 15px; -unity-text-align: upper-left;" />
                         <ui:FloatField label="Distance From Target" value="10" name="distance-field" style="font-size: 15px;" />
-                        <ui:FloatField label="Recovery Duration" value="1.5" name="recovery-duration-field" style="font-size: 15px;" />
+                        <uie:IntegerField label="Repeat Index" value="0" name="repeat-field" style="justify-content: flex-start; align-items: stretch; font-size: 15px;" />
                     </ui:GroupBox>
                     <ui:Label tabindex="-1" text="Save" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
                     <ui:TextField picking-mode="Ignore" label="Path" text="name" name="path-field" value="/Editor/Json/" style="font-size: 15px; -unity-text-align: upper-left;" />
@@ -38,7 +38,6 @@
                         <ui:GroupBox style="margin-top: 3px; padding-top: 0; padding-bottom: 0; padding-left: 0; margin-bottom: 3px; align-self: stretch; justify-content: space-around; align-items: stretch;">
                             <ui:Vector2Field label="Position" name="point-pos-field" style="margin-top: 1px; margin-right: 3px; margin-bottom: 1px; margin-left: 3px; width: auto; font-size: 15px; justify-content: flex-end; align-self: stretch; align-items: stretch;" />
                             <uie:IntegerField label="Index" value="0" name="index-field" style="font-size: 15px; justify-content: space-between; margin-top: 1px; margin-right: 3px; margin-bottom: 1px; margin-left: 3px;" />
-                            <uie:IntegerField label="Repeat Index" value="0" name="repeat-field" style="justify-content: flex-start; align-items: stretch; font-size: 15px;" />
                         </ui:GroupBox>
                         <ui:Button text="Apply" display-tooltip-when-elided="true" name="point-apply-button" style="height: auto; font-size: 16px; align-self: stretch;" />
                         <ui:Label tabindex="-1" text="Remove" parse-escape-sequences="true" display-tooltip-when-elided="true" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 20px; color: rgb(0, 255, 145); margin-left: 3px; margin-top: 3px;" />
@@ -60,7 +59,7 @@
         <ui:GroupBox name="preview-container" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; display: flex;">
             <ui:VisualElement name="preview-area" style="width: 800px; height: 800px; align-items: auto; justify-content: flex-start; margin-left: 0;">
                 <ui:VisualElement name="preview-panel" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Editor/Point/Transparency500.png?fileID=2800000&amp;guid=9541ed3c445b6034ea496edfbee85b62&amp;type=3#Transparency500&apos;); align-items: center; justify-content: center; max-width: none; max-height: none; width: auto; height: auto;">
-                    <ui:VisualElement name="draw-preview" style="width: 800px; height: 800px; background-image: url(&apos;project://database/Assets/Editor/target.png?fileID=2800000&amp;guid=0d82970ff7f246941a7c4ec4e9480954&amp;type=3#target&apos;); margin-bottom: 0; align-items: center; justify-content: center; max-width: none; max-height: none; min-width: auto; min-height: auto; margin-top: 0; margin-right: 0; margin-left: 0; position: absolute;" />
+                    <ui:VisualElement name="draw-preview" style="width: 800px; height: 800px; background-image: url(&apos;project://database/Assets/DownloadedAsset/Image/target.png?fileID=2800000&amp;guid=0d82970ff7f246941a7c4ec4e9480954&amp;type=3#target&apos;); margin-bottom: 0; align-items: center; justify-content: center; max-width: none; max-height: none; min-width: auto; min-height: auto; margin-top: 0; margin-right: 0; margin-left: 0; position: absolute;" />
                     <ui:VisualElement name="point-preview" style="width: 800px; height: 800px; background-image: none; margin-bottom: 0; align-items: center; justify-content: center; max-width: none; max-height: none; min-width: auto; min-height: auto; margin-top: 0; margin-right: 0; margin-left: 0;" />
                 </ui:VisualElement>
             </ui:VisualElement>

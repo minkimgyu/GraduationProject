@@ -68,8 +68,13 @@ namespace Agent.States
             if (_newWeapon != null && equipedWeapon.WeaponType == _newWeapon.WeaponType)
             {
                 SetStateAndSendType?.Invoke(WeaponController.State.Equip, "EquipWeapon", _newWeapon.WeaponType);
+                return;
             }
-            else SetState?.Invoke(WeaponController.State.Idle);
+            else
+            {
+                SetState?.Invoke(WeaponController.State.Idle);
+                return;
+            }
         }
 
         public override void OnStateExit()

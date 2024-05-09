@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 namespace DamageUtility
 {
+    [System.Serializable]
+    public enum HitArea
+    {
+        Head,
+        Body,
+        Leg,
+    }
+
     [System.Serializable]
     public struct DistanceAreaData
     {
@@ -14,21 +23,13 @@ namespace DamageUtility
             _damage = damage;
         }
 
-        [SerializeField]
-        public enum HitArea
-        {
-            Head,
-            Body,
-            Leg,
-        }
+        public float _minDistance;
 
-        [SerializeField] float _minDistance;
+        public float _maxDistance;
 
-        [SerializeField] float _maxDistance;
+        public float _damage;
 
-        [SerializeField] float _damage;
-
-        public float Damage { get { return _damage; } }
+        [JsonIgnore] public float Damage { get { return _damage; } }
 
         public bool IsInRange(float distance)
         {
@@ -43,22 +44,32 @@ namespace DamageUtility
         }
     }
 
+    [System.Serializable]
+    public struct DirectionData
+    {
+        public float _frontAttackDamage;
+        [JsonIgnore] public float FrontAttackDamage { get { return _frontAttackDamage; } }
+
+        public float _backAttackDamage;
+        [JsonIgnore] public float BackAttackDamage { get { return _backAttackDamage; } }
+    }
+
     public class BaseDamageConverter
     {
-        public virtual float ReturnDamage(DistanceAreaData.HitArea hitArea, float distance) { return 0; }
+        public virtual float ReturnDamage(HitArea hitArea, float distance) { return 0; }
         public virtual float ReturnDamage(Vector3 playerFoward, Vector3 targetFoward) { return 0; }
     }
 
     public class DistanceAreaBasedDamageConverter : BaseDamageConverter
     {
-        Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary;
+        Dictionary<HitArea, DistanceAreaData[]> _damageDictionary;
 
-        public DistanceAreaBasedDamageConverter(Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary)
+        public DistanceAreaBasedDamageConverter(Dictionary<HitArea, DistanceAreaData[]> damageDictionary)
         {
             _damageDictionary = damageDictionary;
         }
 
-        public override float ReturnDamage(DistanceAreaData.HitArea hitArea, float distance)
+        public override float ReturnDamage(HitArea hitArea, float distance)
         {
             if (_damageDictionary.ContainsKey(hitArea) == false) return 0;
 
@@ -75,18 +86,6 @@ namespace DamageUtility
 
             return _damageDictionary[hitArea][length].Damage; // 마지막 데미지 값을 넣어줌
         }
-    }
-
-    [System.Serializable]
-    public struct DirectionData
-    {
-        [SerializeField]
-        float _frontAttackDamage;
-        public float FrontAttackDamage { get { return _frontAttackDamage; } }
-
-        [SerializeField]
-        float _backAttackDamage;
-        public float BackAttackDamage { get { return _backAttackDamage; } }
     }
 
     public class DirectionBasedDamageConverter : BaseDamageConverter

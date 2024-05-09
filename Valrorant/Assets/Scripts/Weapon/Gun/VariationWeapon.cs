@@ -21,49 +21,43 @@ abstract public class VariationGun : Gun
     protected Dictionary<Tuple<EventType, Conditon>, ActionStrategy> _actionStorage = new();
     protected Dictionary<Tuple<EventType, Conditon>, BaseRecoilStrategy> _recoilStorage = new();
 
+    public override void OnRooting(WeaponEventBlackboard blackboard)
+    {
+        base.OnRooting(blackboard);
+        foreach (var eventStrategy in _eventStorage) eventStrategy.Value.LinkEvent(blackboard);
+        foreach (var actionStrategy in _actionStorage) actionStrategy.Value.LinkEvent(blackboard);
+        foreach (var recoilStrategy in _recoilStorage) recoilStrategy.Value.LinkEvent(blackboard);
+    }
+
+    public override void OnDrop(WeaponEventBlackboard blackboard)
+    {
+        base.OnDrop(blackboard);
+        foreach (var eventStrategy in _eventStorage) eventStrategy.Value.LinkEvent(blackboard);
+        foreach (var actionStrategy in _actionStorage) actionStrategy.Value.LinkEvent(blackboard);
+        foreach (var recoilStrategy in _recoilStorage) recoilStrategy.Value.LinkEvent(blackboard);
+    }
+
+    // state 패턴으로 바꿔주기
     protected void OnZoomRequested(bool nowZoom)
     {
         if (nowZoom) OnZoomIn();
         else OnZoomOut();
     }
 
-    void ResetStrategy(EventStrategy strategy)
-    {
-        _eventStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
-        strategy.LinkEvent(_weaponEventBlackboard);
-        _eventStrategies[EventType.Main] = strategy;
-    }
-
-    void ResetStrategy(ActionStrategy strategy)
-    {
-        _actionStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
-        strategy.LinkEvent(_weaponEventBlackboard);
-        _actionStrategies[EventType.Main] = strategy;
-    }
-
-    void ResetStrategy(BaseRecoilStrategy strategy)
-    {
-        _recoilStrategies[EventType.Main].UnlinkEvent(_weaponEventBlackboard);
-        strategy.LinkEvent(_weaponEventBlackboard);
-        _recoilStrategies[EventType.Main] = strategy;
-    }
-
     protected virtual void OnZoomIn() 
     {
         Tuple<EventType, Conditon> zoomInKey = new(EventType.Main, Conditon.ZoomIn);
-
-        if (_eventStorage.ContainsKey(zoomInKey)) ResetStrategy(_eventStorage[zoomInKey]);
-        if (_actionStorage.ContainsKey(zoomInKey)) ResetStrategy(_actionStorage[zoomInKey]);
-        if (_recoilStorage.ContainsKey(zoomInKey)) ResetStrategy(_recoilStorage[zoomInKey]);
+        if (_eventStorage.ContainsKey(zoomInKey)) _eventStrategies[EventType.Main] = _eventStorage[zoomInKey];
+        if (_actionStorage.ContainsKey(zoomInKey)) _actionStrategies[EventType.Main] = _actionStorage[zoomInKey];
+        if (_recoilStorage.ContainsKey(zoomInKey)) _recoilStrategies[EventType.Main] = _recoilStorage[zoomInKey];
     }
 
     protected virtual void OnZoomOut() 
     {
         Tuple<EventType, Conditon> zoomOutKey = new(EventType.Main, Conditon.ZoomOut);
-
-        if (_eventStorage.ContainsKey(zoomOutKey)) ResetStrategy(_eventStorage[zoomOutKey]);
-        if (_actionStorage.ContainsKey(zoomOutKey)) ResetStrategy(_actionStorage[zoomOutKey]);
-        if (_recoilStorage.ContainsKey(zoomOutKey)) ResetStrategy(_recoilStorage[zoomOutKey]);
+        if (_eventStorage.ContainsKey(zoomOutKey)) _eventStrategies[EventType.Main] = _eventStorage[zoomOutKey];
+        if (_actionStorage.ContainsKey(zoomOutKey)) _actionStrategies[EventType.Main] = _actionStorage[zoomOutKey];
+        if (_recoilStorage.ContainsKey(zoomOutKey)) _recoilStrategies[EventType.Main] = _recoilStorage[zoomOutKey];
     }
 
     public override void MatchStrategy()

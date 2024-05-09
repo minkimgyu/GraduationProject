@@ -79,6 +79,7 @@ public class JsonAssetGenerator
 
     public T JsonToObject<T>(TextAsset tmpAsset)
     {
-        return JsonConvert.DeserializeObject<T>(tmpAsset.text);
+        T value = JsonConvert.DeserializeObject<T>(tmpAsset.text);
+        return value;
     }
 }

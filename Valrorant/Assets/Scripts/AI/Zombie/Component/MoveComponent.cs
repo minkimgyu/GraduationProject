@@ -19,6 +19,8 @@ namespace AI.Component
             _rigid = GetComponent<Rigidbody>();
         }
 
+        public float SendMoveDisplacement() { return _rigid.velocity.magnitude * 0.1f; }
+
         public Vector3 ReturnVelocity()
         {
             return _rigid.velocity;

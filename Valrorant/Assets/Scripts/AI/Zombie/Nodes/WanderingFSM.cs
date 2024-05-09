@@ -20,14 +20,15 @@ namespace BehaviorTree.Nodes
         StateMachine<State> _fsm;
         public StateMachine<State> FSM { get { return _fsm; } }
 
-        public WanderingFSM(ZombieBlackboard blackboard)
+        public WanderingFSM(Transform myTransform, int wanderOffset, 
+            Func<Vector3, int, Vector3> ReturnNodePos, Action<Vector3, bool> FollowPath, Action<Vector3> View,  Action Stop)
         {
             _fsm = new StateMachine<State>();
             Dictionary<State, BaseState> states = new Dictionary<State, BaseState>()
             {
-                {State.Move, new MoveState(blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.MyTrasform, blackboard.WanderOffset) },
-                {State.Stop, new StopState(blackboard.Stop) },
-                {State.Rotate, new RotateState(blackboard.View, blackboard.Stop, blackboard.MyTrasform) }
+                {State.Move, new MoveState(ReturnNodePos, FollowPath, myTransform, wanderOffset) },
+                {State.Stop, new StopState(Stop) },
+                {State.Rotate, new RotateState(View, Stop, myTransform) }
             };
 
             _fsm.Initialize(states);

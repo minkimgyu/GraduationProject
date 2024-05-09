@@ -34,11 +34,18 @@ namespace Agent.States
         {
             // 사격 도중 총알이 떨어진 경우, State에 들어왔을 때는 총알이 존재했지만
             // Update 중 총알이 다 떨어진 경우
-
             BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
-            if (equipedWeapon.CanAutoReload()) SetState?.Invoke(WeaponController.State.Reload);
-            if (Input.GetMouseButtonUp(0)) SetState?.Invoke(WeaponController.State.Idle);
+            if (equipedWeapon.CanAutoReload())
+            {
+                SetState?.Invoke(WeaponController.State.Reload);
+                return;
+            }
+        }
+
+        public override void OnHandleEventEnd()
+        {
+            SetState?.Invoke(WeaponController.State.Idle);
         }
 
         public override void OnStateUpdate()

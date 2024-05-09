@@ -160,22 +160,21 @@ public class BurstEvent: EventStrategy
     {
         base.OnMouseClickStart();
 
-        _tickDelayTimer.Reset(); // 이전 이벤트 도중 초기화되지 않았다면 초기화를 진행해줘야한다.
+        //if (_actionDelayTimer.CurrentState == StopwatchTimer.State.Running) return;
 
-        if (_actionDelayTimer.CurrentState == StopwatchTimer.State.Running) return;
-        _actionDelayTimer.Start(_actionDelay);
+        _tickDelayTimer.Reset();
+        _actionDelayTimer.Reset();
+        _actionDelayTimer.Start(_actionDelay * _fireCountInOneAction);
     }
 
     public override void OnUpdate()
     {
         if (_actionDelayTimer.CurrentState != StopwatchTimer.State.Running) return;
-
         if (_tickDelayTimer.CurrentState == StopwatchTimer.State.Running) return;
 
         OnAction?.Invoke(_callType);
-        if (_tickDelayTimer.CurrentState == StopwatchTimer.State.Finish) _actionDelayTimer.Reset();
 
-        float tickDelay = _actionDelay / _fireCountInOneAction;
-        _tickDelayTimer.Start(tickDelay);
+        _tickDelayTimer.Reset();
+        _tickDelayTimer.Start(_actionDelay);
     }
 }

@@ -4,9 +4,10 @@ using UnityEngine;
 
 namespace AI.Component
 {
-    public class ViewComponent : MonoBehaviour
+    public class ViewComponent : RecoilReceiver
     {
         float _speed;
+        [SerializeField] Transform _sightPoint;
 
         public void Initialize(float speed)
         {
@@ -16,6 +17,12 @@ namespace AI.Component
         public void View(Vector3 dir)
         {
             transform.forward = Vector3.Lerp(transform.forward, dir, Time.smoothDeltaTime * _speed);
+        }
+
+        public override void ResetCamera()
+        {
+            _viewRotation = new Vector2(_sightPoint.rotation.eulerAngles.y, _sightPoint.rotation.eulerAngles.x);
+            base.ResetCamera();
         }
     }
 }

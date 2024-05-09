@@ -92,8 +92,13 @@ namespace Agent.States
                     {
                         DropWeapon(equipedWeapon);
                         SetStateAndSendWeapon?.Invoke(WeaponController.State.Root, "RootWeapon", _newWeapon);
+                        return;
                     }
-                    else RevertToPreviousState?.Invoke();
+                    else
+                    {
+                        RevertToPreviousState?.Invoke();
+                        return;
+                    }
                 }
                 else
                 {
@@ -109,8 +114,13 @@ namespace Agent.States
                     {
                         DropWeapon(sameTypeWeapon);
                         SetStateAndSendWeapon?.Invoke(WeaponController.State.Root, "RootWeapon", _newWeapon);
+                        return;
                     }
-                    else RevertToPreviousState?.Invoke();
+                    else
+                    {
+                        RevertToPreviousState?.Invoke();
+                        return;
+                    }
                 }
             }
             else
@@ -121,8 +131,13 @@ namespace Agent.States
                 {
                     DropWeapon(equipedWeapon);
                     SetStateAndSendType?.Invoke(WeaponController.State.Equip, "EquipNextWeapon", type);
+                    return;
                 }
-                else RevertToPreviousState?.Invoke();
+                else
+                {
+                    RevertToPreviousState?.Invoke();
+                    return;
+                }
             }
         }
 

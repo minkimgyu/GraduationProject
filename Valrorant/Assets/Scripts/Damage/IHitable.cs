@@ -13,5 +13,5 @@ public interface IHitable
 
     // 여기서 데미지 텍스트 생성 코드 넣자
 
-    DistanceAreaData.HitArea ReturnHitArea();
+    HitArea ReturnHitArea();
 }

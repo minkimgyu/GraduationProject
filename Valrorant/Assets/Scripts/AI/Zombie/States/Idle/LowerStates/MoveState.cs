@@ -27,6 +27,7 @@ namespace AI.ZombieFSM
 
         public override void OnStateEnter()
         {
+            Debug.Log("Movetate");
             _targetPos = ReturnNodePos.Invoke(_myTransform.position, _wanderOffset);
         }
 

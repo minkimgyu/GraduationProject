@@ -14,7 +14,7 @@ public struct ZombieBlackboard
     public int WanderOffset { get; }
     public float StateChangeDelay { get; }
     public Transform CaptureTransform { get; }
-    public Transform MyTrasform { get; }
+    public Transform MyTransform { get; }
     public Transform SightPoint { get; }
 
     public Action<Vector3, bool> FollowPath { get; }
@@ -55,7 +55,7 @@ public struct ZombieBlackboard
     public Action<string> ResetAnimatorTrigger { get; }
     public Action<string, bool> ResetAnimatorBool { get; }
 
-    public Func<ITarget> ReturnTargetInSight { get; }
+    public Func<ISightTarget> ReturnTargetInSight { get; }
 
     // Attack
 
@@ -69,7 +69,7 @@ public struct ZombieBlackboard
         Action<Vector3, bool> FollowPath, Action<Vector3> View, Action Stop, Func<bool> IsTargetInSight,
         Func<Vector3, int, Vector3> ReturnNodePos, Action ClearAllNoise, Func<bool> IsQueueEmpty, Func<Vector3> ReturnFrontNoise,
         Func<bool> IsFollowingFinish, Action<float> ModifyCaptureRadius, Action<string, bool> ResetAnimatorBool, Action<string> ResetAnimatorTrigger, 
-        Func<ITarget> ReturnTargetInSight)
+        Func<ISightTarget> ReturnTargetInSight)
     {
         MaxHP = maxHP;
 
@@ -78,7 +78,7 @@ public struct ZombieBlackboard
         WanderOffset = wanderOffset;
         StateChangeDelay = stateChangeDelay;
         CaptureTransform = captureTransform;
-        MyTrasform = myTrasform;
+        MyTransform = myTrasform;
         SightPoint = sightPoint;
 
         DestoryDelay = destoryDelay;

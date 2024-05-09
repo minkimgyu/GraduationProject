@@ -8,10 +8,10 @@ namespace BehaviorTree.Nodes
     public class RotateTowardTarget : Node
     {
         Transform _sightPoint;
-        Func<ITarget> ReturnTargetInSight;
+        Func<ISightTarget> ReturnTargetInSight;
         Action<Vector3> View;
 
-        public RotateTowardTarget(Transform sightPoint, Func<ITarget> ReturnTargetInSight, Action<Vector3> View)
+        public RotateTowardTarget(Transform sightPoint, Func<ISightTarget> ReturnTargetInSight, Action<Vector3> View)
         {
             _sightPoint = sightPoint;
             this.ReturnTargetInSight = ReturnTargetInSight;
@@ -20,7 +20,7 @@ namespace BehaviorTree.Nodes
 
         public override NodeState Evaluate()
         {
-            ITarget target = ReturnTargetInSight();
+            ISightTarget target = ReturnTargetInSight();
             Vector3 targetPos = target.ReturnPos();
 
             Vector3 dir = (targetPos - _sightPoint.position).normalized;

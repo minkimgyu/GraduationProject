@@ -40,12 +40,12 @@ public class OperatorData : GunData
     public float doubleZoomFieldOfView;
 
 
-    public Vector3 zoomCameraPosition;
+    public SerializableVector3 zoomCameraPosition;
 
 
     public WeightApplier mainWeightApplier;
 
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary;
+    public Dictionary<HitArea, DistanceAreaData[]> damageDictionary;
 }
 
 public class OperatorFactory : WeaponFactory<OperatorData>

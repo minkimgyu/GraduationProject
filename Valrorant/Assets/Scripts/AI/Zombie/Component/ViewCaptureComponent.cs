@@ -9,7 +9,7 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
     [SerializeField] BaseDrawer _circularSectorDrawer;
     [SerializeField] Transform _sightPoint;
 
-    [SerializeField] ITarget _storedTarget;
+    [SerializeField] ISightTarget _storedTarget;
 
     public override void Initialize(float radius, float angle)
     {
@@ -33,7 +33,7 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
     bool isInAngle(float angle) { return angle <= _captureAngle / 2 && -_captureAngle / 2 <= angle; }
 
     // ReturnTargetInSight 사용시 IsTargetInSight 우선 사용
-    public ITarget ReturnTargetInSight() { return _storedTarget; }
+    public ISightTarget ReturnTargetInSight() { return _storedTarget; }
 
     public bool IsTargetInSight()
     {

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
+using DamageUtility;
 
 abstract public class BaseFactory<T1, T2>
 {
@@ -38,19 +40,25 @@ public struct RecoilData
     public TextAsset _asset;
 }
 
+[System.Serializable]
+public struct SerializableVector3
+{
+    public float x;
+    public float y;
+    public float z;
+
+    [JsonIgnore]
+    public Vector3 V3 { get { return new Vector3(x, y, z); } }
+}
+
 public class WeaponPlant : MonoBehaviour
 {
     Dictionary<BaseWeapon.Name, BaseFactory<BaseWeapon, WeaponFactoryData>> _weaponFactories;
     [SerializeField] WeaponDataDictionary _weaponDatas; // 무기 prefab을 모아서 넣어준다.
 
-    //[SerializeField] BuckyData data1;
-    //[SerializeField] AutomaticGunData data2;
-    //[SerializeField] ClassicData data3;
-    //[SerializeField] StingerData data4;
-    //[SerializeField] OperatorData data5;
-
-    private void Start()
+    private void Awake()
     {
+        _weaponFactories = new Dictionary<BaseWeapon.Name, BaseFactory<BaseWeapon, WeaponFactoryData>>();
         Initialize();
     }
 
@@ -59,12 +67,15 @@ public class WeaponPlant : MonoBehaviour
         // 여기서 추가
         _weaponFactories[BaseWeapon.Name.AR] = new AutomaticGunFactory();
         _weaponFactories[BaseWeapon.Name.AK] = new AutomaticGunFactory();
-        _weaponFactories[BaseWeapon.Name.LMG] = new AutomaticGunFactory(); 
+        _weaponFactories[BaseWeapon.Name.LMG] = new AutomaticGunFactory();
+        _weaponFactories[BaseWeapon.Name.Knife] = new KnifeFactory();
 
-        _weaponFactories[BaseWeapon.Name.Pistol] = new ClassicFactory(); 
-        _weaponFactories[BaseWeapon.Name.Shotgun] = new BuckyFactory(); 
-        _weaponFactories[BaseWeapon.Name.Sniper] = new OperatorFactory(); 
-        _weaponFactories[BaseWeapon.Name.SMG] = new StingerFactory(); 
+        _weaponFactories[BaseWeapon.Name.Pistol] = new ClassicFactory();
+        _weaponFactories[BaseWeapon.Name.Shotgun] = new BuckyFactory();
+        _weaponFactories[BaseWeapon.Name.AutoShotgun] = new JudgeFactory();
+        _weaponFactories[BaseWeapon.Name.Sniper] = new OperatorFactory();
+        _weaponFactories[BaseWeapon.Name.SMG] = new StingerFactory();
+        _weaponFactories[BaseWeapon.Name.DMR] = new GuardianFactory();
 
         foreach (var item in _weaponFactories) item.Value.Initialize(_weaponDatas[item.Key]);
     }

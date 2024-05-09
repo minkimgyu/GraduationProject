@@ -34,8 +34,24 @@ namespace Agent.States
         {
             BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
-            if (equipedWeapon.CanAutoReload()) SetState?.Invoke(WeaponController.State.Reload);
-            if (Input.GetMouseButtonUp(0)) SetState?.Invoke(WeaponController.State.Idle);
+            if (equipedWeapon.CanAutoReload())
+            {
+                SetState?.Invoke(WeaponController.State.Reload);
+                return;
+            }
+        }
+
+        public override void OnHandleEventEnd()
+        {
+            SetState?.Invoke(WeaponController.State.Idle);
+        }
+
+        public override void OnHandleReload()
+        {
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            if (equipedWeapon.CanReload() == false) return;
+
+            SetState?.Invoke(WeaponController.State.Reload);
         }
 
         public override void OnStateUpdate()

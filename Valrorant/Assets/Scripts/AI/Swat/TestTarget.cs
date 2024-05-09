@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestTarget : MonoBehaviour, ISightTarget
+public class TestTarget : MonoBehaviour, ITarget
 {
     [SerializeField] Transform _sightPoint;
     [SerializeField] TargetType type;

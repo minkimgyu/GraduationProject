@@ -10,6 +10,6 @@ public class DirectDamageTarget : BaseHitTarget
     {
         base.Start();
         IDamage = GetComponent<IDamageable>();
-        hitArea = DistanceAreaData.HitArea.Body;
+        hitArea = HitArea.Body;
     }
 }

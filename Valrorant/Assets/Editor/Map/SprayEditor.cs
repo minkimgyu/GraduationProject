@@ -19,7 +19,7 @@ public class SprayEditor : EditorWindow
     private TextField _nameField;
     private IntegerField _repeatIndexField;
     private FloatField _distanceInput;
-    private FloatField _recoveryInput;
+    //private FloatField _recoveryInput;
 
     private TextField _pathField;
     private Toggle _saveToggle;
@@ -118,7 +118,7 @@ public class SprayEditor : EditorWindow
         _repeatIndexField = root.Q<IntegerField>("repeat-field");
         _distanceInput = root.Q<FloatField>("distance-field");
 
-        _recoveryInput = root.Q<FloatField>("recovery-duration-field");
+        //_recoveryInput = root.Q<FloatField>("recovery-duration-field");
 
         _pathField = root.Q<TextField>("path-field");
         _saveToggle = root.Q<Toggle>("save-toggle");
@@ -227,6 +227,7 @@ public class SprayEditor : EditorWindow
         return new Vector2(element.style.left.value.value - (_previewSize / 2) + (_pointWidth / 2), (element.style.top.value.value - (_previewSize / 2) + (_pointHeight / 2)));
     }
 
+
     /// <summary>
     /// position을 받아서 중심 좌표에 맞게 변환시켜준다.
     /// </summary>
@@ -242,7 +243,7 @@ public class SprayEditor : EditorWindow
         float ratio = ReturnRatioBetweenTargetAndDistanceInPixel();
         Vector2 centerPosition = ReturnCenterPositionOfPoint(_customeMapPreview[1]);
 
-        RecoilRangeData tmpData = new RecoilRangeData(_nameField.value, _recoveryInput.value, _distanceInput.value, ratio, centerPosition);
+        RecoilRangeData tmpData = new RecoilRangeData(_nameField.value, _distanceInput.value, ratio, new SerializableVector2(centerPosition.x, centerPosition.y));
         _jsonAssetGenerator.CreateAndSaveJsonAsset(tmpData, _pathField.text, _nameField.text, _saveToggle.value);
     }
 
@@ -259,11 +260,10 @@ public class SprayEditor : EditorWindow
         ClearMap(); // 모든 라인을 지워줌
 
         _nameField.value = data.Name;
-        _recoveryInput.value = data.RecoveryDuration;
         _distanceInput.value = data.DistanceFromTarget;
 
         //Vector2 pointPos = RevertAngleToPoint(data.Point);
-        Vector2 pos = ReturnCenterPositionOfPoint(data.Point);
+        Vector2 pos = ReturnCenterPositionOfPoint(new Vector2(data.Point.x, data.Point.y));
         SpawnCenterAndPoint(pos);
 
         DrawPointLines(); // 선 생성시켜주기
@@ -272,16 +272,17 @@ public class SprayEditor : EditorWindow
     // 아래 두 함수는 타입에 따라 달리 동작 해야한다. 
     private void SaveMap()
     {
-        List<Vector2> pointPosition = new List<Vector2>();
+        List<SerializableVector2> pointPosition = new List<SerializableVector2>();
         for (int i = 0; i < _customeMapPreview.childCount; i++)
         {
-            Vector2 position = ReturnCenterPositionOfPoint(_customeMapPreview[i]);
+            Vector2 pos = ReturnCenterPositionOfPoint(_customeMapPreview[i]);
+            SerializableVector2 position = new SerializableVector2(pos.x, pos.y);
             pointPosition.Add(position);
         }
 
         float ratio = ReturnRatioBetweenTargetAndDistanceInPixel();
 
-        RecoilMapData tmpData = new RecoilMapData(_nameField.value, _recoveryInput.value, _distanceInput.value, ratio, _indexField.value, _repeatIndexField.value, pointPosition);
+        RecoilMapData tmpData = new RecoilMapData(_nameField.value, _distanceInput.value, ratio, _indexField.value, _repeatIndexField.value, pointPosition);
         _jsonAssetGenerator.CreateAndSaveJsonAsset(tmpData, _pathField.text, _nameField.text, _saveToggle.value);
     }
 
@@ -293,13 +294,12 @@ public class SprayEditor : EditorWindow
         ClearMap(); // 모든 라인을 지워줌
 
         _nameField.value = data.Name;
-        _recoveryInput.value = data.RecoveryDuration;
         _repeatIndexField.value = data.RepeatIndex;
         _distanceInput.value = data.DistanceFromTarget;
 
         for (int i = 0; i < data.Points.Count; i++)
         {
-            Vector2 pos = ReturnCenterPositionOfPoint(data.Points[i]);
+            Vector2 pos = ReturnCenterPositionOfPoint(data.Points[i].V2);
 
             VisualElement point = SpawnPoint(pos);
             if (data.SelectedIndex == i) ChangeSelectedPoint(point);

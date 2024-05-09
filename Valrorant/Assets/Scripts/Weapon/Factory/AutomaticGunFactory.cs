@@ -39,14 +39,14 @@ public class AutomaticGunData : GunData
     public float recoilRatioWhenZoomIn;
     public float recoilRatioWhenZoomOut;
 
-    public float zoomDelay;
     public float displacementSpreadMultiplyRatio;
     public float zoomDuration;
+    public float zoomDelay;
     public float normalFieldOfView;
     public float zoomFieldOfView;
-    public Vector3 cameraPositionWhenZoom;
 
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary;
+    public SerializableVector3 cameraPositionWhenZoom;
+    public Dictionary<HitArea, DistanceAreaData[]> damageDictionary;
 }
 
 public class AutomaticGunFactory : WeaponFactory<AutomaticGunData>
@@ -56,7 +56,9 @@ public class AutomaticGunFactory : WeaponFactory<AutomaticGunData>
     public override void Initialize(WeaponFactoryData data)
     {
         base.Initialize(data);
-        _mapData = _jsonAssetGenerator.JsonToObject<RecoilMapData>(data._recoilDatas.Find(x => x._type == BaseWeapon.EventType.Main)._asset);
+
+        RecoilData recoilData = data._recoilDatas.Find(x => x._type == BaseWeapon.EventType.Main);
+        _mapData = _jsonAssetGenerator.JsonToObject<RecoilMapData>(recoilData._asset);
     }
 
     public override BaseWeapon Create()

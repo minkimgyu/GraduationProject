@@ -10,22 +10,20 @@ namespace Agent.States
     public class IdleState : State
     {
         Action<WeaponController.State> SetState;
+        Action<WeaponController.State, string, BaseWeapon.Type> SetStateUsingWeaponType;
 
-        Action<BaseWeapon.Type> GoToEquipState;
         Action<BaseWeapon> SwitchToNewWeapon;
-
         Func<BaseWeapon> ReturnEquipedWeapon;
-
 
         public IdleState(
             Action<WeaponController.State> SetState,
-            Action<BaseWeapon.Type> GoToEquipState,
+            Action<WeaponController.State, string, BaseWeapon.Type> SetStateUsingWeaponType,
             Action<BaseWeapon> SwitchToNewWeapon,
 
             Func<BaseWeapon> ReturnEquipedWeapon)
         {
             this.SetState = SetState;
-            this.GoToEquipState = GoToEquipState;
+            this.SetStateUsingWeaponType = SetStateUsingWeaponType;
             this.SwitchToNewWeapon = SwitchToNewWeapon;
 
             this.ReturnEquipedWeapon = ReturnEquipedWeapon;
@@ -34,51 +32,44 @@ namespace Agent.States
         public override void OnStateEnter()
         {
             BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            if (equipedWeapon == null) return;
+
             if (equipedWeapon.CanAutoReload() == false) return;
 
             SetState.Invoke(WeaponController.State.Reload);
         }
 
-        public override void CheckStateChange()
+        public override void OnHandleEquip(BaseWeapon.Type type)
         {
-            // 이부분은 타입을 보고 장착하도록 변경해준다.
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
-                GoToEquipState?.Invoke(BaseWeapon.Type.Main);
-            }
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            if (equipedWeapon != null && equipedWeapon.WeaponType == type) return; // 이미 같은 타입의 아이템이 장착되어 있으면 리턴
+            SetStateUsingWeaponType?.Invoke(WeaponController.State.Equip, "SendWeaponTypeToEquip", type);
+        }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
+        public override void OnHandleEventStart(BaseWeapon.EventType type)
+        {
+            switch (type)
             {
-                GoToEquipState?.Invoke(BaseWeapon.Type.Sub);
+                case BaseWeapon.EventType.Main:
+                    SetState?.Invoke(WeaponController.State.LeftAction);
+                    break;
+                case BaseWeapon.EventType.Sub:
+                    SetState?.Invoke(WeaponController.State.RightAction);
+                    break;
             }
+        }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-                GoToEquipState?.Invoke(BaseWeapon.Type.Melee);
-            }
+        public override void OnHandleDrop()
+        {
+            SetState?.Invoke(WeaponController.State.Drop);
+        }
 
+        public override void OnHandleReload()
+        {
+            BaseWeapon equipedWeapon = ReturnEquipedWeapon();
+            if (equipedWeapon.CanReload() == false) return;
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                SetState?.Invoke(WeaponController.State.LeftAction);
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                SetState?.Invoke(WeaponController.State.RightAction);
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                BaseWeapon equipedWeapon = ReturnEquipedWeapon();
-                if (equipedWeapon.CanReload() == false) return;
-
-                SetState?.Invoke(WeaponController.State.Reload);
-            }
-
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                SetState?.Invoke(WeaponController.State.Drop);
-            }
+            SetState?.Invoke(WeaponController.State.Reload);
         }
 
         public override void OnWeaponReceived(BaseWeapon weapon)

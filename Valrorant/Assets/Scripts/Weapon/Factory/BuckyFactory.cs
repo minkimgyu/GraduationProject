@@ -37,8 +37,8 @@ public class BuckyData : GunData
     public float subActionScatterPenetratePower;
 
     public float findRange;
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary;
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> subSingleAttackDamageDictionary;
+    public Dictionary<HitArea, DistanceAreaData[]> damageDictionary;
+    public Dictionary<HitArea, DistanceAreaData[]> subSingleAttackDamageDictionary;
 }
 
 public class BuckyFactory : WeaponFactory<BuckyData>

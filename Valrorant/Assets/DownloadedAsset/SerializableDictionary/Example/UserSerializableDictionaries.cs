@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using DamageUtility;
 
 [Serializable]
 public class RecoilDataDictionary : SerializableDictionary<BaseWeapon.EventType, TextAsset> { }
@@ -9,8 +10,16 @@ public class RecoilDataDictionary : SerializableDictionary<BaseWeapon.EventType,
 [Serializable]
 public class WeaponDataDictionary : SerializableDictionary<BaseWeapon.Name, WeaponFactoryData> { }
 
-[Serializable]
-public class DamageDictionary : SerializableDictionary<DamageUtility.DistanceAreaData.HitArea, DamageUtility.DistanceAreaData[]> { }
+
+
+//[Serializable]
+//public class Dictionary<HitArea, DistanceAreaData[]> : SerializableDictionary<HitArea, DistanceAreaData[]> { }
+
+//[Serializable]
+//public class DistanceAreaStorage : SerializableDictionary.Storage<DistanceAreaData[]> { }
+
+//[Serializable]
+//public class Dictionary<HitArea, DistanceAreaData[]> : SerializableDictionary<HitArea, DistanceAreaData[]> { }
 
 
 [Serializable]

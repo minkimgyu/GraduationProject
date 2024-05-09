@@ -15,7 +15,7 @@ namespace AI.ZombieFSM
 
         public DieState(ZombieBlackboard blackboard)
         {
-            _myGameObject = blackboard.MyTrasform.gameObject;
+            _myGameObject = blackboard.MyTransform.gameObject;
             _destoryDelay = blackboard.DestoryDelay;
 
             ResetAnimatorBool = blackboard.ResetAnimatorBool;

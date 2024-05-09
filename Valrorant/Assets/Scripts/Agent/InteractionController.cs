@@ -37,17 +37,11 @@ namespace Agent.Controller
         void SetState(State state) { _interactionFSM.SetState(state); }
         void RevertToPreviousState() { _interactionFSM.RevertToPreviousState(); }
 
-        private void Start()
+        public void OnHandleInteract() => _interactionFSM.OnHandleInteract();
+
+        public void Initialize()
         {
             _interactionFSM = new StateMachine<State>();
-            InitializeFSM();
-
-            WeaponController weaponController = GetComponentInParent<WeaponController>();
-            SendWeaponToController = weaponController.OnWeaponReceived;
-        }
-
-        void InitializeFSM()
-        {
             Dictionary<State, BaseState> interactionStates = new Dictionary<State, BaseState>();
 
             BaseState ready = new ReadyState(SetState, ResetTarget, ReturnTarget);
@@ -58,11 +52,9 @@ namespace Agent.Controller
 
             _interactionFSM.Initialize(interactionStates);
             _interactionFSM.SetState(State.Ready);
-        }
 
-        private void Update()
-        {
-            _interactionFSM.OnUpdate();
+            WeaponController weaponController = GetComponentInParent<WeaponController>();
+            SendWeaponToController = weaponController.OnWeaponReceived;
         }
 
         private void OnTriggerEnter(Collider collider)

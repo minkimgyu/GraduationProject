@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BurstRecoilGenerator : RecoilGenerator
 {
-    //RecoilRange _recoilRange;
-
     RecoilRangeData _recoilRange;
 
     Vector2 _recoilDirection;
@@ -24,7 +22,8 @@ public class BurstRecoilGenerator : RecoilGenerator
 
     protected override Vector2 ReturnNextRecoilPoint()
     {
-        _recoilDirection += _recoilRange.Point;
+        Vector2 dir = _recoilRange.ReturnFixedPoint().V2;
+        _recoilDirection += dir;
         return _recoilDirection;
     }
 

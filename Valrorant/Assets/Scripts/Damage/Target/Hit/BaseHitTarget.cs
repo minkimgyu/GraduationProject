@@ -13,7 +13,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
 
     public IDamageable IDamage { get; set; }
 
-    protected DistanceAreaData.HitArea hitArea;
+    protected HitArea hitArea;
 
     protected virtual void Start()
     {
@@ -48,7 +48,7 @@ public class BaseHitTarget : MonoBehaviour, IPenetrable, IEffectable, IHitable
         return hitEffect[effectType].ToString();
     }
 
-    public DistanceAreaData.HitArea ReturnHitArea()
+    public HitArea ReturnHitArea()
     {
         return hitArea;
     }

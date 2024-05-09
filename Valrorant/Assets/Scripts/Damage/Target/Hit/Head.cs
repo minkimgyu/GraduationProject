@@ -9,6 +9,6 @@ public class Head : SeparateHitTarget
     {
         base.Start();
         _durability = 1.5f;
-        hitArea = DistanceAreaData.HitArea.Head;
+        hitArea = HitArea.Head;
     }
 }

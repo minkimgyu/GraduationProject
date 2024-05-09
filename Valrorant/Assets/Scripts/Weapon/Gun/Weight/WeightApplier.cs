@@ -1,24 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 [System.Serializable]
 public class WeightApplier
 {
-    [SerializeField]
-    float storedWeight;
-
-    public float StoredWeight { get { return storedWeight; } }
+    public float storedWeight;
+    [JsonIgnore] public float StoredWeight { get { return storedWeight; } }
 
     float minWeight = 0;
-
-    [SerializeField]
-    float maxWeight = 0.05f;
-
-    [SerializeField]
-    float weightMultiplier = 0.01f;
-    [SerializeField]
-    float weightDecreation = 0.0001f;
+    public float maxWeight = 0.05f;
+    public float weightMultiplier = 0.01f;
+    public float weightDecreation = 0.0001f;
 
     public void MultiplyWeight()
     {

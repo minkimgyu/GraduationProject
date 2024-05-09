@@ -4,7 +4,7 @@ using UnityEngine;
 using DamageUtility;
 
 [System.Serializable]
-public class KnifeData
+public class KnifeData : WeaponData
 {
     public float mainAttackDelay;
 

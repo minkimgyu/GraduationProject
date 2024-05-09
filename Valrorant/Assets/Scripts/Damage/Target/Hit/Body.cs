@@ -9,6 +9,6 @@ public class Body : SeparateHitTarget
     {
         base.Start();
         _durability = 3;
-        hitArea = DistanceAreaData.HitArea.Body;
+        hitArea = HitArea.Body;
     }
 }

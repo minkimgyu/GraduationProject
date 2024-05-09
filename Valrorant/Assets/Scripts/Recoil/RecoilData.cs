@@ -2,64 +2,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Newtonsoft.Json;
+
+[Serializable]
+public struct SerializableVector2
+{
+    public SerializableVector2(float x, float y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public float x;
+    public float y;
+
+    [JsonIgnore]
+    public Vector3 V2 { get { return new Vector3(x, y); } }
+}
 
 [Serializable]
 abstract public class BaseRecoilData
 {
-    public BaseRecoilData(string name, float recoveryDuration, float distanceFromTarget, float ratioBetweenTargetAndDistance)
+    public BaseRecoilData(string name, float distanceFromTarget, float ratioBetweenTargetAndDistance)
     {
         _name = name;
-        _recoveryDuration = recoveryDuration;
         _distanceFromTarget = distanceFromTarget;
         _ratioBetweenTargetAndDistanceInPixel = ratioBetweenTargetAndDistance;
     }
 
-    [SerializeField] string _name;
-    public string Name { get { return _name; } }
+    public string _name;
+    [JsonIgnore] public string Name { get { return _name; } }
 
-    [SerializeField] float _recoveryDuration;
-    public float RecoveryDuration { get { return _recoveryDuration; } }
+    public float _distanceFromTarget;
+    [JsonIgnore] public float DistanceFromTarget { get { return _distanceFromTarget; } }
 
-    [SerializeField] protected float _distanceFromTarget;
-    public float DistanceFromTarget { get { return _distanceFromTarget; } }
+    public float _ratioBetweenTargetAndDistanceInPixel;
+    [JsonIgnore] public float RatioBetweenTargetAndDistanceInPixel { get { return _ratioBetweenTargetAndDistanceInPixel; } }
 
-    [SerializeField] protected float _ratioBetweenTargetAndDistanceInPixel;
-    public float RatioBetweenTargetAndDistanceInPixel { get { return _ratioBetweenTargetAndDistanceInPixel; } }
-
-    protected Vector2 ReturnAngleBetweenCenterAndPoint(Vector2 point)
+    protected SerializableVector2 ReturnAngleBetweenCenterAndPoint(SerializableVector2 point)
     {
         float toDegree = (float)(180.0f / Math.PI);
 
         float xAngle = (float)Math.Atan2(point.x * _ratioBetweenTargetAndDistanceInPixel, _distanceFromTarget) * toDegree;
         float yAngle = (float)Math.Atan2(point.y * _ratioBetweenTargetAndDistanceInPixel, _distanceFromTarget) * toDegree;
 
-        return new Vector2(xAngle, yAngle);
+        return new SerializableVector2(xAngle, yAngle);
     }
 }
 
 [Serializable]
 public class RecoilMapData : BaseRecoilData
 {
-    public RecoilMapData(string name, float recoveryDuration, float distanceFromTarget, float ratioBetweenTargetAndDistance, int selectedIndex, int repeatIndex, List<Vector2> points)
-        : base(name, recoveryDuration, distanceFromTarget, ratioBetweenTargetAndDistance)
+    public RecoilMapData(string name, float distanceFromTarget, float ratioBetweenTargetAndDistance, int selectedIndex, int repeatIndex, List<SerializableVector2> points)
+        : base(name, distanceFromTarget, ratioBetweenTargetAndDistance)
     {
         _selectedIndex = selectedIndex;
         _repeatIndex = repeatIndex;
         _points = points;
     }
 
-    [SerializeField] int _selectedIndex;
-    public int SelectedIndex { get { return _selectedIndex; } }
+    public int _selectedIndex;
+    [JsonIgnore] public int SelectedIndex { get { return _selectedIndex; } }
 
-    [SerializeField] int _repeatIndex;
-    public int RepeatIndex { get { return _repeatIndex; } }
+    public int _repeatIndex;
+    [JsonIgnore] public int RepeatIndex { get { return _repeatIndex; } }
 
-    [SerializeField] List<Vector2> _points;
-    public List<Vector2> Points { get { return _points; } } // --> point¿”
+    public List<SerializableVector2> _points;
+    [JsonIgnore] public List<SerializableVector2> Points { get { return _points; } } // --> point¿”
 
-    public List<Vector2> ReturnAllAnglesBetweenCenterAndPoint()
+    public List<SerializableVector2> ReturnAllAnglesBetweenCenterAndPoint()
     {
-        List<Vector2> tmpList = new List<Vector2>();
+        List<SerializableVector2> tmpList = new List<SerializableVector2>();
         for (int i = 0; i < _points.Count; i++)
         {
             tmpList.Add(ReturnAngleBetweenCenterAndPoint(_points[i]));
@@ -72,16 +85,16 @@ public class RecoilMapData : BaseRecoilData
 [Serializable]
 public class RecoilRangeData : BaseRecoilData
 {
-    public RecoilRangeData(string name, float recoveryDuration, float distanceFromTarget, float ratioBetweenTargetAndDistance, Vector2 point)
-        : base(name, recoveryDuration, distanceFromTarget, ratioBetweenTargetAndDistance)
+    public RecoilRangeData(string name, float distanceFromTarget, float ratioBetweenTargetAndDistance, SerializableVector2 point)
+        : base(name, distanceFromTarget, ratioBetweenTargetAndDistance)
     {
         _point = point;
     }
 
-    [SerializeField] Vector2 _point;
-    public Vector2 Point { get { return _point; } }
+    public SerializableVector2 _point;
+    [JsonIgnore] public SerializableVector2 Point { get { return _point; } }
 
-    public Vector2 ReturnFixedPoint()
+    public SerializableVector2 ReturnFixedPoint()
     {
         return ReturnAngleBetweenCenterAndPoint(_point);
     }

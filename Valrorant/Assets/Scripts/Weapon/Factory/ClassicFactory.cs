@@ -31,7 +31,7 @@ public class ClassicData : GunData
     public float bulletSpreadPowerRatio;
     public float bulletSpreadPowerDecreaseRatio;
 
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary;
+    public Dictionary<HitArea, DistanceAreaData[]> damageDictionary;
 }
 
 public class ClassicFactory : WeaponFactory<ClassicData>

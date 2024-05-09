@@ -7,8 +7,6 @@ using System;
 
 namespace Shop
 {
-   
-
     public struct ItemData
     {
         public enum Type

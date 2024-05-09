@@ -6,51 +6,38 @@ using System;
 
 public class Guardian : VariationGun
 {
-    [SerializeField] protected float _shootInterval;
+    public override void Initialize(GuardianData data, RecoilRangeData recoilData)
+    {
+        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
+        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
 
-    [SerializeField] protected float _zoomDuration;
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new ManualEvent(EventType.Main, data.fireIntervalWhenZoomIn, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
-    [SerializeField] protected int _fireAmmoCnt;
+        _eventStorage.Add(new(EventType.Main, Conditon.ZoomOut)
+            , new ManualEvent(EventType.Main, data.fireIntervalWhenZoomOut, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
-    [SerializeField] protected float _penetratePower;
-
-    [SerializeField] protected float _displacementSpreadMultiplyRatio = 1;
-
-    [SerializeField] WeightApplier _weightApplier;
-
-
-    [SerializeField] protected Vector3 _cameraPositionWhenZoom;
-
-    [SerializeField] protected float _normalFieldOfView;
-
-    [SerializeField] protected float _zoomFieldOfView;
+        _eventStorage.Add(new(EventType.Sub, Conditon.Both)
+            , new ManualEvent(EventType.Sub, data.zoomDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
 
 
-    [SerializeField] protected float _recoveryDuration;
+        _actionStorage.Add(new(EventType.Main, Conditon.Both),
+            new SingleProjectileAttackWithWeight(data.weaponName, data.range, _targetLayer, data.fireCnt,
+            data.penetratePower, data.displacementSpreadMultiplyRatio, data.mainWeightApplier, data.damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
 
-    [SerializeField] protected float _recoilRatioWhenZoomOut = 1.0f;
-
-
-    protected Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> _damageDictionary;
-
-    //protected override void AddStrategies()
-    //{
-    //    //_eventStrategies[BaseStrategy.Type.Main] = new AutoEvent(BaseStrategy.Type.Main, _shootInterval);
-    //    //_eventStrategies[BaseStrategy.Type.Sub] = new ManualEvent(BaseStrategy.Type.Sub, _zoomDuration);
-
-    //    //_actionStrategies[BaseStrategy.Type.Main] = new SingleProjectileAttackWithWeight(BaseStrategy.Type.Main, _weaponName, _range, _targetLayer, _fireAmmoCnt,
-    //    //    _penetratePower, _displacementSpreadMultiplyRatio, _weightApplier, _damageDictionary, OnPlayOwnerAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
-    //    //    SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest);
-    //    //_actionStrategies[BaseStrategy.Type.Sub] = new ZoomStrategy(BaseStrategy.Type.Sub, _cameraPositionWhenZoom, _zoomDuration, _normalFieldOfView, _zoomFieldOfView, OnZoomRequested);
+        _actionStorage.Add(new(EventType.Sub, Conditon.Both),
+            new ZoomStrategy(data.cameraPositionWhenZoom.V3, data.zoomDuration, data.normalFieldOfView, data.zoomFieldOfView, OnZoomRequested));
 
 
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomIn),
+            new ManualRecoilGenerator(data.fireIntervalWhenZoomIn, data.recoveryDuration, recoilData));
 
-    //    //_recoilStrategies[BaseStrategy.Type.Main] = new NoRecoilGenerator(BaseStrategy.Type.Main); // --> 수정해주기
-    //    //_recoilStrategies[BaseStrategy.Type.Sub] = new NoRecoilGenerator(BaseStrategy.Type.Sub);
+        _recoilStorage.Add(new(EventType.Main, Conditon.ZoomOut),
+           new ManualRecoilGenerator(data.fireIntervalWhenZoomOut, data.recoveryDuration, recoilData));
 
-    //    //_reloadStrategy = new MagazineReload(_weaponName, _reloadFinishDuration, _reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnPlayOwnerAnimation, OnReloadRequested);
+        _recoilStorage.Add(new(EventType.Sub, Conditon.Both), new NoRecoilGenerator());
 
-    //    //_storedMainRecoilWhenZoomIn = new ManualRecoilGenerator(BaseStrategy.Type.Main, _shootInterval, _recoveryDuration, new RecoilRangeData());
-    //    //_storedMainRecoilWhenZoomOut = new AutoRecoilGenerator(BaseStrategy.Type.Main, _shootInterval, _recoveryDuration, _recoilRatioWhenZoomOut, new RecoilMapData());
-    //}
+        _reloadStrategy = new MagazineReload(data.weaponName, data.reloadFinishDuration, data.reloadExitDuration, data.maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
+    }
 }

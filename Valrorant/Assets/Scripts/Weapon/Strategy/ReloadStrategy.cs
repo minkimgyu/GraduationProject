@@ -8,7 +8,7 @@ abstract public class ReloadStrategy : BaseStrategy
 {
     public ReloadStrategy() : base() { }
 
-    public virtual void Execute(int ammoCountInMagazine, int ammoCountInPossession) { }
+    public virtual void Execute(bool isTPS, int ammoCountInMagazine, int ammoCountInPossession) { }
 
 
     /// <summary>
@@ -128,7 +128,7 @@ public class MagazineReload : BaseReload
         _reloadDuration = reloadDuration;
     }
 
-    public override void Execute(int ammoCountInMagazine, int ammoCountInPossession) 
+    public override void Execute(bool isTPS, int ammoCountInMagazine, int ammoCountInPossession) 
     {
         _ammoCountInMagazine = ammoCountInMagazine;
         _ammoCountsInPossession = ammoCountInPossession;
@@ -139,7 +139,9 @@ public class MagazineReload : BaseReload
         _reloadExitTimer.Reset(); // 시작 전 리셋시켜주기
         _reloadExitTimer.Start(_reloadExitDuration);
 
-        PlayAnimation("Reload");
+        string reloadString = "Reload";
+        if (isTPS) reloadString = "TPS" + reloadString;
+        PlayAnimation(reloadString);
     }
 
     public override void OnUpdate() 
@@ -201,7 +203,7 @@ public class RoundByRoundReload : BaseReload
     public override bool CanCancelReloadingByLeftClick() { return Input.GetMouseButtonDown(0); }
     public override bool CanCancelReloadingByRightClick() { return Input.GetMouseButtonDown(1); }
 
-    public override void Execute(int ammoCountInMagazine, int ammoCountInPossession) // maxAmmoCountInMagazine 이건 생성자에서 받기
+    public override void Execute(bool isTPS, int ammoCountInMagazine, int ammoCountInPossession) // maxAmmoCountInMagazine 이건 생성자에서 받기
     {
         _ammoCountInMagazine = ammoCountInMagazine;
         _ammoCountsInPossession = ammoCountInPossession;
@@ -253,7 +255,6 @@ public class RoundByRoundReload : BaseReload
             {
                 CalculateAmmoWhenReload();
                 _storedReloadRatio += _reloadRatio;
-
                 PlayAnimation("AfterReload");
             }
         }
@@ -261,6 +262,8 @@ public class RoundByRoundReload : BaseReload
 
     public override void OnCancelReload()
     {
+        PlayAnimation("EndReload");
+
         _storedReloadRatio = 0;
         _reloadBeforeTimer.Reset();
         _reloadTimer.Reset();

@@ -26,10 +26,11 @@ public class StingerData : GunData
 
     public float normalFieldOfView;
     public float zoomFieldOfView;
-    public Vector3 zoomCameraPosition;
+    public SerializableVector3 zoomCameraPosition;
 
-    public Dictionary<DistanceAreaData.HitArea, DistanceAreaData[]> damageDictionary;
     public WeightApplier weightApplier;
+
+    public Dictionary<HitArea, DistanceAreaData[]> damageDictionary;
 }
 
 public class StingerFactory : WeaponFactory<StingerData>
