@@ -6,6 +6,10 @@ using AI;
 
 public interface ICommandListener
 {
-    void GoToBuildFormationState(FormationData data);
+    void GoToBuildFormationState();
     void GoToFreeRoleState();
+
+    void ResetFormationData(FormationData data);
+
+    Vector3 ReturnPos(); // 위치 반환
 }

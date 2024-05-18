@@ -11,12 +11,33 @@ namespace Agent.Controller
     public class WeaponController : MonoBehaviour
     {
         [SerializeField] Transform _weaponParent;
-        [SerializeField] float _weaponThrowPower = 3;
+        float _weaponThrowPower;
 
         BaseWeapon _nowEquipedWeapon = null;
         Dictionary<BaseWeapon.Type, BaseWeapon> _weaponsContainer;
 
         WeaponEventBlackboard _eventBlackboard;
+
+        public enum InputState
+        {
+            Enable,
+            Disable
+        }
+
+        InputState _inputState;
+
+        public void TurnOnOffInput()
+        {
+            switch (_inputState)
+            {
+                case InputState.Enable:
+                    _inputState = InputState.Disable;
+                    break;
+                case InputState.Disable:
+                    _inputState = InputState.Enable;
+                    break;
+            }
+        }
 
         public enum State
         {
@@ -33,14 +54,25 @@ namespace Agent.Controller
         StateMachine<State> _weaponFSM;
         public Action<float> OnWeaponChangeRequested;
 
+        Action<BaseWeapon.Name, BaseWeapon.Type> AddPreview;
+        Action<BaseWeapon.Type> RemovePreview;
+
         Rigidbody _rigidbody;
         public float SendMoveDisplacement() { return _rigidbody.velocity.magnitude * 0.01f; }
 
         bool _isTPS; // TPS 모델인 경우
 
         // 여기에 이밴트 넣어서 WeaponEventBlackboard 이거 하당해주자
-        public void Initialize(bool isTPS, Action<bool, float, Vector3, float> OnZoomRequested, Action<string, int, float> OnPlayOwnerAnimation)
+        public void Initialize(float weaponThrowPower, bool isTPS, Action<bool, float, Vector3, float> OnZoomRequested, 
+            Action<string, int, float> OnPlayOwnerAnimation, Action<bool, int, int> OnShowRounds = null,
+            Action<BaseWeapon.Name, BaseWeapon.Type> AddPreview = null, Action<BaseWeapon.Type> RemovePreview = null)
         {
+            this.AddPreview = AddPreview;
+            this.RemovePreview = RemovePreview;
+
+            _inputState = InputState.Enable;
+
+            _weaponThrowPower = weaponThrowPower;
             _isTPS = isTPS;
 
             _weaponsContainer = new Dictionary<BaseWeapon.Type, BaseWeapon>();
@@ -53,66 +85,61 @@ namespace Agent.Controller
                recoilReceiver.OnRecoilRequested,
                OnPlayOwnerAnimation,
                recoilReceiver.ReturnRaycastPos,
-               recoilReceiver.ReturnRaycastDir
+               recoilReceiver.ReturnRaycastDir,
+               OnShowRounds
            );
 
             InitializeWeapons();
             InitializeFSM();
         }
 
+        public void RefillAmmo()
+        {
+            foreach (var weapon in _weaponsContainer)
+            {
+                weapon.Value.RefillAmmo();
+            }
+        }
+
         void InitializeWeapons()
         {
-            WeaponPlant weaponPlant = FindObjectOfType<WeaponPlant>();
+            WeaponPlant plant = FindObjectOfType<WeaponPlant>();
 
+            BaseWeapon lmg = plant.Create(BaseWeapon.Name.AR);
+            lmg.transform.SetParent(_weaponParent);
 
-            BaseWeapon ak = weaponPlant.CreateWeapon(BaseWeapon.Name.LMG);
-            ak.transform.SetParent(_weaponParent);
-            ak.transform.localPosition = Vector3.zero;
-            ak.transform.localRotation = Quaternion.identity;
-            ak.transform.localScale = Vector3.one;
+            lmg.OnRooting(_eventBlackboard);
+            AddWeaponToContainer(lmg);
 
-            ak.OnRooting(_eventBlackboard);
-            ak.gameObject.SetActive(false);
-            _weaponsContainer.Add(ak.WeaponType, ak);
-
-
-
-            BaseWeapon pistol = weaponPlant.CreateWeapon(BaseWeapon.Name.Pistol);
+            BaseWeapon pistol = plant.Create(BaseWeapon.Name.SMG);
             pistol.transform.SetParent(_weaponParent);
-            pistol.transform.localPosition = Vector3.zero;
-            pistol.transform.localRotation = Quaternion.identity;
-            pistol.transform.localScale = Vector3.one;
-
 
             pistol.OnRooting(_eventBlackboard);
-            pistol.gameObject.SetActive(false);
-            _weaponsContainer.Add(pistol.WeaponType, pistol);
+            AddWeaponToContainer(pistol);
 
-
-
-
-            BaseWeapon knife = weaponPlant.CreateWeapon(BaseWeapon.Name.Knife);
+            BaseWeapon knife = plant.Create(BaseWeapon.Name.Knife);
             knife.transform.SetParent(_weaponParent);
-            knife.transform.localPosition = Vector3.zero;
-            knife.transform.localRotation = Quaternion.identity;
-            knife.transform.localScale = Vector3.one;
 
             knife.OnRooting(_eventBlackboard);
-            knife.gameObject.SetActive(false);
-
-            _weaponsContainer.Add(knife.WeaponType, knife);
+            AddWeaponToContainer(knife);
         }
 
 
         Transform ReturnWeaponParent() { return _weaponParent; }
         BaseWeapon ReturnEquipedWeapon() { return _nowEquipedWeapon; }
-        void ResetEquipedWeapon(BaseWeapon weapon) { _nowEquipedWeapon = weapon; }
 
-        bool IsContainerHasSameType(BaseWeapon.Type weaponType) { return _weaponsContainer.ContainsKey(weaponType) == false; }
+        public bool IsAmmoEmpty() 
+        {
+            if (_nowEquipedWeapon == null) return false;
+
+            return _nowEquipedWeapon.IsAmmoEmpty(); 
+        }
+
+        void ResetEquipedWeapon(BaseWeapon weapon) { _nowEquipedWeapon = weapon; }
 
         void SwitchToNewWeapon(BaseWeapon newWeapon)
         {
-            if (IsContainerHasSameType(newWeapon.WeaponType))
+            if (_weaponsContainer.ContainsKey(newWeapon.WeaponType) == true)
             {
                 _weaponFSM.SetState(State.Drop, "DropSameTypeWeaponAndRootNewWeapon", newWeapon);
             }
@@ -132,21 +159,59 @@ namespace Agent.Controller
 
         WeaponEventBlackboard ReturnEventBlackboard() { return _eventBlackboard; }
 
-        void RemoveWeaponInContainer(BaseWeapon.Type type) { _weaponsContainer.Remove(type); }
+        void RemoveWeaponInContainer(BaseWeapon.Type type) 
+        { 
+            _weaponsContainer.Remove(type);
+            RemovePreview?.Invoke(type);
+        }
 
-        void AddWeaponToContainer(BaseWeapon weapon) { _weaponsContainer.Add(weapon.WeaponType, weapon); }
+        void AddWeaponToContainer(BaseWeapon weapon) 
+        { 
+            _weaponsContainer.Add(weapon.WeaponType, weapon);
+            AddPreview?.Invoke(weapon.WeaponName, weapon.WeaponType);
+            Debug.Log(weapon.WeaponType);
+        }
 
-        BaseWeapon ReturnSameTypeWeapon(BaseWeapon.Type type) { return _weaponsContainer[type]; }
+        public BaseWeapon ReturnSameTypeWeapon(BaseWeapon.Type type) 
+        {
+            if (_weaponsContainer.ContainsKey(type) == false) return null;
+            return _weaponsContainer[type]; 
+        }
 
         bool HaveSameTypeWeapon(BaseWeapon.Type type) { return _weaponsContainer.ContainsKey(type); }
 
         ///
-        public void OnHandleEquip(BaseWeapon.Type type) => _weaponFSM.OnHandleEquip(type);
-        public void OnHandleEventStart(BaseWeapon.EventType type) => _weaponFSM.OnHandleEventStart(type);
-        public void OnHandleEventEnd() => _weaponFSM.OnHandleEventEnd();
+        public void OnHandleEquip(BaseWeapon.Type type)
+        {
+            if (_inputState == InputState.Disable) return;
 
-        public void OnHandleReload() => _weaponFSM.OnHandleReload();
-        public void OnHandleDrop() => _weaponFSM.OnHandleDrop();
+            _weaponFSM.OnHandleEquip(type);
+        }
+        public void OnHandleEventStart(BaseWeapon.EventType type)
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _weaponFSM.OnHandleEventStart(type);
+        }
+        public void OnHandleEventEnd()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _weaponFSM.OnHandleEventEnd();
+        }
+
+        public void OnHandleReload()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _weaponFSM.OnHandleReload();
+        }
+        public void OnHandleDrop()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _weaponFSM.OnHandleDrop();
+        }
 
         void InitializeFSM()
         {
@@ -163,8 +228,8 @@ namespace Agent.Controller
             BaseState rightAction = new RightActionState(SetState, ReturnEquipedWeapon);
 
             BaseState root = new RootState(SetState, SetState, AddWeaponToContainer, ReturnEquipedWeapon, ReturnWeaponParent, ReturnEventBlackboard);
-            BaseState drop = new DropState(_weaponThrowPower, RevertToPreviousState, RemoveWeaponInContainer, SetState, SetState, ReturnEquipedWeapon, HaveSameTypeWeapon,
-                ReturnSameTypeWeapon, ReturnEventBlackboard);
+            BaseState drop = new DropState(_weaponThrowPower, RevertToPreviousState, SetState, SetState, ReturnEquipedWeapon, 
+                ResetEquipedWeapon, RemoveWeaponInContainer, HaveSameTypeWeapon, ReturnSameTypeWeapon, ReturnEventBlackboard);
 
             weaponStates.Add(State.Idle, idle);
             weaponStates.Add(State.Equip, equip);

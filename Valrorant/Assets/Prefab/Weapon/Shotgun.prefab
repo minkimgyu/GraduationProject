@@ -247,7 +247,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.072393596, y: 0.22669896, z: 0.8989032}
   m_Center: {x: -0.0008868575, y: 0.03, z: 0.38399002}
@@ -290,40 +290,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed5c231f3b6f1e45a6c8fa29b8afc2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 100
   _weaponName: 5
-  _weaponType: 1
-  _equipFinishTime: 1.3
+  _weaponType: 0
   _weaponWeight: 1.5
   _muzzleFlash: {fileID: 1213072288788725991}
   _emptyCartridgeSpawner: {fileID: 7325781475754608689}
   _muzzle: {fileID: 2742369107316689394}
-  _maxAmmoCountInMagazine: 5
-  _maxAmmoCountsInPossession: 10
   _ammoCountsInMagazine: 0
   _ammoCountsInPossession: 0
-  _reloadFinishDuration: 0
-  _reloadExitDuration: 0
   _objectMesh: {fileID: 229616588926488093}
-  _mainFireInterval: 0
-  _subFireInterval: 0
-  _mainFireCnt: 0
-  _subFireCnt: 0
-  _recoveryDuration: 0
-  _penetratePower: 0
-  _pelletCount: 15
-  _spreadOffset: 0.1
-  _bulletSpreadPowerDecreaseRatio: 0.1
-  _reloadBeforeDuration: 0.13
-  _frontDistance: 0
-  _explosionEffectName: ExplosionEffect
-  _subActionPelletCount: 5
-  _subScatterActionBulletSpreadPowerDecreaseRatio: 0.1
-  _subSingleActionBulletSpreadPowerDecreaseRatio: 0.1
-  _subActionSpreadOffset: 0.05
-  _subActionSinglePenetratePower: 15
-  _subActionScatterPenetratePower: 15
-  _findRange: 5
 --- !u!1 &2726528579380043919
 GameObject:
   m_ObjectHideFlags: 0

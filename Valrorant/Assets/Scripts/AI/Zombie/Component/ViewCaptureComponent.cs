@@ -18,7 +18,7 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
         OnModifyData();
     }
 
-    bool canRaycastTarget(Vector3 sightPoint, Transform target)
+    bool CanRaycastTarget(Vector3 sightPoint, Transform target)
     {
         Vector3 dir = (sightPoint - _sightPoint.position).normalized;
 
@@ -30,27 +30,39 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
         else return false;
     }
 
-    bool isInAngle(float angle) { return angle <= _captureAngle / 2 && -_captureAngle / 2 <= angle; }
+    bool IsInAngle(float angle) { return angle <= _captureAngle / 2 && -_captureAngle / 2 <= angle; }
 
     // ReturnTargetInSight 사용시 IsTargetInSight 우선 사용
     public ISightTarget ReturnTargetInSight() { return _storedTarget; }
+
+    public List<ISightTarget> ReturnAllTargets() { return _capturedTargets; }
+
+    void RemoveTarget(int index)
+    {
+        _capturedTargets.RemoveAt(index);
+    }
 
     public bool IsTargetInSight()
     {
         if (_capturedTargets.Count == 0) return false;
 
+
         for (int i = 0; i < _capturedTargets.Count; i++)
         {
-            if (_capturedTargets[i] == null) continue;
+            if (_capturedTargets[i].IsUntrackable() == true)
+            {
+                RemoveTarget(i);
+                continue;
+            }
 
             Transform targetTransform = _capturedTargets[i].ReturnTransform();
             Transform sightPoint = _capturedTargets[i].ReturnSightPoint();
 
-            float angle = returnAngleBetween(targetTransform.position);
-            bool inInAngle = isInAngle(angle);
+            float angle = ReturnAngleBetween(targetTransform.position);
+            bool inInAngle = IsInAngle(angle);
             if (inInAngle == false) continue;
 
-            bool canRaycast = canRaycastTarget(sightPoint.position, targetTransform);
+            bool canRaycast = CanRaycastTarget(sightPoint.position, targetTransform);
             if (canRaycast == false) continue;
 
             _storedTarget = _capturedTargets[i];
@@ -60,7 +72,7 @@ public class ViewCaptureComponent : MovableTargetCaptureComponent<ISightTarget>
         return false;
     }
 
-    float returnAngleBetween(Vector3 targetPos)
+    float ReturnAngleBetween(Vector3 targetPos)
     {
         Vector3 dir = (new Vector3(targetPos.x, transform.position.y, targetPos.z) - transform.position).normalized;
         float angle = Vector3.Angle(transform.forward, dir);

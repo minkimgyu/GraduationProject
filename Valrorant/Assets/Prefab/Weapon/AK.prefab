@@ -19907,6 +19907,7 @@ Transform:
   - {fileID: 1838434614815562059}
   - {fileID: 7160458419396035743}
   - {fileID: 9221742752687820876}
+  - {fileID: 5558013369642934771}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &5005903373949005083
@@ -19991,7 +19992,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponName: 0
-  _weaponType: 1
+  _weaponType: 0
   _weaponWeight: 1.5
   _muzzleFlash: {fileID: 6138010244093628210}
   _emptyCartridgeSpawner: {fileID: 3781653716495308920}
@@ -19999,6 +20000,7 @@ MonoBehaviour:
   _ammoCountsInMagazine: 0
   _ammoCountsInPossession: 0
   _objectMesh: {fileID: 3176523970315810931}
+  _aimPoint: {fileID: 5558013369642934771}
 --- !u!1 &3738398229831790735
 GameObject:
   m_ObjectHideFlags: 0
@@ -25047,6 +25049,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &6173112474533276160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5558013369642934771}
+  m_Layer: 6
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5558013369642934771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6173112474533276160}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.1372, z: -0.088}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 19192491914421028}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6613651078473640647
 GameObject:
   m_ObjectHideFlags: 0

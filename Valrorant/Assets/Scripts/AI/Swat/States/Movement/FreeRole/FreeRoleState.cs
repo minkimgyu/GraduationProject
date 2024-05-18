@@ -19,11 +19,11 @@ namespace AI.SwatFSM
         }
 
         protected Tree _bt;
-        Action<Swat.MovementState, string, FormationData> SetState;
+        Action<Helper.MovementState> SetState;
 
         StateMachine<State> _fsm = new StateMachine<State>();
 
-        public FreeRoleState(Action<Swat.MovementState, string, FormationData> SetState, SwatMovementBlackboard blackboard)
+        public FreeRoleState(Action<Helper.MovementState> SetState, SwatMovementBlackboard blackboard)
         {
             this.SetState = SetState;
 
@@ -42,9 +42,9 @@ namespace AI.SwatFSM
             _fsm.OnUpdate();
         }
 
-        public override void OnHandleBuildFormation(FormationData data)
+        public override void OnHandleBuildFormation()
         {
-            SetState?.Invoke(Swat.MovementState.BuildingFormation, "BuildingFormation", data);
+            SetState?.Invoke(Helper.MovementState.BuildingFormation);
         }
     }
 }

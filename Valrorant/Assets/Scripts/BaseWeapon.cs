@@ -21,7 +21,6 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public enum Type
     {
-        None,
         Main,
         Sub,
         Melee
@@ -39,6 +38,7 @@ abstract public class BaseWeapon : MonoBehaviour
 
     [SerializeField] protected Type _weaponType;
 
+    public Name WeaponName { get { return _weaponName; } }
     public Type WeaponType { get { return _weaponType; } }
 
     protected int _targetLayer; // 공격 대상 레이어
@@ -57,8 +57,6 @@ abstract public class BaseWeapon : MonoBehaviour
     /// 무기의 애니메이션을 실행시킬 때 호출
     /// </summary>
     protected Action<string, int, float> OnPlayWeaponAnimation;
-
-    public Action<bool, int, int> OnRoundChangeRequested;
 
     [SerializeField] float _weaponWeight = 1;
     public float SlowDownRatioByWeaponWeight { get { return 1.0f / _weaponWeight; } }
@@ -103,7 +101,6 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public virtual void OnEquip()
     {
-        gameObject.SetActive(true);
         _weaponEventBlackboard.OnPlayOwnerAnimation?.Invoke(_weaponName + "Equip", -1, 0);
         OnPlayWeaponAnimation?.Invoke("Equip", -1, 0);
     }
@@ -111,12 +108,17 @@ abstract public class BaseWeapon : MonoBehaviour
     public virtual void OnUnEquip()
     {
         foreach (var action in _actionStrategies) action.Value.TurnOffZoomDirectly();
-        gameObject.SetActive(false);
     }
 
 
     public virtual void OnRooting(WeaponEventBlackboard blackboard)  // 
     {
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        transform.localScale = Vector3.one;
+
+        gameObject.SetActive(false);
+
         _weaponEventBlackboard = blackboard;
         foreach (var actions in _actionStrategies) actions.Value.LinkEvent(blackboard);
         foreach (var recoils in _recoilStrategies) recoils.Value.LinkEvent(blackboard);
@@ -138,6 +140,7 @@ abstract public class BaseWeapon : MonoBehaviour
         transform.SetParent(null);
     }
 
+    public virtual bool IsAmmoEmpty() { return true; }
 
     public virtual bool CanAutoReload() { return false; }
 
@@ -147,6 +150,7 @@ abstract public class BaseWeapon : MonoBehaviour
     // 내부에 전략패턴 넣어서 구현해주기
     public virtual void OnReload(bool isTPS) { }
 
+    public virtual void RefillAmmo() { }
 
     // 장전 하는 도중에 마우스 입력을 통한 장전 캔슬
     public bool CanCancelReloadAndGoToMainAction()

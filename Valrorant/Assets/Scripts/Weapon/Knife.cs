@@ -34,7 +34,7 @@ public class Knife : BaseWeapon
     public override void OnEquip()
     {
         base.OnEquip();
-        OnRoundChangeRequested?.Invoke(false, 0, 0);
+        _weaponEventBlackboard.OnShowRounds?.Invoke(false, 0, 0);
     }
 
     public override void Initialize(KnifeData data)

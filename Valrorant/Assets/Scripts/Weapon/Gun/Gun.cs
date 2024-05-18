@@ -32,8 +32,7 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     [SerializeField] protected int _ammoCountsInPossession;
 
-    [SerializeField]
-    Transform _objectMesh;
+    [SerializeField] Transform _objectMesh;
 
     BoxCollider _gunCollider;
     Rigidbody _gunRigidbody;
@@ -46,6 +45,10 @@ abstract public class Gun : BaseWeapon, IInteractable
     protected void SpawnEmptyCartridge() => _emptyCartridgeSpawner.Play();
     protected void SpawnMuzzleFlashEffect() => _muzzleFlash.Play();
 
+    public override bool IsAmmoEmpty()
+    {
+        return _ammoCountsInMagazine == 0 && _ammoCountsInPossession == 0;
+    }
 
     public void DecreaseAmmoCount(int _fireCountInOnce)
     {
@@ -75,7 +78,7 @@ abstract public class Gun : BaseWeapon, IInteractable
     {
         _ammoCountsInMagazine = ammoInMagazine;
         _ammoCountsInPossession = ammoInPossession;
-        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
     #endregion
@@ -116,7 +119,7 @@ abstract public class Gun : BaseWeapon, IInteractable
     public override void OnEquip()
     {
         base.OnEquip();
-        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
     #endregion;
@@ -151,11 +154,18 @@ abstract public class Gun : BaseWeapon, IInteractable
         OnGenerateNoiseRequest = noiseGenerator.GenerateNoise;
     }
 
+    public override void RefillAmmo() 
+    {
+        _ammoCountsInMagazine = _maxAmmoCountInMagazine;
+        _ammoCountsInPossession = _maxAmmoCountsInPossession;
+
+        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+    }
 
     protected override void OnAction(EventType type)
     {
         base.OnAction(type);
-        OnRoundChangeRequested?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
     }
 
     public void OnSightEnter()

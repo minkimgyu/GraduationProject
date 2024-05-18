@@ -29737,7 +29737,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.041787904, y: 0.20966238, z: 0.3560182}
   m_Center: {x: -0.00356617, y: -0.0146677, z: 0.1072782}
@@ -29780,35 +29780,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4e76d746249a41468da3c43940f3d18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _range: 100
   _weaponName: 4
-  _weaponType: 2
-  _equipFinishTime: 1.3
+  _weaponType: 1
   _weaponWeight: 1.25
   _muzzleFlash: {fileID: 2107759679256808453}
   _emptyCartridgeSpawner: {fileID: 8854378238840112560}
   _muzzle: {fileID: 1211931533362079851}
-  _maxAmmoCountInMagazine: 12
-  _maxAmmoCountsInPossession: 36
-  _reloadFinishTime: 1
-  _reloadExitTime: 1.515
+  _ammoCountsInMagazine: 0
+  _ammoCountsInPossession: 0
   _objectMesh: {fileID: 4282356685801140647}
-  _subAttackBulletCounts: 3
-  _spreadOffset: 0.05
-  _mainActionDelay: 0.1125
-  _subActionDelay: 0.037
-  _bulletSpreadPowerRatio: 1
-  _bulletSpreadPowerDecreaseRatio: 0.5
-  _mainWeightApplier:
-    storedWeight: 0
-    maxWeight: 0.05
-    weightMultiplier: 0.01
-    weightDecreation: 0.0001
-  _subWeightApplier:
-    storedWeight: 0
-    maxWeight: 0.05
-    weightMultiplier: 0.01
-    weightDecreation: 0.0001
 --- !u!1 &7831451600780340775
 GameObject:
   m_ObjectHideFlags: 0

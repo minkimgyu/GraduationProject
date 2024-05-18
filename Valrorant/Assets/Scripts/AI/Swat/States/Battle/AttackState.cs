@@ -8,11 +8,13 @@ namespace AI.SwatFSM
 {
     public class AttackState : State
     {
-        Action<Swat.BattleState> SetState;
+        Action<Helper.BattleState> SetState;
         Func<bool> IsTargetInSight;
 
         Action<BaseWeapon.EventType> EventStart;
         Action EventEnd;
+
+        Func<bool> IsAmmoEmpty;
 
         StopwatchTimer _attackTimer;
         StopwatchTimer _attackDelayTimer;
@@ -29,7 +31,7 @@ namespace AI.SwatFSM
         float _attackDuration;
         float _attackDelay;
 
-        public AttackState(Action<Swat.BattleState> SetState, SwatBattleBlackboard blackboard)
+        public AttackState(Action<Helper.BattleState> SetState, SwatBattleBlackboard blackboard)
         {
             _attackDuration = blackboard.AttackDuration;
             _attackDelay = blackboard.AttackDelay;
@@ -39,6 +41,8 @@ namespace AI.SwatFSM
             IsTargetInSight = blackboard.IsTargetInSight;
             EventStart = blackboard.EventStart;
             EventEnd = blackboard.EventEnd;
+
+            IsAmmoEmpty = blackboard.IsAmmoEmpty;
 
             _state = State.Idle;
 
@@ -57,7 +61,7 @@ namespace AI.SwatFSM
 
                     break;
                 case State.Action:
-
+                    
                     if (_attackTimer.CurrentState != StopwatchTimer.State.Finish) break;
 
                     _attackTimer.Reset();
@@ -80,13 +84,27 @@ namespace AI.SwatFSM
 
         }
 
-        public override void CheckStateChange()
+        public override void OnStateExit()
         {
-            bool isInSight = IsTargetInSight();
-            if (isInSight == true) return;
+            if (_state == State.Action) EventEnd?.Invoke();
 
             _state = State.Idle;
-            SetState(Swat.BattleState.Idle);
+            _attackTimer.Reset();
+            _attackDelayTimer.Reset();
+        }
+
+        public override void CheckStateChange()
+        {
+            // 여기서 무기 전환
+            // Idle로 보내서 장착 가능한 무기로 전환해준다.
+
+            bool isAmmoEmpty = IsAmmoEmpty();
+            bool isInSight = IsTargetInSight();
+            if (isAmmoEmpty == true || isInSight == false)
+            {
+                SetState(Helper.BattleState.Idle);
+                return;
+            }
         }
     }
 }

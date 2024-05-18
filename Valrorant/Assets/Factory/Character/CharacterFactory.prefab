@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &88631549948820520
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4316217940565530294}
+  - component: {fileID: 1616839313288294931}
+  m_Layer: 0
+  m_Name: CharacterFactory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4316217940565530294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88631549948820520}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1616839313288294931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 88631549948820520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea10995d348bf6945a48c5257d990f46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _characterDatas:
+    m_keys: 0100000002000000030000000400000000000000
+    m_values:
+    - _prefab: {fileID: 4395829357608308187, guid: 562fdab0276e02241a48022e3257ab80, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: fe9361fa1d5f518439e8cc02ec141e03, type: 3}
+    - _prefab: {fileID: 715688799584042555, guid: b82e097a25606604288efeb230c4a6fe, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: a6c267fe165c6cf41a5c84ffe0ce9543, type: 3}
+    - _prefab: {fileID: 4100824293043297564, guid: 6db37022d492770468b1500d0f5f410e, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: a6c267fe165c6cf41a5c84ffe0ce9543, type: 3}
+    - _prefab: {fileID: 1727277776090289925, guid: f5cfd008ad6f0744b8f2b7ea7b048dcf, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: a6c267fe165c6cf41a5c84ffe0ce9543, type: 3}
+    - _prefab: {fileID: 4020267693671052458, guid: f0061fe3b14a8264b85cacf98599dc6b, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 66def4f6c6a14f8419f1b074f047e62c, type: 3}

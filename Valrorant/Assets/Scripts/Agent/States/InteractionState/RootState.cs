@@ -65,7 +65,7 @@ namespace Agent.States
             RootWeapon();
             BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
-            if (_newWeapon != null && equipedWeapon.WeaponType == _newWeapon.WeaponType)
+            if (_newWeapon != null && equipedWeapon == null)
             {
                 SetStateAndSendType?.Invoke(WeaponController.State.Equip, "EquipWeapon", _newWeapon.WeaponType);
                 return;

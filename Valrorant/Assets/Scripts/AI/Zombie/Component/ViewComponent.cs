@@ -16,7 +16,7 @@ namespace AI.Component
 
         public void View(Vector3 dir)
         {
-            transform.forward = Vector3.Lerp(transform.forward, dir, Time.smoothDeltaTime * _speed);
+            transform.forward = Vector3.Lerp(transform.forward, dir, Time.deltaTime * _speed);
         }
 
         public override void ResetCamera()

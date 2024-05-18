@@ -14,12 +14,12 @@ namespace FSM
         public override void OnMessageReceived(string message, bool containSameType) { }
         public override void OnMessageReceived(string message, BaseWeapon newWeapon) { }
         public override void OnMessageReceived(string message, float multiplier) { }
-        public override void OnMessageReceived(string message, FormationData data) { }
 
         public override void OnStateFixedUpdate() { }
         public override void OnStateLateUpdate() { }
         public override void OnNoiseReceived() { }
         public override void OnDamaged(float damage) { }
+        public override void OnHeal(float hpPoint, float armorPoint) { }
 
         public override void OnStateCollisionEnter(Collision collision) { }
         public override void OnStateTriggerEnter(Collider collider) { }
@@ -48,7 +48,7 @@ namespace FSM
         public override void OnHandleEquipSubWeapon() { }
         public override void OnHandleEquipMeleeWeapon() { }
 
-        public override void OnHandleBuildFormation(FormationData data) { }
+        public override void OnHandleBuildFormation() { }
         public override void OnHandleFreeRole() { }
     }
 
@@ -58,13 +58,15 @@ namespace FSM
         public abstract void OnMessageReceived(string message, bool containSameType);
         public abstract void OnMessageReceived(string message, BaseWeapon newWeapon);
         public abstract void OnMessageReceived(string message, float multiplier);
-        public abstract void OnMessageReceived(string message, FormationData data);
 
         public abstract void CheckStateChange();
         public abstract void OnStateFixedUpdate();
         public abstract void OnStateLateUpdate();
         public abstract void OnNoiseReceived();
         public abstract void OnDamaged(float damage);
+        public abstract void OnHeal(float hpPoint, float armorPoint);
+
+
         public abstract void OnStateCollisionEnter(Collision collision);
         public abstract void OnStateTriggerEnter(Collider collider);
         public abstract void OnStateTriggerExit(Collider collider);
@@ -93,7 +95,7 @@ namespace FSM
         public abstract void OnHandleEquipSubWeapon();
         public abstract void OnHandleEquipMeleeWeapon();
 
-        public abstract void OnHandleBuildFormation(FormationData index);
+        public abstract void OnHandleBuildFormation();
         public abstract void OnHandleFreeRole();
     }
 
@@ -107,6 +109,12 @@ namespace FSM
         {
             if (_currentState == null) return;
             _currentState.OnDamaged(damage);
+        }
+
+        public void OnHeal(float hpPoint, float armorPoint)
+        {
+            if (_currentState == null) return;
+            _currentState.OnHeal(hpPoint, armorPoint);
         }
 
         public void OnWeaponReceived(BaseWeapon weapon)
@@ -228,10 +236,10 @@ namespace FSM
             _currentState.OnHandleInteract();
         }
 
-        public void OnHandleBuildFormation(FormationData index)
+        public void OnHandleBuildFormation()
         {
             if (_currentState == null) return;
-            _currentState.OnHandleBuildFormation(index);
+            _currentState.OnHandleBuildFormation();
         }
 
         public void OnHandleFreeRole()
@@ -283,12 +291,6 @@ namespace FSM
         {
             _currentStateName = stateName;
             return ChangeState(_stateDictionary[stateName], message, weapon);
-        }
-
-        public bool SetState(T stateName, string message, FormationData data)
-        {
-            _currentStateName = stateName;
-            return ChangeState(_stateDictionary[stateName], message, data);
         }
 
         #endregion
@@ -392,32 +394,6 @@ namespace FSM
             if (_currentState != null) //새 상태의 Enter를 호출한다.
             {
                 _currentState.OnMessageReceived(message, baseWeapon);
-                _currentState.OnStateEnter();
-            }
-
-            return true;
-        }
-
-        bool ChangeState(BaseState state, string message, FormationData data)
-        {
-            if (_stateDictionary.ContainsValue(state) == false) return false;
-
-            if (_currentState == state) // 같은 State로 전환하지 못하게 막기
-            {
-                return false;
-            }
-
-            if (_currentState != null) //상태가 바뀌기 전에, 이전 상태의 Exit를 호출
-                _currentState.OnStateExit();
-
-            _previousState = _currentState;
-
-            _currentState = state;
-
-
-            if (_currentState != null) //새 상태의 Enter를 호출한다.
-            {
-                _currentState.OnMessageReceived(message, data);
                 _currentState.OnStateEnter();
             }
 

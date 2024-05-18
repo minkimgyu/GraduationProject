@@ -30,7 +30,7 @@ namespace AI.ZombieFSM
 
         public override void OnStateEnter()
         {
-            Debug.Log("RotateState");
+            //Debug.Log("RotateState");
 
             float angle = Random.Range(0f, 360f);
             _circlePos = ReturnCirclePositionAround(angle);

@@ -12,7 +12,7 @@ abstract public class BaseDrawer : MonoBehaviour
     public virtual void ResetData(float angle, float radius) { }
     public virtual void ResetData(float radius, Vector3 distance) { }
 
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         Gizmos.color = color;
         DrawGizmo();

@@ -53,7 +53,8 @@ namespace Agent.States
             }
 
             ResetTarget(newTarget);
-            oldTarget.OnSightEnter();
+
+            if (oldTarget != null) oldTarget.OnSightEnter();
         }
 
         public override void OnStateTriggerExit(Collider collision)
@@ -61,7 +62,7 @@ namespace Agent.States
             if (CanInteract() == false) return;
 
             IInteractable oldTarget = ReturnTarget();
-            oldTarget.OnSightExit();
+            if (oldTarget != null) oldTarget.OnSightExit();
         }
     }
 

@@ -106,6 +106,7 @@ abstract public class BaseReload : ReloadStrategy
 
     protected void PlayAnimation(string aniName)
     {
+        Debug.Log(aniName);
         OnPlayWeaponAnimation?.Invoke(aniName, -1, 0);
         OnPlayOwnerAnimation?.Invoke(_weaponName.ToString() + aniName, -1, 0);
     }

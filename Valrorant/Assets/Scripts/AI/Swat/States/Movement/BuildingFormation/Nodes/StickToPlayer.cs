@@ -8,35 +8,43 @@ namespace BehaviorTree.Nodes
 {
     public class StickToPlayer : Node
     {
-        Func<ISightTarget> ReturnPlayer;
+        Func<Vector3> ReturnPlayerPos;
         Func<Vector3, int, Vector3> ReturnNodePos;
-        Action<Vector3, bool> FollowPath;
+        Action<Vector3, List<Vector3>, bool> FollowPath;
 
-        Action<Vector3> View;
         Func<FormationData> ReturnFormationData;
-
-        Transform _myTransform;
         float _radius;
 
-        public StickToPlayer(Transform myTransform, float radius, Func<ISightTarget> ReturnPlayer, Func<Vector3, int, Vector3> ReturnNodePos,
-            Action<Vector3, bool> FollowPath, Action<Vector3> View, Func<FormationData> ReturnFormationData)
+        Vector3 _posOffset;
+
+        float _offset = 3f;
+        float _offsetChangeDuration = 5f;
+        StopwatchTimer _timer;
+
+        Func<List<ISightTarget>> ReturnAllTargetInLargeSight;
+
+        public StickToPlayer(float radius, float offset, float offsetChangeDuration,  Func<Vector3> ReturnPlayerPos, Func<Vector3, int, Vector3> ReturnNodePos,
+            Action<Vector3, List<Vector3>, bool> FollowPath, Action<Vector3> View, Func<FormationData> ReturnFormationData, Func<List<ISightTarget>> ReturnAllTargetInLargeSight)
         {
-            _myTransform = myTransform;
+            _timer = new StopwatchTimer();
+            _posOffset = Vector3.zero;
+
+            _offset = offset;
+            _offsetChangeDuration = offsetChangeDuration;
             _radius = radius;
 
-            this.ReturnPlayer = ReturnPlayer;
+            this.ReturnPlayerPos = ReturnPlayerPos;
 
             this.ReturnNodePos = ReturnNodePos;
             this.FollowPath = FollowPath;
             this.ReturnFormationData = ReturnFormationData;
+
+            this.ReturnAllTargetInLargeSight = ReturnAllTargetInLargeSight;
         }
 
         Vector3 ReturnCirclePos()
         {
-            ISightTarget target = ReturnPlayer();
-
-            Vector3 playerPos = target.ReturnPos();
-
+            Vector3 playerPos = ReturnPlayerPos();
             FormationData data = ReturnFormationData();
 
             float offset = 360f / data.MaxCount;
@@ -50,17 +58,50 @@ namespace BehaviorTree.Nodes
             return new Vector3(x, playerPos.y, z);
         }
 
+        void ResetPosOffset()
+        {
+            _timer.Start(_offsetChangeDuration);
+            if (_timer.CurrentState == StopwatchTimer.State.Finish)
+            {
+                float randomPosX = UnityEngine.Random.Range(-_offset, _offset);
+                float randomPosZ = UnityEngine.Random.Range(-_offset, _offset);
+
+                _posOffset = new Vector3(randomPosX, 0, randomPosZ);
+
+                _timer.Reset();
+                _timer.Start(_offsetChangeDuration);
+            }
+        }
+
         public override NodeState Evaluate()
         {
+            ResetPosOffset();
+
+            List<Vector3> nearHelperPos = new List<Vector3>();
+
+            FormationData data = ReturnFormationData();
+            for (int i = 0; i < data.Listeners.Count; i++)
+            {
+                if (i == data.Index) continue;
+                nearHelperPos.Add(data.Listeners[i].ReturnPos());
+            }
+
+            Vector3 playerPos = ReturnPlayerPos();
+            nearHelperPos.Add(playerPos);
+
+            List<ISightTarget> targets = ReturnAllTargetInLargeSight();
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i].IsUntrackable() == true) continue;
+
+                nearHelperPos.Add(targets[i].ReturnPos());
+            }
+
             // 공격 중 후퇴의 경우 View를 돌리지 않음
             Vector3 circlePos = ReturnCirclePos();
-            Vector3 _targetPos = ReturnNodePos.Invoke(circlePos, 0);
-            FollowPath?.Invoke(_targetPos, false);
+            Vector3 _targetPos = ReturnNodePos.Invoke(circlePos + _posOffset, 0);
+            FollowPath?.Invoke(_targetPos, nearHelperPos, false);
 
-            //ISightTarget target = ReturnPlayer();
-            //Vector3 dir = (_myTransform.position - target.ReturnPos()).normalized;
-
-            //View?.Invoke(new Vector3(dir.x, 0, dir.z));
             return NodeState.SUCCESS;
         }
     }

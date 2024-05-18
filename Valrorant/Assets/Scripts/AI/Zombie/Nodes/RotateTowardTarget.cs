@@ -24,6 +24,8 @@ namespace BehaviorTree.Nodes
             Vector3 targetPos = target.ReturnPos();
 
             Vector3 dir = (targetPos - _sightPoint.position).normalized;
+            dir = new Vector3(dir.x, 0, dir.z);
+
             View?.Invoke(dir);
 
             return NodeState.SUCCESS;

@@ -10,12 +10,16 @@ namespace AI.Component
         Rigidbody _rigid;
         float _speed;
 
-        Action<string, bool> ResetAnimatorValue;
+        Action<string, float> ResetAnimatorValue;
+        Func<string, float> GetAnimatorValue;
+        Transform _sightPoint;
 
-        public void Initialize(float speed, Action<string, bool> ResetAnimatorValue)
+        public void Initialize(Transform sightPoint, float speed, Action<string, float> ResetAnimatorValue, Func<string, float> GetAnimatorValue)
         {
+            _sightPoint = sightPoint;
             _speed = speed;
             this.ResetAnimatorValue = ResetAnimatorValue;
+            this.GetAnimatorValue = GetAnimatorValue;
             _rigid = GetComponent<Rigidbody>();
         }
 
@@ -28,14 +32,26 @@ namespace AI.Component
 
         public void Move(Vector3 dir)
         {
-            _rigid.velocity = dir * _speed;
-            ResetAnimatorValue?.Invoke("NowMove", true);
+            transform.position = Vector3.Lerp(transform.position, transform.position + dir * _speed, Time.deltaTime);
+            //_rigid.velocity = Vector3.Lerp(_rigid.velocity, dir * _speed, Time.de);
+
+            //Vector3 changeDir = transform.TransformDirection(dir);
+            //Debug.DrawRay(transform.position, changeDir);
+
+            Vector3 changeDir = transform.InverseTransformDirection(dir);
+            Debug.DrawRay(transform.position, changeDir);
+
+            ResetAnimatorValue?.Invoke("Y", changeDir.z);
+            ResetAnimatorValue?.Invoke("X", changeDir.x);
         }
 
         public void Stop()
         {
-            _rigid.velocity = Vector3.zero;
-            ResetAnimatorValue?.Invoke("NowMove", false);
+            float xValue = GetAnimatorValue("X");
+            float yValue = GetAnimatorValue("Y");
+
+            ResetAnimatorValue?.Invoke("X", Mathf.Lerp(xValue, 0, Time.deltaTime * 5));
+            ResetAnimatorValue?.Invoke("Y", Mathf.Lerp(yValue, 0, Time.deltaTime * 5));
         }
     }
 }

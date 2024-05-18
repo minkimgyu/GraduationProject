@@ -49,7 +49,7 @@ namespace BehaviorTree.Nodes
 
         public override void OnDisableRequested()
         {
-            Debug.Log("OnDisableRequested");
+            //Debug.Log("OnDisableRequested");
             _captureTransform.localRotation = Quaternion.Euler(0, 0, 0);
         }
     }

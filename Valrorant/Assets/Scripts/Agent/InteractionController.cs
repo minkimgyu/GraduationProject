@@ -41,6 +41,9 @@ namespace Agent.Controller
 
         public void Initialize()
         {
+            WeaponController weaponController = GetComponentInParent<WeaponController>();
+            SendWeaponToController = weaponController.OnWeaponReceived;
+
             _interactionFSM = new StateMachine<State>();
             Dictionary<State, BaseState> interactionStates = new Dictionary<State, BaseState>();
 
@@ -52,9 +55,6 @@ namespace Agent.Controller
 
             _interactionFSM.Initialize(interactionStates);
             _interactionFSM.SetState(State.Ready);
-
-            WeaponController weaponController = GetComponentInParent<WeaponController>();
-            SendWeaponToController = weaponController.OnWeaponReceived;
         }
 
         private void OnTriggerEnter(Collider collider)

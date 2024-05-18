@@ -12,7 +12,12 @@ namespace AI.SwatFSM
 {
     public class ExploringState : State
     {
-        Func<bool> IsTargetInSight;
+        Func<bool> IsTargetInLargeSight;
+        Func<bool> IsTargetInSmallSight;
+
+        Action<float> ModifyLargeCaptureRadius;
+        Action<float> ModifySmallCaptureRadius;
+
         Action<FreeRoleState.State> SetState;
 
         protected Tree _bt;
@@ -24,12 +29,16 @@ namespace AI.SwatFSM
             WanderingFSM wanderingFSM = new WanderingFSM(blackboard.MyTransform, blackboard.WanderOffset,
                 blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, blackboard.Stop);
 
-            IsFarAwayToTarget isFarAway = new IsFarAwayToTarget(blackboard.MyTransform, blackboard.FarFromPlayerDistance, blackboard.FarFromPlayerDistanceOffset,
-                blackboard.ReturnPlayer, () => { wanderingFSM.FSM.SetState(WanderingFSM.State.Stop); });
+            IsFarAwayFromPlayer isFarAwayFromPlayer = new IsFarAwayFromPlayer(blackboard.MyTransform, blackboard.FarFromPlayerDistance, blackboard.FarFromPlayerDistanceOffset,
+                blackboard.ReturnPlayerPos);
 
             ChangeToRandomState changeState = new ChangeToRandomState(wanderingFSM.FSM.SetState);
 
-            this.IsTargetInSight = blackboard.IsTargetInSight;
+            this.IsTargetInLargeSight = blackboard.IsTargetInLargeSight;
+            this.IsTargetInSmallSight = blackboard.IsTargetInSmallSight;
+
+            ModifyLargeCaptureRadius = blackboard.ModifyLargeCaptureRadius;
+            ModifySmallCaptureRadius = blackboard.ModifySmallCaptureRadius;
 
             _bt = new Tree();
             List<Node> _childNodes;
@@ -49,8 +58,11 @@ namespace AI.SwatFSM
                                 (
                                     new List<Node>()
                                     {
-                                        isFarAway,
-                                        new Retreat(blackboard.ReturnPlayer, blackboard.ReturnNodePos, blackboard.FollowPath, true)
+                                        isFarAwayFromPlayer,
+
+                                        new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration,
+                                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                                        blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
                                     }
                                 ),
 
@@ -81,6 +93,12 @@ namespace AI.SwatFSM
             _bt.SetUp(rootNode);
         }
 
+        public override void OnStateEnter()
+        {
+            Debug.Log("ExploringState");
+        }
+
+
         public override void OnStateExit()
         {
             _bt.OnDisable();
@@ -88,8 +106,14 @@ namespace AI.SwatFSM
 
         public override void CheckStateChange()
         {
-            bool isInSight = IsTargetInSight();
-            if (isInSight == false) return;
+            bool isInSmallSight = IsTargetInSmallSight();
+            bool isInLargeSight = IsTargetInLargeSight();
+
+            if (isInSmallSight == false && isInLargeSight == false) return;
+
+            // captureComponent Å°¿öÁÜ
+            ModifyLargeCaptureRadius(2f);
+            ModifySmallCaptureRadius(2f);
 
             SetState?.Invoke(FreeRoleState.State.Combat);
         }

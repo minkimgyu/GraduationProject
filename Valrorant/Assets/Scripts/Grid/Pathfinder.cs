@@ -9,7 +9,7 @@ namespace Grid.Pathfinder
 
     public class Pathfinder : MonoBehaviour
     {
-        Func<Vector3Int, List<Vector3Int>> ReturnNearNodeIndexes;
+        Func<Vector3Int, HashSet<Vector3Int>, List<Vector3Int>> ReturnNearNodeIndexes;
         Func<Vector3, Vector3Int> ReturnNodeIndex;
 
         Func<Vector3Int, Node> ReturnNode;
@@ -46,7 +46,7 @@ namespace Grid.Pathfinder
         }
 
         // 가장 먼저 반올림을 통해 가장 가까운 노드를 찾는다.
-        public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos)
+        public List<Vector3> FindPath(Vector3 startPos, Vector3 targetPos, List<Vector3> CantPassPos = null)
         {
             //// 리스트 초기화
             _openList.Clear();
@@ -58,6 +58,21 @@ namespace Grid.Pathfinder
             Node startNode = FindPassNode(startIndex);
             Node endNode = FindPassNode(endIndex);
             _openList.Insert(startNode);
+
+            HashSet<Vector3Int> cantPassIndexes = new HashSet<Vector3Int>();
+            if (CantPassPos != null)
+            {
+                for (int i = 0; i < CantPassPos.Count; i++)
+                {
+                    Vector3Int cantPassIndex = ReturnNodeIndex(CantPassPos[i]);
+
+                    // 시작 인덱스와 같은 경우 패스함
+                    if (cantPassIndex == startIndex) continue;
+
+                    if (cantPassIndexes.Contains(cantPassIndex)) continue;
+                    cantPassIndexes.Add(ReturnNodeIndex(CantPassPos[i]));
+                }
+            }
 
             while (_openList.Count > 0)
             {
@@ -79,17 +94,17 @@ namespace Grid.Pathfinder
 
                 _openList.DeleteMin(); // 해당 그리드 지워줌
                 _closedList.Add(targetNode); // 해당 그리드 추가해줌
-                AddNearGridInList(targetNode, endNode.SurfacePos); // 주변 그리드를 찾아서 다시 넣어줌
+                AddNearGridInList(targetNode, endNode.SurfacePos, cantPassIndexes); // 주변 그리드를 찾아서 다시 넣어줌
             }
 
             // 이 경우는 경로를 찾지 못한 상황임
             return null;
         }
 
-        void AddNearGridInList(Node targetGrid, Vector3 targetGridPos)
+        void AddNearGridInList(Node targetGrid, Vector3 targetGridPos, HashSet<Vector3Int> cantPassIndexes)
         {
             Vector3Int index = ReturnNodeIndex(targetGrid.SurfacePos);
-            List<Vector3Int> nearGridIndexes = ReturnNearNodeIndexes(index);
+            List<Vector3Int> nearGridIndexes = ReturnNearNodeIndexes(index, cantPassIndexes);
 
             for (int i = 0; i < nearGridIndexes.Count; i++)
             {

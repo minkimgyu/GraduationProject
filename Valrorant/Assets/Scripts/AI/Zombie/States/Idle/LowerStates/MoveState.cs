@@ -10,13 +10,13 @@ namespace AI.ZombieFSM
     public class MoveState : State
     {
         Func<Vector3, int, Vector3> ReturnNodePos;
-        Action<Vector3, bool> FollowPath;
+        Action<Vector3, List<Vector3>, bool> FollowPath;
 
         Transform _myTransform;
         int _wanderOffset = 0;
         Vector3 _targetPos;
 
-        public MoveState(Func<Vector3, int, Vector3> ReturnNodePos, Action<Vector3, bool> FollowPath, Transform myTransform, int wanderOffset)
+        public MoveState(Func<Vector3, int, Vector3> ReturnNodePos, Action<Vector3, List<Vector3>, bool> FollowPath, Transform myTransform, int wanderOffset)
         {
             this.ReturnNodePos = ReturnNodePos;
             this.FollowPath = FollowPath;
@@ -27,13 +27,13 @@ namespace AI.ZombieFSM
 
         public override void OnStateEnter()
         {
-            Debug.Log("Movetate");
+            //Debug.Log("Movetate");
             _targetPos = ReturnNodePos.Invoke(_myTransform.position, _wanderOffset);
         }
 
         public override void OnStateUpdate()
         {
-            FollowPath?.Invoke(_targetPos, true);
+            FollowPath?.Invoke(_targetPos, null, true);
         }
     }
 }

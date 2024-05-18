@@ -17,7 +17,7 @@ namespace AI.ZombieFSM
 
         public override void OnStateEnter()
         {
-            Debug.Log("StopState");
+            //Debug.Log("StopState");
         }
 
         public override void OnStateUpdate()

@@ -9,9 +9,9 @@ namespace BehaviorTree.Nodes
     public class Follow : Node
     {
         Func<ITarget> ReturnTargetInSight;
-        Action<Vector3, bool> FollowPath;
+        Action<Vector3, List<Vector3>, bool> FollowPath;
 
-        public Follow(Func<ITarget> ReturnTargetInSight, Action<Vector3, bool> FollowPath)
+        public Follow(Func<ITarget> ReturnTargetInSight, Action<Vector3, List<Vector3>, bool> FollowPath)
         {
             this.ReturnTargetInSight = ReturnTargetInSight;
             this.FollowPath = FollowPath;
@@ -21,7 +21,7 @@ namespace BehaviorTree.Nodes
         {
             ITarget target = ReturnTargetInSight();
             Vector3 pos = target.ReturnPos();
-            FollowPath?.Invoke(pos, false);
+            FollowPath?.Invoke(pos, null, false);
 
             return NodeState.SUCCESS;
         }

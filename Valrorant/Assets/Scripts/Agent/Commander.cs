@@ -5,15 +5,43 @@ using AI;
 
 public class Commander : MonoBehaviour
 {
-    [SerializeField] List<GameObject> _listenerGO;
+    [SerializeField] Helper _helperPrefab;
+    [SerializeField] int _helperCnt = 1;
+    [SerializeField] float _startRange = 10f;
     List<ICommandListener> _listeners = new List<ICommandListener>();
+
+    Vector3 ReturnPlayerPos() { return transform.position; }
 
     public void Initialize()
     {
-        for (int i = 0; i < _listenerGO.Count; i++)
+        // HelperFactory 구현 필요함
+        //HelperViewer viewer =  FindObjectOfType<HelperViewer>();
+        //viewer.
+
+        CharacterPlant plant = FindObjectOfType<CharacterPlant>();
+
+        for (int i = 0; i < _helperCnt; i++)
         {
-            ICommandListener listener = _listenerGO[i].GetComponent<ICommandListener>();
+            Vector2 startPos = Random.insideUnitCircle * _startRange;
+
+            plant.Create(CharacterPlant.Name.Oryx);
+
+            Helper swat = Instantiate(_helperPrefab, new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x), Quaternion.identity);
+            //swat.Initialize(ReturnPlayerPos);
+
+            ICommandListener listener = swat.GetComponent<ICommandListener>();
             _listeners.Add(listener);
+        }
+
+        ResetFormationData();
+    }
+
+    public void ResetFormationData()
+    {
+        for (int i = 0; i < _listeners.Count; i++)
+        {
+            FormationData data = new FormationData(i + 1, _listeners.Count, _listeners);
+            _listeners[i].ResetFormationData(data);
         }
     }
 
@@ -21,8 +49,7 @@ public class Commander : MonoBehaviour
     {
         for (int i = 0; i < _listeners.Count; i++)
         {
-            FormationData data = new FormationData(i + 1 , _listeners.Count);
-            _listeners[i].GoToBuildFormationState(data);
+            _listeners[i].GoToBuildFormationState();
         }
     }
 

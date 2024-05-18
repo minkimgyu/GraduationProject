@@ -31,30 +31,36 @@ namespace AI.ZombieFSM
             List<Node> _childNodes;
             _childNodes = new List<Node>()
             {
-                new Selector
+                new Sequencer
                 (
                     new List<Node>()
                     {
-                         new Sequencer
-                         (
-                             new List<Node>()
-                             {
-                                new RotateTowardTarget(blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View), // 정지 하는 코드 넣기
-                                new NowWithinActionRange(blackboard.MyTransform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
-                                new Sequencer
-                                (
-                                    new List<Node>()
-                                    {
-                                        new StopAgent(blackboard.Stop), // 정지 하는 코드 넣기
+                        new RotateTowardTarget(blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View), // 정지 하는 코드 넣기
 
-                                        new WaitForNextAttack(blackboard.DelayDuration),
-                                        new Attack(blackboard.AttackPoint, blackboard.AttackCircleRadius, blackboard.AttackLayer, blackboard.ResetAnimatorTrigger),
-                                        // Wander에 이벤트를 보내는 방식으로 방향을 돌려준다.
-                                    }
-                                ),
-                             }
-                         ),
-                         new Follow(blackboard.ReturnTargetInSight, blackboard.FollowPath)
+                        new Selector
+                        (
+                            new List<Node>()
+                            {
+                                 new Sequencer
+                                 (
+                                     new List<Node>()
+                                     {
+                                        new NowWithinActionRange(blackboard.MyTransform, blackboard.ReturnTargetInSight, blackboard.AttackRange, blackboard.AdditiveAttackRange),
+                                        new Sequencer
+                                        (
+                                            new List<Node>()
+                                            {
+                                                new Stop(blackboard.Stop), // 정지 하는 코드 넣기
+                                                new Attack(blackboard.AttackPoint, blackboard.AttackDamage, blackboard.PreAttackDelay, blackboard.DelayForNextAttack,
+                                                blackboard.AttackCircleRadius, blackboard.AttackLayer, blackboard.ResetAnimatorTrigger, blackboard.IsTargetInSight, blackboard.ReturnTargetInSight),
+                                                // Wander에 이벤트를 보내는 방식으로 방향을 돌려준다.
+                                            }
+                                        ),
+                                     }
+                                 ),
+                                 new Follow(blackboard.ReturnTargetInSight, blackboard.FollowPath)
+                            }
+                        )
                     }
                 )
             };
@@ -74,7 +80,7 @@ namespace AI.ZombieFSM
         public override void OnStateEnter()
         {
             ModifyCaptureRadius?.Invoke(_additiveCaptureRadius);
-            Debug.Log("FollowState");
+            //Debug.Log("FollowState");
         }
 
         public override void OnStateUpdate()

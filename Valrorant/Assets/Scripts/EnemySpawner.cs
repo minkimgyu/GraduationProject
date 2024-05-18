@@ -40,6 +40,6 @@ public class EnemySpawner : MonoBehaviour
     void Spawn(Vector3 pos)
     {
         Zombie zombie = Instantiate(_zombiePrefab, pos, Quaternion.identity);
-        zombie.Initialize();
+        //zombie.Initialize();
     }
 }

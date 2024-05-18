@@ -23,7 +23,7 @@ abstract public class ActionStrategy : BaseStrategy
     public virtual void TurnOffZoomDirectly() { }
 }
 
-public class NoResult : ActionStrategy { }
+public class NoAction : ActionStrategy { }
 
 public class BaseZoomStrategy : ActionStrategy
 {

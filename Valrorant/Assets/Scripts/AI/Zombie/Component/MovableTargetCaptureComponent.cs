@@ -19,6 +19,8 @@ abstract public class MovableTargetCaptureComponent<T> : BaseCaptureComponent<T>
     protected override void OnTargetExit(T target)
     {
         _capturedTargets.Remove(target);
+
+        Debug.Log(target);
     }
 
     protected override bool IsAlreadyContaining(T target)

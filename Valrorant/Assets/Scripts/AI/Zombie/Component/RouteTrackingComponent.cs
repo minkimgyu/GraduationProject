@@ -10,7 +10,7 @@ public class RouteTrackingComponent : MonoBehaviour
 
     Action<Vector3> View;
 
-    Func<Vector3, Vector3, List<Vector3>> FindPath;
+    Func<Vector3, Vector3, List<Vector3>, List<Vector3>> FindPath;
 
     List<Vector3> _paths = new List<Vector3>();
     int _pathIndex = 0;
@@ -22,8 +22,9 @@ public class RouteTrackingComponent : MonoBehaviour
     bool _isFollowingFinish = false;
     Vector3 _storedTargetPos; // 저장된 타겟의 위치
 
+
     public void Initialize(float pathFindDelay, Action<Vector3> Move, Action Stop, Action<Vector3> View, 
-        Func<Vector3, Vector3, List<Vector3>> FindPath)
+        Func<Vector3, Vector3, List<Vector3>, List<Vector3>> FindPath)
     {
         _stopwatchTimer = new StopwatchTimer();
 
@@ -36,13 +37,20 @@ public class RouteTrackingComponent : MonoBehaviour
 
     void ResetPath()
     {
+        if (_paths == null || _paths.Count == 0) return;
+
         _paths.Clear();
         _pathIndex = 1;
     }
 
-    void CreatePath(Vector3 targetPos)
+    void CreatePath(Vector3 targetPos, List<Vector3> ignorePos)
     {
-        if (_storedTargetPos == targetPos || transform.position == targetPos) return;
+        if (_storedTargetPos == targetPos || transform.position == targetPos)
+        {
+            Stop?.Invoke();
+            // 이 경우 MoveAnimation을 Stop으로 바꿔준다.
+            return;
+        }
         _storedTargetPos = targetPos;
 
         if (_stopwatchTimer.CurrentState == StopwatchTimer.State.Running) return;
@@ -55,7 +63,7 @@ public class RouteTrackingComponent : MonoBehaviour
 
         _isFollowingFinish = false; // 다시 길찾기를 시작할 때
         ResetPath();
-        _paths = FindPath(transform.position, targetPos);
+        _paths = FindPath(transform.position, targetPos, ignorePos);
     }
 
     public bool IsFollowingFinish() { return _isFollowingFinish; }
@@ -66,10 +74,12 @@ public class RouteTrackingComponent : MonoBehaviour
         ResetPath();
     }
 
-    public void FollowPath(Vector3 targetPos, bool lookPath = false)
+    public void FollowPath(Vector3 targetPos, List<Vector3> ignorePos = null, bool lookPath = false)
     {
-        CreatePath(targetPos);
+        CreatePath(targetPos, ignorePos);
         if (_isFollowingFinish == true) return;
+
+        if (_paths == null) return;
         if (_paths.Count == 0 || _pathIndex > _paths.Count - 1) return; // CreatePath가 작동하지 않은 경우 작동 X
 
         Vector3 nextPathPos = new Vector3(_paths[_pathIndex].x, transform.position.y, _paths[_pathIndex].z);
@@ -92,9 +102,9 @@ public class RouteTrackingComponent : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmosSelected()
     {
-        if (_paths.Count == 0) return;
+        if (_paths == null || _paths.Count == 0) return;
 
         for (int i = 0; i < _paths.Count; i++)
         {

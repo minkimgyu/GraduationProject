@@ -2,25 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
 
-namespace Shop
+public class ItemSlotContainer : MonoBehaviour
 {
-    public class ItemSlotContainer : MonoBehaviour
+    [SerializeField] TMP_Text _titleTxt;
+    [SerializeField] ItemSlotDictionary _itemSlotDictionary;
+
+    [SerializeField] Transform _content;
+
+    public List<ItemSlot> _itemSlots;
+    public void Initialize(string title, ItemSlot.Type type, List<ItemData> datas, Func<ShopBlackboard> ReturnBlackboard,
+        Action TurnOffPreview, Action<Sprite, string, string> TurnOnPreview)
     {
-        
-        [SerializeField] TMP_Text _titleTxt;
-        [SerializeField] ItemSlot _slotPrefab;
+        _titleTxt.text = title;
 
-        public List<ItemSlot> _itemSlots;
-        public void Initialize(string title, List<ItemData> datas) // 여기에 이벤트 추가
+        for (int i = 0; i < datas.Count; i++)
         {
-            for (int i = 0; i < datas.Count; i++)
-            {
-                ItemSlot slot = Instantiate(_slotPrefab, transform);
-                //slot.Initialize(datas[i]);
+            ItemSlot slot = Instantiate(_itemSlotDictionary[type], _content);
+            datas[i].Reset(slot, ReturnBlackboard, TurnOffPreview, TurnOnPreview);
 
-                _itemSlots.Add(slot);
-            }
+            _itemSlots.Add(slot);
         }
     }
 }

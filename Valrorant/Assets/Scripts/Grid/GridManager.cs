@@ -29,7 +29,7 @@ namespace Grid
         [SerializeField] Transform _bottomLeftTarget;
 
         // Start is called before the first frame update
-        void Start()
+        void Awake()
         {
             CreateGrid();
         }
@@ -131,7 +131,7 @@ namespace Grid
         public Node ReturnNode(Vector3Int index) { return _simpleNodes[index.x, index.z][index.y]; }
         public Node ReturnNode(int x, int z) { return _simpleNodes[x, z][0]; }
 
-        public List<Vector3Int> ReturnNearNodeIndexes(Vector3Int index)
+        public List<Vector3Int> ReturnNearNodeIndexes(Vector3Int index, HashSet<Vector3Int> ignoreIndexes = null)
         {
             List<Vector3Int> closeGridIndex = new List<Vector3Int>();
 
@@ -144,6 +144,7 @@ namespace Grid
 
             for (int i = 0; i < closeIndex.Length; i++)
             {
+
                 bool isOutOfRange = closeIndex[i].x < 0 || closeIndex[i].z < 0 || closeIndex[i].x > _sizeOfGrid.x - 1 || closeIndex[i].z > _sizeOfGrid.z - 1;
                 if (isOutOfRange == true) continue;
 
@@ -161,6 +162,12 @@ namespace Grid
 
                 bool isIn = IsInMaxAngleBetweenNode(currentNodePos, nearNodePos);
                 if (isIn == false) continue;
+
+                if(ignoreIndexes != null)
+                {
+                    bool nowContain = ignoreIndexes.Contains(closeIndex[i]);
+                    if (nowContain == true) continue;
+                }
 
                 closeGridIndex.Add(new Vector3Int(closeIndex[i].x, yIndex, closeIndex[i].z));
             }

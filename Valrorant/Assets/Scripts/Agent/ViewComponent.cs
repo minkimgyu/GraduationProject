@@ -16,8 +16,7 @@ namespace Agent.Component
 
         //protected Vector2 _viewRotation;
 
-        [SerializeField] private float _viewClampYMax = 40;
-        [SerializeField] private float _viewClampYMin = -40;
+        [SerializeField] private float _viewYRange = 40;
         [SerializeField] private Vector2 _viewSensitivity;
 
         [SerializeField] private Vector2 _cameraRotationMultiplier;
@@ -29,6 +28,12 @@ namespace Agent.Component
 
         //public Vector3 ReturnRaycastPos() { return _firePoint.position; }
         //public Vector3 ReturnRaycastDir() { return _firePoint.forward; }
+
+        public void Initialize(float viewYRange, Vector2 viewSensitivity)
+        {
+            _viewYRange = viewYRange;
+            _viewSensitivity = viewSensitivity;
+        }
 
         public override void OnRecoilRequested(Vector2 recoilForce)
         {
@@ -42,7 +47,7 @@ namespace Agent.Component
         public void ResetView()
         {
             _viewRotation.x += Mathf.Lerp(_viewRotation.x, Input.GetAxisRaw("Mouse X"), _viewSensitivity.x * Time.deltaTime);
-            _viewRotation.y = Mathf.Clamp(_viewRotation.y - (Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.deltaTime), _viewClampYMin, _viewClampYMax);
+            _viewRotation.y = Mathf.Clamp(_viewRotation.y - (Input.GetAxisRaw("Mouse Y") * _viewSensitivity.y * Time.deltaTime), -_viewYRange, _viewYRange);
 
             _direction.rotation = Quaternion.Euler(0, ActorBoneViewRotation.x, 0);
 

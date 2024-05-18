@@ -14740,6 +14740,37 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &2711955469964280624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4494355250010297576}
+  m_Layer: 6
+  m_Name: AimPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4494355250010297576
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2711955469964280624}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.0134, y: 0.163, z: -0.0465}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4329451347719957779}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2841720171806651585
 GameObject:
   m_ObjectHideFlags: 0
@@ -35375,6 +35406,7 @@ Transform:
   - {fileID: 1632895402353991296}
   - {fileID: 612103285344003744}
   - {fileID: 1270004554376256973}
+  - {fileID: 4494355250010297576}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7209342483555977339
@@ -35415,7 +35447,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.050817877, y: 0.26449785, z: 1.0133208}
   m_Center: {x: -0.015, y: 0, z: 0.17}
@@ -35459,7 +35491,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _weaponName: 1
-  _weaponType: 1
+  _weaponType: 0
   _weaponWeight: 1.5
   _muzzleFlash: {fileID: 3796721468523432237}
   _emptyCartridgeSpawner: {fileID: 6081935337307441222}
@@ -35467,6 +35499,7 @@ MonoBehaviour:
   _ammoCountsInMagazine: 0
   _ammoCountsInPossession: 0
   _objectMesh: {fileID: 6254338654471207941}
+  _aimPoint: {fileID: 4494355250010297576}
 --- !u!1 &8953099336863249015
 GameObject:
   m_ObjectHideFlags: 0

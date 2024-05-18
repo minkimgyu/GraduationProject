@@ -4,90 +4,153 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
-namespace Shop
+public class ItemData
 {
-    public struct ItemData
+    [Serializable]
+    public enum Name
     {
-        public enum Type
-        {
-            Equipment,
-            Side,
-            Main
-        }
+        Armor,
+        AidKit,
+        Ammo,
 
-        Type _type;
-        int _number;
-        int _cost;
+        Glock18,
+        MP5,
 
-        string _name;
+        AKM,
+        M416,
+        Scout,
 
-        public int Number { get { return _number; } }
-        public string Name { get { return _name; } }
-        public int Cost { get { return _cost; } }
-
-        public ItemData(Type type, int number, string name, int cost)
-        {
-            _type = type;
-            _number = number;
-            _name = name;
-            _cost = cost;
-        }
+        Saiga,
+        MK18,
+        M249
     }
 
-    public class ItemSlot : MonoBehaviour
+    protected Name _name;
+    protected int _cost;
+    protected string _info;
+    protected Sprite _icon;
+    protected Sprite _previewModel;
+
+    public ItemData(Name name, int cost, string info, Sprite icon, Sprite previewModel)
     {
-        [SerializeField] TMP_Text _numberTxt;
-        [SerializeField] TMP_Text _costTxt;
+        _name = name;
+        _cost = cost;
 
-        [SerializeField] TMP_Text _nameTxt;
-
-        [SerializeField] Button _button;
-
-        Func<int> OnAssetRequested;
-
-        ItemData _data;
-
-        public void Initialize(ItemData data, Func<int> OnAssetRequested)
-        {
-            _button.onClick.AddListener(Buy);
-
-            _data = data;
-            ResetTxt();
-        }
-
-        protected virtual void Buy()
-        {
-            int asset = OnAssetRequested();
-            if (asset < _data.Cost) return;
-
-
-        }
-
-        void ResetTxt()
-        {
-            _numberTxt.text = _data.Number.ToString();
-            _costTxt.text = _data.Cost.ToString();
-
-            _nameTxt.text = _data.Name;
-        }
+        _info = info;
+        _icon = icon;
+        _previewModel = previewModel;
     }
 
-
-    // 이벤트를 넣어서 클릭 시 작동하는 함수를 다르게 하기
-    public class WeaponSlot : ItemSlot
+    public virtual void Reset(ItemSlot slot, Func<ShopBlackboard> ReturnBlackboard, Action TurnOffPreview, Action<Sprite, string, string> TurnOnPreview) 
     {
-        protected override void Buy()
-        {
+        slot.Initialize(_name.ToString(), _cost, _info, _icon, _previewModel, ReturnBlackboard, TurnOffPreview, TurnOnPreview);
+    }
+}
 
-        }
+public class AmmoItemData : ItemData
+{
+    public AmmoItemData(Name name, int cost, string info, Sprite icon, Sprite previewModel)
+        : base(name, cost, info, icon, previewModel)
+    {
+    }
+}
+
+public class HealItemData : ItemData
+{
+    float _hpPoint;
+    float _armorPoint;
+
+    public HealItemData(Name name, float hpPoint, float armorPoint, int cost, string info, Sprite icon, Sprite previewModel)
+        : base(name, cost, info, icon, previewModel)
+    {
+        _hpPoint = hpPoint;
+        _armorPoint = armorPoint;
     }
 
-    public class EquipmentSlot : ItemSlot
+    public override void Reset(ItemSlot slot, Func<ShopBlackboard> ReturnBlackboard, Action TurnOffPreview, Action<Sprite, string, string> TurnOnPreview)
     {
-        protected override void Buy()
-        {
+        base.Reset(slot, ReturnBlackboard, TurnOffPreview, TurnOnPreview);
+        slot.ResetData(_hpPoint, _armorPoint);
+    }
+}
 
-        }
+public class WeaponItemData : ItemData
+{
+    BaseWeapon.Name _weaponNameToSpawn;
+
+    public WeaponItemData(Name name, BaseWeapon.Name weaponNameToSpawn, int cost, string info, Sprite icon, Sprite previewModel)
+        :base(name, cost, info, icon, previewModel)
+    {
+        _weaponNameToSpawn = weaponNameToSpawn;
+    }
+
+    public override void Reset(ItemSlot slot, Func<ShopBlackboard> ReturnBlackboard, Action TurnOffPreview, Action<Sprite, string, string> TurnOnPreview)
+    {
+        base.Reset(slot, ReturnBlackboard, TurnOffPreview, TurnOnPreview);
+        slot.ResetData(_weaponNameToSpawn);
+    }
+}
+
+public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+{
+    public enum Type
+    {
+        Consumable,
+        Ammo,
+        Weapon
+    }
+
+    [SerializeField] TMP_Text _costTxt;
+
+    [SerializeField] Image _iconImg;
+    [SerializeField] TMP_Text _nameTxt;
+    [SerializeField] Button _button;
+
+    string _name;
+    string _info;
+    Sprite _previewModel;
+
+    protected Func<ShopBlackboard> ReturnBlackboard;
+    Action<Sprite, string, string> TurnOnPreview;
+    Action TurnOffPreview;
+
+    public virtual void Initialize(string name, int cost, string info, Sprite icon, Sprite previewModel, Func<ShopBlackboard> ReturnBlackboard, 
+        Action TurnOffPreview, Action<Sprite, string, string> TurnOnPreview)
+    {
+        ResetSlot(name, cost, info, icon, previewModel);
+        this.ReturnBlackboard = ReturnBlackboard;
+
+        this.TurnOnPreview = TurnOnPreview;
+        this.TurnOffPreview = TurnOffPreview;
+
+        _button.onClick.AddListener(Buy);
+    }
+
+    public virtual void ResetData(BaseWeapon.Name name) { }
+    public virtual void ResetData(float hpPoint, float armorPoint) { }
+
+    protected virtual void Buy() { }
+
+    void ResetSlot(string name, int cost, string info, Sprite icon, Sprite previewModel)
+    {
+        _name = name;
+        _info = info;
+
+        _nameTxt.text = _name;
+        _costTxt.text = "$" + cost.ToString();
+        _iconImg.sprite = icon;
+        _previewModel = previewModel;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        TurnOnPreview(_previewModel, _name, _info);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        TurnOffPreview();
     }
 }

@@ -12,20 +12,10 @@ namespace AI.SwatFSM
 {
     public class BuildingFormationState : State
     {
-        Action<Swat.MovementState> SetState;
+        Action<Helper.MovementState> SetState;
         protected Tree _bt;
 
-        FormationData _formationData;
-
-        public override void OnMessageReceived(string message, FormationData data)
-        {
-            Debug.Log(message);
-            _formationData = data;
-        }
-
-        FormationData ReturnFormationData() { return _formationData; }
-
-        public BuildingFormationState(Action<Swat.MovementState> SetState, SwatMovementBlackboard blackboard)
+        public BuildingFormationState(Action<Helper.MovementState> SetState, SwatMovementBlackboard blackboard)
         {
             this.SetState = SetState;
 
@@ -37,8 +27,9 @@ namespace AI.SwatFSM
                 (
                     new List<Node>()
                     {
-                        new StickToPlayer(blackboard.MyTransform, blackboard.FormationRadius, blackboard.ReturnPlayer, blackboard.ReturnNodePos, 
-                        blackboard.FollowPath, blackboard.View, ReturnFormationData),
+                        new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration, 
+                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                        blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
 
                         new Selector
                         (
@@ -48,24 +39,16 @@ namespace AI.SwatFSM
                                 (
                                     new List<Node>()
                                     {
-                                        new IsCloseToTarget(blackboard.MyTransform, 9, blackboard.CloseDistanceOffset,
-                                                blackboard.ReturnTargetInSight),
+                                        new IsCloseToTarget(blackboard.MyTransform, blackboard.FarFromTargetDistance, blackboard.FarFromTargetDistanceOffset,
+                                                blackboard.IsTargetInLargeSight, blackboard.ReturnTargetInLargeSight),
 
-                                        new FaceToTarget(blackboard.MyTransform, blackboard.AimPoint, blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View)
+                                        new FaceToTarget(blackboard.MyTransform, blackboard.AimPoint, blackboard.SightPoint, blackboard.View,
+                                        blackboard.IsTargetInSmallSight, blackboard.ReturnTargetInSmallSight,
+                                        blackboard.IsTargetInLargeSight, blackboard.ReturnTargetInLargeSight)
                                     }
                                 ),
 
-                                 new Sequencer
-                                (
-                                    new List<Node>()
-                                    {
-                                        new ChangeAngleOfSight(blackboard.CaptureTransform, blackboard.AngleOffset, blackboard.AngleChangeAmount),
-
-                                        new FixViewToFormation(blackboard.MyTransform, blackboard.ReturnPlayer, blackboard.View)
-                                    }
-                                ),
-
-                                
+                                new ChangeAngleOfSight(blackboard.CaptureTransform, blackboard.AngleOffset, blackboard.AngleChangeAmount),
                             }
                         )
                     }
@@ -83,7 +66,7 @@ namespace AI.SwatFSM
 
         public override void OnHandleFreeRole()
         {
-            SetState?.Invoke(Swat.MovementState.FreeRole);
+            SetState?.Invoke(Helper.MovementState.FreeRole);
         }
     }
 }

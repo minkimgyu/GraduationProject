@@ -7,19 +7,24 @@ namespace BehaviorTree.Nodes
 {
     public class IsCloseToTarget : EvaluatingDistance
     {
+        Func<bool> IsTargetInSight;
         Func<ISightTarget> ReturnTargetInSight;
 
-        public IsCloseToTarget(Transform myTransform, float closeDistance, float closeDistanceOffset, Func<ISightTarget> ReturnTargetInSight)
+        public IsCloseToTarget(Transform myTransform, float closeDistance, float closeDistanceOffset, 
+            Func<bool> IsTargetInSight, Func<ISightTarget> ReturnTargetInSight)
+
             : base(myTransform, closeDistance, closeDistanceOffset, false)
         {
+            this.IsTargetInSight = IsTargetInSight;
             this.ReturnTargetInSight = ReturnTargetInSight;
         }
 
         public override NodeState Evaluate()
         {
-            ISightTarget target = ReturnTargetInSight();
-            if (target == null) return NodeState.FAILURE;
+            bool isInSight = IsTargetInSight();
+            if (isInSight == false) return NodeState.FAILURE;
 
+            ISightTarget target = ReturnTargetInSight();
             SwitchState(target.ReturnPos());
 
             switch (_state)

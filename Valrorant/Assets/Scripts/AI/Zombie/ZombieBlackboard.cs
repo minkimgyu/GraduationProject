@@ -6,8 +6,6 @@ using AI;
 
 public struct ZombieBlackboard
 {
-    public float MaxHP { get; }
-
     // Wander
     public float AngleOffset { get; }
     public float AngleChangeAmount { get; }
@@ -17,7 +15,7 @@ public struct ZombieBlackboard
     public Transform MyTransform { get; }
     public Transform SightPoint { get; }
 
-    public Action<Vector3, bool> FollowPath { get; }
+    public Action<Vector3, List<Vector3>, bool> FollowPath { get; }
     public Action<Vector3> View { get; }
     public Action Stop { get; }
 
@@ -42,9 +40,11 @@ public struct ZombieBlackboard
     public float AdditiveAttackRange { get; }
 
     public float AttackRange { get; }
+    public float AttackDamage { get; }
     public float AttackCircleRadius { get; }
 
-    public float DelayDuration { get; }
+    public float DelayForNextAttack { get; }
+    public float PreAttackDelay { get; }
 
 
     public LayerMask AttackLayer { get; }
@@ -59,19 +59,16 @@ public struct ZombieBlackboard
 
     // Attack
 
-    public float DestoryDelay { get; }
-
-    public ZombieBlackboard(float angleOffset, float angleChangeAmount, int wanderOffset, float stateChangeDelay, 
+    public ZombieBlackboard(float attackDamage, float angleOffset, float angleChangeAmount, int wanderOffset, float stateChangeDelay, 
         Transform captureTransform, Transform myTrasform, Transform sightPoint, float additiveCaptureRadius, float additiveAttackRange, 
-        float attackRange, float attackCircleRadius, float delayDuration, LayerMask attackLayer, Transform attackPoint,
-        float destoryDelay, float maxHP,
+        float attackRange, float attackCircleRadius, float delayForNextAttack, float preAttackDelay, LayerMask attackLayer, Transform attackPoint,
 
-        Action<Vector3, bool> FollowPath, Action<Vector3> View, Action Stop, Func<bool> IsTargetInSight,
+        Action<Vector3, List<Vector3>, bool> FollowPath, Action<Vector3> View, Action Stop, Func<bool> IsTargetInSight,
         Func<Vector3, int, Vector3> ReturnNodePos, Action ClearAllNoise, Func<bool> IsQueueEmpty, Func<Vector3> ReturnFrontNoise,
         Func<bool> IsFollowingFinish, Action<float> ModifyCaptureRadius, Action<string, bool> ResetAnimatorBool, Action<string> ResetAnimatorTrigger, 
         Func<ISightTarget> ReturnTargetInSight)
     {
-        MaxHP = maxHP;
+        AttackDamage = attackDamage;
 
         AngleOffset = angleOffset;
         AngleChangeAmount = angleChangeAmount;
@@ -80,8 +77,6 @@ public struct ZombieBlackboard
         CaptureTransform = captureTransform;
         MyTransform = myTrasform;
         SightPoint = sightPoint;
-
-        DestoryDelay = destoryDelay;
 
         this.FollowPath = FollowPath;
         this.View = View;
@@ -93,7 +88,8 @@ public struct ZombieBlackboard
         AdditiveAttackRange = additiveAttackRange;
         AttackRange = attackRange;
         AttackCircleRadius = attackCircleRadius;
-        DelayDuration = delayDuration;
+        DelayForNextAttack = delayForNextAttack;
+        PreAttackDelay = preAttackDelay;
 
         AttackLayer = attackLayer;
         AttackPoint = attackPoint;

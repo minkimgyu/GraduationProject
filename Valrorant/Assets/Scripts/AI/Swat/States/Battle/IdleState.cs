@@ -8,20 +8,34 @@ namespace AI.SwatFSM
 {
     public class IdleState : State
     {
-        Action<Swat.BattleState> SetState;
+        Action<Helper.BattleState> SetState;
         Action<BaseWeapon.Type> EquipWeapon;
         Func<bool> IsTargetInSight;
+        Func<BaseWeapon.Type, BaseWeapon> ReturnWeapon;
 
-        public IdleState(Action<Swat.BattleState> SetState, SwatBattleBlackboard blackboard)
+        public IdleState(Action<Helper.BattleState> SetState, SwatBattleBlackboard blackboard)
         {
             this.SetState = SetState;
             EquipWeapon = blackboard.EquipWeapon;
             IsTargetInSight = blackboard.IsTargetInSight;
+            ReturnWeapon = blackboard.ReturnWeapon;
         }
 
         public override void OnStateEnter()
         {
-            EquipWeapon(BaseWeapon.Type.Main);
+            BaseWeapon mainWeapon = ReturnWeapon(BaseWeapon.Type.Main);
+            if (mainWeapon.IsAmmoEmpty() == false)
+            {
+                EquipWeapon(BaseWeapon.Type.Main);
+                return;
+            }
+
+            BaseWeapon subWeapon = ReturnWeapon(BaseWeapon.Type.Sub);
+            if (subWeapon.IsAmmoEmpty() == false)
+            {
+                EquipWeapon(BaseWeapon.Type.Sub);
+                return;
+            }
         }
 
         public override void CheckStateChange()
@@ -29,7 +43,7 @@ namespace AI.SwatFSM
             bool isInSight = IsTargetInSight();
             if (isInSight == false) return;
 
-            SetState(Swat.BattleState.Attack);
+            SetState(Helper.BattleState.Attack);
         }
     }
 }

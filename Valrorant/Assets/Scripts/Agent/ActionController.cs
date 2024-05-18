@@ -10,6 +10,27 @@ namespace Agent.Controller
 {
     public class ActionController : MonoBehaviour
     {
+        public enum InputState
+        {
+            Enable,
+            Disable
+        }
+
+        InputState _inputState;
+
+        public void TurnOnOffInput()
+        {
+            switch (_inputState)
+            {
+                case InputState.Enable:
+                    _inputState = InputState.Disable;
+                    break;
+                case InputState.Disable:
+                    _inputState = InputState.Enable;
+                    break;
+            }
+        }
+
         public enum PostureState
         {
             Sit,
@@ -33,23 +54,39 @@ namespace Agent.Controller
         Rigidbody _rigidbody;
 
         [SerializeField] Transform _direction;
-        [SerializeField] float _walkSpeed;
-        [SerializeField] float _walkSpeedOnAir;
-        [SerializeField] float _jumpSpeed;
+        float _walkSpeed;
+        float _walkSpeedOnAir;
+        float _jumpSpeed;
 
-        [SerializeField] float _postureSwitchDuration;
-        [SerializeField] float _capsuleStandCenter = 1f;
-        [SerializeField] float _capsuleCrouchHeight = 1.7f;
+        float _postureSwitchDuration;
+        float _capsuleStandCenter = 1f;
+        float _capsuleCrouchHeight = 1.7f;
 
-        [SerializeField] float _capsuleStandHeight = 2f;
-        [SerializeField] float _capsuleCrouchCenter = 1.15f;
+        float _capsuleStandHeight = 2f;
+        float _capsuleCrouchCenter = 1.15f;
 
-        public void Initialize()
+        public void Initialize(float walkSpeed, float walkSpeedOnAir, float jumpSpeed, float postureSwitchDuration, float capsuleStandCenter,
+            float capsuleStandHeight, float capsuleCrouchCenter, float capsuleCrouchHeight, float viewYRange, Vector2 viewSensitivity)
         {
+            _walkSpeed = walkSpeed;
+            _walkSpeedOnAir = walkSpeedOnAir;
+            _jumpSpeed = jumpSpeed;
+
+            _postureSwitchDuration = postureSwitchDuration;
+            _capsuleStandCenter = capsuleStandCenter;
+            _capsuleCrouchHeight = capsuleCrouchHeight;
+
+            _capsuleCrouchCenter = capsuleCrouchCenter;
+            _capsuleStandHeight = capsuleStandHeight;
+
+            _inputState = InputState.Enable;
+
             _capsuleCollider = GetComponent<CapsuleCollider>();
             _rigidbody = GetComponent<Rigidbody>();
 
             _viewComponent = GetComponent<ViewComponent>();
+            _viewComponent.Initialize(viewYRange, viewSensitivity);
+
             _zoomComponent = GetComponent<ZoomComponent>();
 
             _movementFSM = new StateMachine<MovementState>();
@@ -80,20 +117,50 @@ namespace Agent.Controller
             _movementFSM.SetState(MovementState.Stop);
         }
 
-        public void OnHandleSit() => _postureFSM.OnHandleSit();
-        public void OnHandleStand() => _postureFSM.OnHandleStand();
+        public void OnHandleSit()
+        {
+            if (_inputState == InputState.Disable) return;
 
-        public void OnHandleJump() => _movementFSM.OnHandleJump();
-        public void OnHandleStop() => _movementFSM.OnHandleStop();
-        public void OnHandleMove(Vector3 dir) => _movementFSM.OnHandleMove(dir);
+            _postureFSM.OnHandleSit();
+        }
+
+        public void OnHandleStand()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _postureFSM.OnHandleStand();
+        }
+
+        public void OnHandleJump()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _movementFSM.OnHandleJump();
+        }
+
+        public void OnHandleStop()
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _movementFSM.OnHandleStop();
+        }
+
+        public void OnHandleMove(Vector3 dir)
+        {
+            if (_inputState == InputState.Disable) return;
+
+            _movementFSM.OnHandleMove(dir);
+        }
 
         public void OnUpdate()
         {
-            _viewComponent.ResetView();
             _zoomComponent.OnUpdate();
 
             _movementFSM.OnUpdate();
             _postureFSM.OnUpdate();
+
+            if (_inputState == InputState.Disable) return;
+            _viewComponent.ResetView();
         }
 
         public void OnFixedUpdate()
@@ -106,7 +173,7 @@ namespace Agent.Controller
             _viewComponent.ResetCamera();
         }
 
-        private void OnCollisionEnterRequested(Collision collision)
+        public void OnCollisionEnterRequested(Collision collision)
         {
             _movementFSM.OnCollisionEnter(collision);
         }

@@ -14,11 +14,12 @@ namespace Agent.States
         Action<WeaponController.State, string, BaseWeapon> SetStateAndSendWeapon;
         Action<WeaponController.State, string, BaseWeapon.Type> SetStateAndSendType;
 
-        Action<BaseWeapon.Type> RemoveWeaponInContainer;
+        Func<BaseWeapon> ReturnEquipedWeapon;
+        Action<BaseWeapon> ResetEquipedWeapon;
        
         Action RevertToPreviousState;
 
-        Func<BaseWeapon> ReturnEquipedWeapon;
+        Action<BaseWeapon.Type> RemoveWeaponInContainer;
         Func<BaseWeapon.Type, bool> HaveSameTypeWeapon;
         Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon;
 
@@ -28,25 +29,28 @@ namespace Agent.States
         public DropState(
             float weaponThrowPower, 
             Action RevertToPreviousState, 
-            Action<BaseWeapon.Type> RemoveWeaponInContainer,
-
 
             Action<WeaponController.State, string, BaseWeapon> SetStateAndSendWeapon,
             Action<WeaponController.State, string, BaseWeapon.Type> SetStateAndSendType,
 
-            Func<BaseWeapon> ReturnEquipedWeapon, 
+            Func<BaseWeapon> ReturnEquipedWeapon,
+            Action<BaseWeapon> ResetEquipedWeapon,
+
+            Action<BaseWeapon.Type> RemoveWeaponInContainer,
             Func<BaseWeapon.Type, bool> HaveSameTypeWeapon, 
-            Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon, 
+            Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon,
+
             Func<WeaponEventBlackboard> ReturnEventBlackboard)
         {
             _weaponThrowPower = weaponThrowPower;
             this.RevertToPreviousState = RevertToPreviousState;
-            this.RemoveWeaponInContainer = RemoveWeaponInContainer;
             this.SetStateAndSendWeapon = SetStateAndSendWeapon;
             this.SetStateAndSendType = SetStateAndSendType;
 
-
             this.ReturnEquipedWeapon = ReturnEquipedWeapon;
+            this.ResetEquipedWeapon = ResetEquipedWeapon;
+
+            this.RemoveWeaponInContainer = RemoveWeaponInContainer;
             this.HaveSameTypeWeapon = HaveSameTypeWeapon;
             this.ReturnSameTypeWeapon = ReturnSameTypeWeapon;
 
@@ -62,8 +66,7 @@ namespace Agent.States
         bool DropWeapon(BaseWeapon weapon, bool activateWeapon = false)
         {
             weapon.ThrowWeapon(_weaponThrowPower);
-
-            if (activateWeapon == true) weapon.gameObject.SetActive(true);
+            weapon.gameObject.SetActive(true);
 
             WeaponEventBlackboard eventBlackboard = ReturnEventBlackboard();
             weapon.OnDrop(eventBlackboard);
@@ -91,6 +94,7 @@ namespace Agent.States
                     if(canDrop)
                     {
                         DropWeapon(equipedWeapon);
+                        ResetEquipedWeapon?.Invoke(null);
                         SetStateAndSendWeapon?.Invoke(WeaponController.State.Root, "RootWeapon", _newWeapon);
                         return;
                     }
@@ -113,6 +117,7 @@ namespace Agent.States
                     if(canDrop)
                     {
                         DropWeapon(sameTypeWeapon);
+                        ResetEquipedWeapon?.Invoke(null);
                         SetStateAndSendWeapon?.Invoke(WeaponController.State.Root, "RootWeapon", _newWeapon);
                         return;
                     }
@@ -130,6 +135,7 @@ namespace Agent.States
                 if (canDrop)
                 {
                     DropWeapon(equipedWeapon);
+                    ResetEquipedWeapon?.Invoke(null);
                     SetStateAndSendType?.Invoke(WeaponController.State.Equip, "EquipNextWeapon", type);
                     return;
                 }

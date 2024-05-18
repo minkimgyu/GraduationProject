@@ -302,6 +302,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eb44f2238084434ab3d8a974d2988d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firePoint: {fileID: 0}
+  _firePointRotationMultiplier: {x: 0, y: 0}
+  _sightPoint: {fileID: 0}
 --- !u!114 &216895657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,11 +334,23 @@ MonoBehaviour:
   _wanderOffset: 5
   _stateChangeDelay: 5
   _sightPoint: {fileID: 247491272}
+  _aimPoint: {fileID: 0}
   _moveSpeed: 3
   _viewSpeed: 5
   _targetCaptureRadius: 8
   _targetCaptureAngle: 90
   _pathFindDelay: 0.5
+  _farFromPlayerDistance: 9
+  _farFromPlayerDistanceOffset: 6
+  _farFromTargetDistance: 6
+  _farFromTargetDistanceOffset: 1
+  _closeDistance: 3
+  _closeDistanceOffset: 1
+  _attackDelay: 3
+  _attackDuration: 1
+  _formationRadius: 10
+  _ownerAnimator: {fileID: 0}
+  _player: {fileID: 0}
 --- !u!1 &247491271
 GameObject:
   m_ObjectHideFlags: 0

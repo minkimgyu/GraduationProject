@@ -7,14 +7,18 @@ using System;
 public class BaseCommand
 {
     public BaseCommand(Action DoAction) { }
+    public BaseCommand(Action<BaseWeapon> DoAction) { }
     public BaseCommand(Action<BaseWeapon.Type> DoAction) { }
     public BaseCommand(Action<BaseWeapon.EventType> DoAction) { }
     public BaseCommand(Action<Vector3> DoAction) { }
+    public BaseCommand(Action<float, float> DoAction) { }
 
     public virtual void Execute() { }
+    public virtual void Execute(BaseWeapon weapon) { }
     public virtual void Execute(BaseWeapon.Type type) { }
     public virtual void Execute(BaseWeapon.EventType type) { }
     public virtual void Execute(Vector3 dir) { }
+    public virtual void Execute(float hp, float armor) { }
 }
 
 public class Command : BaseCommand
@@ -71,5 +75,33 @@ public class EventCommand : BaseCommand
     public override void Execute(BaseWeapon.EventType type)
     {
         DoAction?.Invoke(type);
+    }
+}
+
+public class WeaponCommand : BaseCommand
+{
+    Action<BaseWeapon> DoAction;
+    public WeaponCommand(Action<BaseWeapon> DoAction) : base(DoAction)
+    {
+        this.DoAction = DoAction;
+    }
+
+    public override void Execute(BaseWeapon type)
+    {
+        DoAction?.Invoke(type);
+    }
+}
+
+public class HealCommand : BaseCommand
+{
+    Action<float, float> DoAction;
+    public HealCommand(Action<float, float> DoAction) : base(DoAction)
+    {
+        this.DoAction = DoAction;
+    }
+
+    public override void Execute(float hp, float armor)
+    {
+        DoAction?.Invoke(hp, armor);
     }
 }

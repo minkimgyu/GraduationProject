@@ -261,7 +261,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _titleTxt: {fileID: 7746343606420110828}
-  _slotPrefab: {fileID: 1748615430856529085, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+  _itemSlotDictionary:
+    m_keys: 020000000000000001000000
+    m_values:
+    - {fileID: 2553064799711021024, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+    - {fileID: 8438957357814419462, guid: 71adf68b56777fb41b8b1b949249be3b, type: 3}
+    - {fileID: 6362146157174408850, guid: 37f4e24cc90496147bda7b3425ca7c6c, type: 3}
+  _content: {fileID: 5159491368752222610}
   _itemSlots: []
 --- !u!1 &7689621825812616769
 GameObject:
@@ -272,7 +278,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5159491368752222610}
-  - component: {fileID: 215153148773706342}
+  - component: {fileID: 1042050580743724041}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -299,7 +305,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -50}
   m_SizeDelta: {x: 0, y: -100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &215153148773706342
+--- !u!114 &1042050580743724041
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,18 +314,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 7689621825812616769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
-    m_Right: 0
+    m_Left: 10
+    m_Right: 10
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 1
-  m_StartCorner: 0
-  m_StartAxis: 1
-  m_CellSize: {x: 300, y: 160}
-  m_Spacing: {x: 0, y: 20}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Spacing: 50
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0

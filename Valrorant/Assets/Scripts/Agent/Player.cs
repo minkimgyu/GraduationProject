@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using Agent.Controller;
 using Agent.Component;
+using FSM;
+using AI.ZombieFSM;
+
+public enum LifeState
+{
+    Alive,
+    Die
+}
 
 public class Player : DirectDamageTarget, IDamageable, ISightTarget
 {
     [SerializeField] Transform _sightPoint;
-    [SerializeField] float _maxHp;
-    float _hp;
 
     public TargetType MyType { get; set; }
 
@@ -18,25 +24,57 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
 
     [SerializeField] Animator _ownerAnimator;
 
-    protected override void Start()
+    public enum EventState
     {
-        Cursor.visible = false;
+        Enable,
+        Disable
+    }
+
+    EventState _state;
+
+    StateMachine<LifeState> _lifeFsm = new StateMachine<LifeState>();
+
+    public void Initialize(PlayerData data)
+    {
+        _state = EventState.Enable;
+
+        //Cursor.visible = false;
         MyType = TargetType.Human;
 
         base.Start();
 
-        _hp = _maxHp;
+        HpViewer hpViwer = FindObjectOfType<HpViewer>();
+        RoundViwer roundViwer = FindObjectOfType<RoundViwer>();
+
+
+        //(state) => {_lifeFsm.SetState(state); }, hpViwer.OnHpChange)
+
+        _lifeFsm.Initialize(
+              new Dictionary<LifeState, BaseState>
+              {
+                    {LifeState.Alive, new AliveState(data.maxHp, data.maxArmor, null)},
+                    //{LifeState.Die, new DieState(gameObject, _destoryDelay, ResetAnimatorValue) },
+              }
+           );
+        _lifeFsm.SetState(LifeState.Alive);
 
         _interactionController = GetComponentInChildren<InteractionController>();
         _interactionController.Initialize();
-        InputHandler.AddInputEvent(InputHandler.Type.Interact, new BaseCommand(_interactionController.OnHandleInteract));
+        InputHandler.AddInputEvent(InputHandler.Type.Interact, new Command(_interactionController.OnHandleInteract));
+
+
+        WeaponViewer weaponViewer = FindObjectOfType<WeaponViewer>();
 
         ZoomComponent zoomComponent = GetComponent<ZoomComponent>();
         _weaponController = GetComponent<WeaponController>();
         _weaponController.Initialize(
+            data.weaponThrowPower,
             false,
-            zoomComponent.OnZoomCalled, 
-            (name, layer, nomalizedTime) => _ownerAnimator.Play(name, layer, nomalizedTime)
+            zoomComponent.OnZoomCalled,
+            (name, layer, nomalizedTime) => _ownerAnimator.Play(name, layer, nomalizedTime),
+            roundViwer.OnRoundCountChange,
+            weaponViewer.AddPreview,
+            weaponViewer.RemovePreview
         );
 
         _weaponController.OnHandleEquip(BaseWeapon.Type.Sub);
@@ -49,7 +87,9 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.Drop, new Command(_weaponController.OnHandleDrop));
 
         _actionController = GetComponent<ActionController>();
-        _actionController.Initialize();
+        _actionController.Initialize(data.walkSpeed, data.walkSpeedOnAir, data.jumpSpeed, 
+            data.postureSwitchDuration, data.capsuleStandCenter, data.capsuleStandHeight, 
+            data.capsuleCrouchCenter, data.capsuleCrouchHeight, data.viewYRange, data.viewSensitivity.V2);
 
         InputHandler.AddInputEvent(InputHandler.Type.Sit, new Command(_actionController.OnHandleSit));
         InputHandler.AddInputEvent(InputHandler.Type.Stand, new Command(_actionController.OnHandleStand));
@@ -58,7 +98,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.Stop, new Command(_actionController.OnHandleStop));
         InputHandler.AddInputEvent(InputHandler.Type.Walk, new MoveCommand(_actionController.OnHandleMove));
 
-        Commander commander  = GetComponent<Commander>();
+        Commander commander = GetComponent<Commander>();
         commander.Initialize();
 
         InputHandler.AddInputEvent(InputHandler.Type.FreeRole, new Command(commander.FreeRole));
@@ -66,16 +106,50 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
 
         InputHandler.AddInputEvent(InputHandler.Type.PickUpWeapon, new Command(commander.PickUpWeapon));
         InputHandler.AddInputEvent(InputHandler.Type.SetPriorityTarget, new Command(commander.SetPriorityTarget));
+
+        InputHandler.AddInputEvent(InputHandler.Type.TurnOnOffPlayerRoutine, new Command(TurnOnOffRoutine));
+
+
+        Shop shop = FindObjectOfType<Shop>();
+        if (shop == null) return;
+
+        // 상점에 Event를 등록시켜준다.
+        shop.AddEvent(Shop.EventType.BuyWeapon, new WeaponCommand(_weaponController.OnWeaponReceived));
+        shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp, armor) => _lifeFsm.OnHeal(hp, armor)));
+        shop.AddEvent(Shop.EventType.BuyAmmo, new Command(_weaponController.RefillAmmo));
+    }
+
+    void TurnOnOffRoutine()
+    {
+        switch (_state)
+        {
+            case EventState.Enable:
+                _state = EventState.Disable;
+                _actionController.TurnOnOffInput();
+                _weaponController.TurnOnOffInput();
+
+                break;
+            case EventState.Disable:
+                _state = EventState.Enable;
+                _actionController.TurnOnOffInput();
+                _weaponController.TurnOnOffInput();
+
+                break;
+        }
     }
 
     private void Update()
     {
+        if (_state == EventState.Disable) return;
+
         _actionController.OnUpdate();
         _weaponController.OnUpdate();
     }
 
     private void FixedUpdate()
     {
+        if (_state == EventState.Disable) return;
+
         _actionController.OnFixedUpdate();
     }
 
@@ -84,14 +158,14 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         _actionController.OnLateUpdate();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        _actionController.OnCollisionEnterRequested(collision);
+    }
 
     public void GetDamage(float damage)
     {
-        _hp -= damage;
-
-        if (_hp <= 0)
-        {
-        }
+        _lifeFsm.OnDamaged(damage);
     }
 
     private void OnApplicationFocus(bool focus)
@@ -119,12 +193,8 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         return _sightPoint;
     }
 
-    public bool IsDie()
+    public bool IsUntrackable()
     {
-        return _hp <= 0;
-    }
-
-    public void Die()
-    {
+        return false;
     }
 }

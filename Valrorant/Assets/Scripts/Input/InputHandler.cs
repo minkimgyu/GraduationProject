@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
-
 public class InputHandler : MonoBehaviour
 {
     public enum Type
     {
+        TurnOnOffPlayerRoutine,
+
         Sit,
         Stand,
 
@@ -25,95 +25,109 @@ public class InputHandler : MonoBehaviour
         Drop,
         Interact,
 
+        Shop,
+
         BuildFormation,
         FreeRole,
         PickUpWeapon,
         SetPriorityTarget,
     }
 
-    private static InputHandler instance = null;
-
-    void Awake()
-    {
-        if (null == instance)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public static InputHandler Instance { get { return instance; } }
+    static InputHandler _instance = null;
 
     //// input 이벤트가 하나가 아닐 수도 있음
     Dictionary<Type, BaseCommand> _commands = new Dictionary<Type, BaseCommand>();
 
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+
+            if (transform.parent != null && transform.root != null)
+            {
+                DontDestroyOnLoad(transform.root.gameObject);
+            }
+            else
+            {
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+        else Destroy(gameObject);
+    }
+
     public static void AddInputEvent(Type type, BaseCommand command)
     {
-        instance._commands.Add(type, command);
+        _instance._commands.Add(type, command);
     }
     public static void RemoveInputEvent(Type type)
     {
-        instance._commands.Remove(type);
+        _instance._commands.Remove(type);
     }
 
     void ExecuteCommand(Type type)
     {
-        if (instance._commands.ContainsKey(type) == false) return;
-        instance._commands[type].Execute();
+        if (_instance._commands.ContainsKey(type) == false) return;
+        _instance._commands[type].Execute();
     }
 
     void ExecuteCommand(Type type, Vector3 dir)
     {
-        if (instance._commands.ContainsKey(type) == false) return;
-        instance._commands[type].Execute(dir);
+        if (_instance._commands.ContainsKey(type) == false) return;
+        _instance._commands[type].Execute(dir);
     }
 
     void ExecuteCommand(Type type, BaseWeapon.EventType eventType)
     {
-        if (instance._commands.ContainsKey(type) == false) return;
-        instance._commands[type].Execute(eventType);
+        if (_instance._commands.ContainsKey(type) == false) return;
+        _instance._commands[type].Execute(eventType);
     }
 
     void ExecuteCommand(Type type, BaseWeapon.Type equipType)
     {
-        if (instance._commands.ContainsKey(type) == false) return;
-        instance._commands[type].Execute(equipType);
+        if (_instance._commands.ContainsKey(type) == false) return;
+        _instance._commands[type].Execute(equipType);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.LeftControl)) instance.ExecuteCommand(Type.Sit);
-        else if(Input.GetKeyUp(KeyCode.LeftControl)) instance.ExecuteCommand(Type.Stand);
+        if(Input.GetKeyDown(KeyCode.LeftControl)) _instance.ExecuteCommand(Type.Sit);
+        else if(Input.GetKeyUp(KeyCode.LeftControl)) _instance.ExecuteCommand(Type.Stand);
 
         Vector3 dir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
-        if(dir != Vector3.zero) instance.ExecuteCommand(Type.Walk, dir);
+        if(dir != Vector3.zero) _instance.ExecuteCommand(Type.Walk, dir);
 
-        if (dir == Vector3.zero) instance.ExecuteCommand(Type.Stop);
+        if (dir == Vector3.zero) _instance.ExecuteCommand(Type.Stop);
 
-        if (Input.GetKeyDown(KeyCode.Space)) instance.ExecuteCommand(Type.Jump);
+        if (Input.GetKeyDown(KeyCode.Space)) _instance.ExecuteCommand(Type.Jump);
 
-        if(Input.GetMouseButtonDown(0)) instance.ExecuteCommand(Type.EventStart, BaseWeapon.EventType.Main);
-        else if (Input.GetMouseButtonUp(0)) instance.ExecuteCommand(Type.EventEnd);
+        if(Input.GetMouseButtonDown(0)) _instance.ExecuteCommand(Type.EventStart, BaseWeapon.EventType.Main);
+        else if (Input.GetMouseButtonUp(0)) _instance.ExecuteCommand(Type.EventEnd);
 
-        if (Input.GetMouseButtonDown(1)) instance.ExecuteCommand(Type.EventStart, BaseWeapon.EventType.Sub);
-        else if (Input.GetMouseButtonUp(1)) instance.ExecuteCommand(Type.EventEnd);
+        if (Input.GetMouseButtonDown(1)) _instance.ExecuteCommand(Type.EventStart, BaseWeapon.EventType.Sub);
+        else if (Input.GetMouseButtonUp(1)) _instance.ExecuteCommand(Type.EventEnd);
 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Main);
-        else if (Input.GetKeyDown(KeyCode.Alpha2)) instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Sub);
-        else if (Input.GetKeyDown(KeyCode.Alpha3)) instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Melee);
+        if (Input.GetKeyDown(KeyCode.Alpha1)) _instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Main);
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) _instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Sub);
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) _instance.ExecuteCommand(Type.Equip, BaseWeapon.Type.Melee);
 
-        if (Input.GetKeyDown(KeyCode.R)) instance.ExecuteCommand(Type.Reload);
-        if (Input.GetKeyDown(KeyCode.G)) instance.ExecuteCommand(Type.Drop);
-        if (Input.GetKeyDown(KeyCode.F)) instance.ExecuteCommand(Type.Interact);
+        if (Input.GetKeyDown(KeyCode.R)) _instance.ExecuteCommand(Type.Reload);
+        if (Input.GetKeyDown(KeyCode.G)) _instance.ExecuteCommand(Type.Drop);
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            _instance.ExecuteCommand(Type.Interact);
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            _instance.ExecuteCommand(Type.Shop);
+            _instance.ExecuteCommand(Type.TurnOnOffPlayerRoutine);
+        }
 
 
-        if (Input.GetKeyDown(KeyCode.B)) 
-            instance.ExecuteCommand(Type.BuildFormation);
-        if (Input.GetKeyDown(KeyCode.I)) 
-            instance.ExecuteCommand(Type.FreeRole);
+        if (Input.GetKeyDown(KeyCode.P))
+            _instance.ExecuteCommand(Type.BuildFormation);
+        if (Input.GetKeyDown(KeyCode.L))
+            _instance.ExecuteCommand(Type.FreeRole);
     }
 }

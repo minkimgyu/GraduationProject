@@ -16,7 +16,7 @@ namespace AI.ZombieFSM
 
         Func<bool> IsTargetInSight;
 
-        Action<Vector3, bool> FollowPath;
+        Action<Vector3, List<Vector3>, bool> FollowPath;
         Func<bool> IsFollowingFinish;
 
         Vector3 _noisePos;
@@ -36,7 +36,7 @@ namespace AI.ZombieFSM
 
         public override void OnStateEnter()
         {
-            Debug.Log("NoiseTrackingState");
+            //Debug.Log("NoiseTrackingState");
             _noisePos = ReturnFrontNoise();
         }
 
@@ -50,7 +50,7 @@ namespace AI.ZombieFSM
 
         public override void OnStateUpdate()
         {
-            FollowPath(_noisePos, false);
+            FollowPath(_noisePos, null, true);
 
             bool isFinish = IsFollowingFinish();
             if (isFinish == false) return;

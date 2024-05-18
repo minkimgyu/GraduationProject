@@ -12,34 +12,77 @@ namespace BehaviorTree.Nodes
         Transform _aimPoint;
         Transform _sightPoint;
 
-        Func<ISightTarget> ReturnTargetInSight;
+        float _frontOffset = 10f;
         Action<Vector3> View;
 
-        float _frontOffset = 10f;
+        Func<bool> IsTargetInSmallSight;
+        Func<ISightTarget> ReturnTargetInSmallSight;
 
-        public FaceToTarget(Transform myTransform, Transform aimPoint, Transform sightPoint, Func<ISightTarget> ReturnTargetInSight, Action<Vector3> View)
+        Func<bool> IsTargetInLargeSight;
+        Func<ISightTarget> ReturnTargetInLargeSight;
+
+        public FaceToTarget(Transform myTransform, Transform aimPoint, Transform sightPoint, Action<Vector3> View,
+
+            Func<bool> IsTargetInSmallSight, Func<ISightTarget> ReturnTargetInSmallSight,
+            Func<bool> IsTargetInLargeSight, Func<ISightTarget> ReturnTargetInLargeSight)
         {
             _myTransform = myTransform;
 
             _aimPoint = aimPoint;
             _sightPoint = sightPoint;
-            this.ReturnTargetInSight = ReturnTargetInSight;
             this.View = View;
+
+            this.IsTargetInSmallSight = IsTargetInSmallSight;
+            this.ReturnTargetInSmallSight = ReturnTargetInSmallSight;
+
+            this.IsTargetInLargeSight = IsTargetInLargeSight;
+            this.ReturnTargetInLargeSight = ReturnTargetInLargeSight;
         }
 
-        public override NodeState Evaluate()
+        void ResetView(ISightTarget target)
         {
-            ISightTarget target = ReturnTargetInSight();
-            if (target == null) return NodeState.FAILURE;
-
             Transform sightPoint = target.ReturnSightPoint();
-            _aimPoint.position = sightPoint.position;
+
+            float distance = Vector3.Distance(sightPoint.position, _sightPoint.position);
+
+            Vector3 nextPos;
+            if (distance <= 2f)
+            {
+                Vector3 targetDir = (sightPoint.position - _sightPoint.position);
+                nextPos = sightPoint.position + (targetDir * 2f);
+            }
+            else
+            {
+                nextPos = sightPoint.position;
+            }
+
+            _aimPoint.position = Vector3.Lerp(_aimPoint.position, nextPos, Time.deltaTime * 0.7f);
 
             Vector3 dir = (_aimPoint.position - _sightPoint.position).normalized;
             View?.Invoke(new Vector3(dir.x, 0, dir.z));
 
-
             _sightPoint.rotation = Quaternion.LookRotation(dir).normalized;
+        }
+
+        public override NodeState Evaluate()
+        {
+            bool isInSmallSight = IsTargetInSmallSight();
+            ISightTarget target;
+
+            if (isInSmallSight == true)
+            {
+                target = ReturnTargetInSmallSight(); // 만약 작은 시아에 적이 감지되었다면 얘로 대상을 정해준다.
+                ResetView(target);
+            }
+            else
+            {
+                bool isInLargeSight = IsTargetInLargeSight();
+                if (isInLargeSight == false) return NodeState.FAILURE;
+
+                target = ReturnTargetInLargeSight();
+                ResetView(target);
+            }
+
             return NodeState.SUCCESS;
         }
 

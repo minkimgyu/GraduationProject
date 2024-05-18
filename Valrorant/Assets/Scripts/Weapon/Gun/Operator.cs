@@ -6,61 +6,6 @@ using UnityEngine.UI;
 
 public class Operator : VariationGun
 {
-    //[SerializeField]
-    //float _mainActionDelayWhenZoomIn;
-
-    //[SerializeField]
-    //float _mainActionDelayWhenZoomOut;
-
-    //[SerializeField] protected int _fireCnt;
-
-    //[SerializeField] float _penetratePower;
-
-    //[SerializeField] protected float _recoveryDuration;
-
-
-    //[SerializeField]
-    //float _subActionDelay;
-
-    //[SerializeField]
-    //float _mainActionbulletSpreadPowerRatio;
-
-    //GameObject _scope;
-
-    //[SerializeField]
-    //float _meshDisableDelay;
-
-    //[SerializeField]
-    //float _zoomDuration;
-
-    //[SerializeField]
-    //float _scopeOnDelay;
-
-    //[SerializeField]
-    //float _normalFieldOfView;
-
-    //[SerializeField]
-    //float _zoomFieldOfView;
-
-    //[SerializeField]
-    //float _doubleZoomFieldOfView;
-
-    //[SerializeField]
-    //Vector3 _zoomCameraPosition;
-
-    //[SerializeField]
-    //GameObject _gunMesh;
-
-    //[SerializeField]
-    //WeightApplier _mainWeightApplier;
-
-    //Dictionary<HitArea, DistanceAreaData[]> _damageDictionary = new Dictionary<HitArea, DistanceAreaData[]>()
-    //{
-    //    { HitArea.Head, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 255) } },
-    //    { HitArea.Body, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 150) } },
-    //    { HitArea.Leg, new DistanceAreaData[]{ new DistanceAreaData(0, 50, 120) } },
-    //};
-
     public override void Initialize(OperatorData data, RecoilRangeData mainRangeData, RecoilRangeData subRangeData)
     {
         _ammoCountsInMagazine = data.maxAmmoCountInMagazine;

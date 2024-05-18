@@ -71,7 +71,7 @@ namespace Agent.States
             SwitchToNewWeapon?.Invoke(weapon);
         }
 
-        public void EquipWeapon(BaseWeapon.Type weaponType)
+        public void EquipWeapon(BaseWeapon weaponToEquip)
         {
             BaseWeapon equipedWeapon = ReturnEquipedWeapon();
 
@@ -81,7 +81,6 @@ namespace Agent.States
                 equipedWeapon.gameObject.SetActive(false);
             }
 
-            BaseWeapon weaponToEquip = ReturnSameTypeWeapon(weaponType);
             ResetEquipedWeapon?.Invoke(weaponToEquip);
 
             weaponToEquip.gameObject.SetActive(true);
@@ -92,7 +91,14 @@ namespace Agent.States
 
         public override void OnStateEnter()
         {
-            EquipWeapon(_weaponTypeToEquip);
+            BaseWeapon weaponToEquip = ReturnSameTypeWeapon(_weaponTypeToEquip);
+            if (weaponToEquip == null)
+            {
+                SetState(WeaponController.State.Idle);
+                return;
+            }
+
+            EquipWeapon(weaponToEquip);
 
             BaseWeapon weapon = ReturnEquipedWeapon();
             _timer.Start(weapon.EquipFinishTime); // µÙ∑π¿Ã

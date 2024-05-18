@@ -4,35 +4,59 @@ using UnityEngine;
 using FSM;
 using System;
 
-namespace AI.ZombieFSM
+public class DieState : State
 {
-    public class DieState : State
+    float _destoryDelay;
+    Action<float> DestoryMe;
+    Transform _myTransform;
+    Transform _myRig;
+
+    GameObject _model;
+    CapsuleCollider _modelCol;
+    string _ragdoolName;
+
+    private void CopyAnimCharacterTransformToRagdoll(Transform origin, Transform rag)
     {
-        GameObject _myGameObject;
-        float _destoryDelay;
-        Action<string, bool> ResetAnimatorBool;
-        StopwatchTimer _stopwatchTimer = new StopwatchTimer();
+        rag.position = origin.position;
+        rag.rotation = origin.rotation;
 
-        public DieState(ZombieBlackboard blackboard)
+        for (int i = 0; i < origin.transform.childCount; i++)
         {
-            _myGameObject = blackboard.MyTransform.gameObject;
-            _destoryDelay = blackboard.DestoryDelay;
-
-            ResetAnimatorBool = blackboard.ResetAnimatorBool;
-        }
-
-        public override void OnStateEnter()
-        {
-            ResetAnimatorBool?.Invoke("IsDie", true);
-            _stopwatchTimer.Start(_destoryDelay);
-        }
-
-        public override void OnStateUpdate()
-        {
-            if(_stopwatchTimer.CurrentState == StopwatchTimer.State.Finish)
+            if (origin.childCount != rag.childCount) continue;
+            if (origin.transform.childCount != 0)
             {
-                UnityEngine.Object.Destroy(_myGameObject);
+                CopyAnimCharacterTransformToRagdoll(origin.transform.GetChild(i), rag.transform.GetChild(i));
             }
+
+            rag.transform.GetChild(i).localPosition = origin.transform.GetChild(i).localPosition;
+            rag.transform.GetChild(i).localRotation = origin.transform.GetChild(i).localRotation;
         }
+    }
+
+    void OnDieRequested()
+    {
+        _modelCol = _myTransform.GetComponent<CapsuleCollider>();
+        _modelCol.enabled = false;
+
+        // 그냥 여기서 생성시켜버리자
+        Ragdoll ragObj = ObjectPooler.SpawnFromPool<Ragdoll>(_ragdoolName);
+        CopyAnimCharacterTransformToRagdoll(_myRig, ragObj.Rig);
+        _model.SetActive(false);
+        DestoryMe(_destoryDelay);
+    }
+
+    public DieState(string ragdoolName, Transform myTransform, GameObject model, Transform myRig, float destoryDelay, Action<float> DestoryMe)
+    {
+        _ragdoolName = ragdoolName;
+        _myTransform = myTransform;
+        _model = model;
+        _myRig = myRig;
+        _destoryDelay = destoryDelay;
+        this.DestoryMe = DestoryMe;
+    }
+
+    public override void OnStateEnter()
+    {
+        OnDieRequested();
     }
 }

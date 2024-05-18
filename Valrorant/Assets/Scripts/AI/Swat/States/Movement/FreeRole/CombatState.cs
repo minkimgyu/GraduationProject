@@ -14,13 +14,23 @@ namespace AI.SwatFSM
     {
         protected Tree _bt;
 
-        Func<bool> IsTargetInSight;
+        Func<bool> IsTargetInLargeSight;
+        Func<bool> IsTargetInSmallSight;
+
+        Action<float> ModifyLargeCaptureRadius;
+        Action<float> ModifySmallCaptureRadius;
+
         Action<FreeRoleState.State> SetState;
 
         public CombatState(Action<FreeRoleState.State> SetState, SwatMovementBlackboard blackboard)
         {
             this.SetState = SetState;
-            this.IsTargetInSight = blackboard.IsTargetInSight;
+
+            this.IsTargetInLargeSight = blackboard.IsTargetInLargeSight;
+            this.IsTargetInSmallSight = blackboard.IsTargetInSmallSight;
+
+            ModifyLargeCaptureRadius = blackboard.ModifyLargeCaptureRadius;
+            ModifySmallCaptureRadius = blackboard.ModifySmallCaptureRadius;
 
             _bt = new Tree();
             List<Node> _childNodes;
@@ -30,7 +40,9 @@ namespace AI.SwatFSM
                 (
                     new List<Node>()
                     {
-                        new FaceToTarget(blackboard.MyTransform, blackboard.AimPoint, blackboard.SightPoint, blackboard.ReturnTargetInSight, blackboard.View),
+                        new FaceToTarget(blackboard.MyTransform, blackboard.AimPoint, blackboard.SightPoint, blackboard.View,
+                                        blackboard.IsTargetInSmallSight, blackboard.ReturnTargetInSmallSight,
+                                        blackboard.IsTargetInLargeSight, blackboard.ReturnTargetInLargeSight),
 
                         new Selector
                         (
@@ -44,31 +56,23 @@ namespace AI.SwatFSM
                                         (
                                             new List<Node>()
                                             {
-                                                new IsFarAwayToTarget(blackboard.MyTransform, blackboard.FarFromPlayerDistance,
-                                                blackboard.FarFromPlayerDistanceOffset, blackboard.ReturnPlayer),
+                                                new IsFarAwayFromPlayer(blackboard.MyTransform, blackboard.FarFromPlayerDistance,
+                                                blackboard.FarFromPlayerDistanceOffset, blackboard.ReturnPlayerPos),
 
                                                 // --> 이 경우는 가장 가까운 적의 위치 기반으로 하자
                                                 // 이를 통해 후퇴를 하게되는 경우 타겟을 얘로 바꾸자
                                                 new IsCloseToTarget(blackboard.MyTransform, blackboard.CloseDistance, blackboard.CloseDistanceOffset,
-                                                blackboard.ReturnTargetInSight)
+                                                blackboard.IsTargetInSmallSight, blackboard.ReturnTargetInSmallSight)
                                             }
                                         ),
 
-                                       new Retreat(blackboard.ReturnPlayer, blackboard.ReturnNodePos, blackboard.FollowPath, false)
+                                        new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration,
+                                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                                        blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
                                     }
                                 ),
 
-                                // 여기서는 타겟과의 거리가 멀어질 경우 추적하는 메커니즘을 넣어보자
-                                new Sequencer
-                                (
-                                    new List<Node>()
-                                    {
-                                        new IsFarAwayToTarget(blackboard.MyTransform, blackboard.FarFromTargetDistance,
-                                                blackboard.FarFromTargetDistanceOffset, blackboard.ReturnTargetInSight),
-
-                                       new FollowTarget(blackboard.ReturnTargetInSight, blackboard.ReturnNodePos, blackboard.FollowPath)
-                                    }
-                                )
+                                new Stop(blackboard.Stop)
                             }
                         )
                     }
@@ -79,17 +83,28 @@ namespace AI.SwatFSM
             _bt.SetUp(rootNode);
         }
 
+        public override void OnStateEnter()
+        {
+            Debug.Log("CombatState");
+        }
+
         public override void OnStateExit()
         {
-
             _bt.OnDisable();
             // 여기서 aimpoint 위치를 정방향으로 바꿔준다.
         }
 
         public override void CheckStateChange()
         {
-            bool isInSight = IsTargetInSight();
-            if (isInSight == true) return;
+            bool isInSmallSight = IsTargetInSmallSight();
+            bool isInLargeSight = IsTargetInLargeSight();
+
+            if (isInSmallSight == true || isInLargeSight == true) return;
+
+            // captureComponent 줄여줌
+            // captureComponent 키워줌
+            ModifyLargeCaptureRadius(-2f);
+            ModifySmallCaptureRadius(-2f);
 
             SetState?.Invoke(FreeRoleState.State.Exploring);
         }
