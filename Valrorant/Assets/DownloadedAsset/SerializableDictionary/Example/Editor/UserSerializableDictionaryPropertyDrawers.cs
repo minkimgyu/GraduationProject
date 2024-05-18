@@ -5,6 +5,10 @@ using UnityEditor;
 
 [CustomPropertyDrawer(typeof(RecoilDataDictionary))]
 [CustomPropertyDrawer(typeof(WeaponDataDictionary))]
+[CustomPropertyDrawer(typeof(CharacterDataDictionary))]
+[CustomPropertyDrawer(typeof(SpriteDictionary))]
+[CustomPropertyDrawer(typeof(ProfileDictionary))]
+[CustomPropertyDrawer(typeof(ItemSlotDictionary))]
 //[CustomPropertyDrawer(typeof(Dictionary<HitArea, DistanceAreaData[]>))]
 //[CustomPropertyDrawer(typeof(Dictionary<HitArea, DistanceAreaData[]>1))]
 

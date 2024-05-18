@@ -10,7 +10,17 @@ public class RecoilDataDictionary : SerializableDictionary<BaseWeapon.EventType,
 [Serializable]
 public class WeaponDataDictionary : SerializableDictionary<BaseWeapon.Name, WeaponFactoryData> { }
 
+[Serializable]
+public class CharacterDataDictionary : SerializableDictionary<CharacterPlant.Name, CharacterFactoryData> { }
 
+[Serializable]
+public class SpriteDictionary : SerializableDictionary<Database.IconName, Sprite> { }
+
+[Serializable]
+public class ProfileDictionary : SerializableDictionary<Database.HelperName, Sprite> { }
+
+[Serializable]
+public class ItemSlotDictionary : SerializableDictionary<ItemSlot.Type, ItemSlot> { }
 
 //[Serializable]
 //public class Dictionary<HitArea, DistanceAreaData[]> : SerializableDictionary<HitArea, DistanceAreaData[]> { }
