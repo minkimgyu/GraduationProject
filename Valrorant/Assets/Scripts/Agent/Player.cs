@@ -52,7 +52,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         _lifeFsm.Initialize(
               new Dictionary<LifeState, BaseState>
               {
-                    {LifeState.Alive, new AliveState(data.maxHp, data.maxArmor, null)},
+                    {LifeState.Alive, new AliveState(data.maxHp, null, hpViwer.OnHpChange)},
                     //{LifeState.Die, new DieState(gameObject, _destoryDelay, ResetAnimatorValue) },
               }
            );
@@ -73,6 +73,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
             zoomComponent.OnZoomCalled,
             (name, layer, nomalizedTime) => _ownerAnimator.Play(name, layer, nomalizedTime),
             roundViwer.OnRoundCountChange,
+            null,
             weaponViewer.AddPreview,
             weaponViewer.RemovePreview
         );
@@ -99,7 +100,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.Walk, new MoveCommand(_actionController.OnHandleMove));
 
         Commander commander = GetComponent<Commander>();
-        commander.Initialize();
+        commander.Initialize(data.startRange);
 
         InputHandler.AddInputEvent(InputHandler.Type.FreeRole, new Command(commander.FreeRole));
         InputHandler.AddInputEvent(InputHandler.Type.BuildFormation, new Command(commander.BuildFormation));
@@ -115,7 +116,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
 
         // 상점에 Event를 등록시켜준다.
         shop.AddEvent(Shop.EventType.BuyWeapon, new WeaponCommand(_weaponController.OnWeaponReceived));
-        shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp, armor) => _lifeFsm.OnHeal(hp, armor)));
+        shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp) => _lifeFsm.OnHeal(hp)));
         shop.AddEvent(Shop.EventType.BuyAmmo, new Command(_weaponController.RefillAmmo));
     }
 
@@ -166,12 +167,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
     public void GetDamage(float damage)
     {
         _lifeFsm.OnDamaged(damage);
-    }
-
-    private void OnApplicationFocus(bool focus)
-    {
-        if (focus) Cursor.lockState = CursorLockMode.Locked;
-        else Cursor.lockState = CursorLockMode.None;
     }
 
     public Vector3 GetFowardVector()

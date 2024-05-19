@@ -6,16 +6,25 @@ using Agent.Controller;
 
 public struct ShopBlackboard
 {
-    public ShopBlackboard(Action OnBuyAmmo, Action<BaseWeapon> OnBuyWeapon, Action<float, float> OnBuyHealpack)
+    public ShopBlackboard(Action<Sprite, string, string> TurnOnPreview, Action TurnOffPreview, Action OnBuyAmmo,
+        Action<BaseWeapon> OnBuyWeapon, Action<float> OnBuyHealpack, Func<BaseWeapon.Name, BaseWeapon> CreateWeapon)
     {
+        this.TurnOnPreview = TurnOnPreview;
+        this.TurnOffPreview = TurnOffPreview;
+
         this.OnBuyAmmo = OnBuyAmmo;
         this.OnBuyWeapon = OnBuyWeapon;
         this.OnBuyHealpack = OnBuyHealpack;
+        this.CreateWeapon = CreateWeapon;
     }
+
+    public Action<Sprite, string, string> TurnOnPreview { get; }
+    public Action TurnOffPreview { get; }
 
     public Action OnBuyAmmo { get; }
     public Action<BaseWeapon> OnBuyWeapon { get; }
-    public Action<float, float> OnBuyHealpack { get; }
+    public Action<float> OnBuyHealpack { get; }
+    public Func<BaseWeapon.Name, BaseWeapon> CreateWeapon { get; }
 }
 
 public class Shop : MonoBehaviour
@@ -27,9 +36,15 @@ public class Shop : MonoBehaviour
     [SerializeField] ItemSlotContainer _slotContainerPrefab;
     [SerializeField] ItemPreviewer _itemPreview;
 
-    Dictionary<Tuple<string, ItemSlot.Type>, List<ItemData>> _itemDictionary;
+    Dictionary<Category, List<SlotPlant.Name>> _itemDictionary;
 
-    public Action<BaseWeapon> AddWeapon;
+    public enum Category
+    {
+        Comsumable,
+        Sub,
+        Main,
+        Special
+    }
 
     public enum EventType
     {
@@ -72,91 +87,67 @@ public class Shop : MonoBehaviour
     ShopBlackboard ReturnBlackboard()
     {
         ShopBlackboard shopBlackboard = new ShopBlackboard(
-             _commands[EventType.BuyAmmo].Execute,
-             (weapon) => _commands[EventType.BuyWeapon].Execute(weapon),
-             (hp, armor) => _commands[EventType.BuyHealPack].Execute(hp, armor)
+            (model, title, info) => _itemPreview.TurnOnPreview(model, title, info),
+            _itemPreview.TurnOffPreview,
+
+            _commands[EventType.BuyAmmo].Execute,
+            (weapon) => { _commands[EventType.BuyWeapon].Execute(weapon); },
+            (hp) => { _commands[EventType.BuyHealPack].Execute(hp); },
+
+            CreateWeapon
         );
 
         return shopBlackboard;
     }
 
+    Func<BaseWeapon.Name, BaseWeapon> CreateWeapon;
+
     private void Initialize()
     {
         ActivatePanel(false);
         _itemPreview.TurnOffPreview();
+        CreateWeapon = FindObjectOfType<WeaponPlant>().Create;
 
         InputHandler.AddInputEvent(InputHandler.Type.Shop, new Command(TurnOnOffPanel));
 
-        _itemDictionary = new Dictionary<Tuple<string, ItemSlot.Type>, List<ItemData>>()
+        JsonAssetGenerator generator = new JsonAssetGenerator();
+
+
+        _itemDictionary = new Dictionary<Category, List<SlotPlant.Name>>()
         {
-            { new Tuple<string, ItemSlot.Type>("Ammo", ItemSlot.Type.Ammo), new List<ItemData>()
+            {   Category.Comsumable, new List<SlotPlant.Name>()
                 {
-                    new AmmoItemData(ItemData.Name.Ammo, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.AmmoIcon), 
-                    Database.ReturnPreview(Database.IconName.AmmoIcon)),
+                    SlotPlant.Name.AidKit,
+                    SlotPlant.Name.AmmoPack,
+                    SlotPlant.Name.ReviveKit
                 }
             },
-
-            { new Tuple<string, ItemSlot.Type>("Consumable", ItemSlot.Type.Consumable), new List<ItemData>()
+            {   Category.Sub, new List<SlotPlant.Name>()
                 {
-                    new HealItemData(ItemData.Name.AidKit, 100, 200, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.AidKitIcon), 
-                    Database.ReturnPreview(Database.IconName.AidKitIcon))
+                    SlotPlant.Name.Glock18,
+                    SlotPlant.Name.MP5,
                 } 
             },
-
-            {new Tuple<string, ItemSlot.Type>("Sub", ItemSlot.Type.Weapon), new List<ItemData>()
-                { 
-                    new WeaponItemData(ItemData.Name.Glock18, BaseWeapon.Name.Pistol, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.PistolIcon),
-                    Database.ReturnPreview(Database.IconName.PistolIcon)),
-
-                    new WeaponItemData(ItemData.Name.MP5, BaseWeapon.Name.SMG, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.SMGIcon),
-                    Database.ReturnPreview(Database.IconName.SMGIcon)) 
+            {   Category.Main, new List<SlotPlant.Name>()
+                {
+                    SlotPlant.Name.AKM,
+                    SlotPlant.Name.M416,
+                    SlotPlant.Name.Scout
                 } 
             },
-
-            {new Tuple<string, ItemSlot.Type>("Main", ItemSlot.Type.Weapon), new List<ItemData>()
-                { 
-                    new WeaponItemData(ItemData.Name.AKM, BaseWeapon.Name.AK, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.AKIcon),
-                    Database.ReturnPreview(Database.IconName.AKIcon)), 
-
-                    new WeaponItemData(ItemData.Name.M416, BaseWeapon.Name.AR, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.ARIcon),
-                    Database.ReturnPreview(Database.IconName.ARIcon)), 
-
-                    new WeaponItemData(ItemData.Name.Scout, BaseWeapon.Name.Sniper, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.SniperIcon),
-                    Database.ReturnPreview(Database.IconName.SniperIcon)),
+            {   Category.Special, new List<SlotPlant.Name>()
+                {
+                    SlotPlant.Name.Saiga,
+                    SlotPlant.Name.MK18,
+                    SlotPlant.Name.M249
                 } 
-            },
-
-            {new Tuple<string, ItemSlot.Type>("Special", ItemSlot.Type.Weapon), new List<ItemData>()
-                { 
-                    new WeaponItemData(ItemData.Name.Saiga, BaseWeapon.Name.AutoShotgun, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.AutoShotgunIcon),
-                    Database.ReturnPreview(Database.IconName.AutoShotgunIcon)), 
-
-                    new WeaponItemData(ItemData.Name.MK18, BaseWeapon.Name.DMR, 300, "d", 
-                    Database.ReturnIcon(Database.IconName.DMRIcon),
-                    Database.ReturnPreview(Database.IconName.DMRIcon)),
-
-                    new WeaponItemData(ItemData.Name.M249, BaseWeapon.Name.LMG, 300, "d",
-                    Database.ReturnIcon(Database.IconName.LMGIcon),
-                    Database.ReturnPreview(Database.IconName.LMGIcon))
-                } 
-            },
+            }
         };
 
         foreach (var item in _itemDictionary)
         {
             ItemSlotContainer slotContainer = Instantiate(_slotContainerPrefab, _slotContainer);
-            slotContainer.Initialize(item.Key.Item1, item.Key.Item2, item.Value, ReturnBlackboard,
-               _itemPreview.TurnOffPreview,
-               (model, title, info) => _itemPreview.TurnOnPreview(model, title, info)
-            );
+            slotContainer.Initialize(item.Key.ToString(), item.Value, ReturnBlackboard);
         }
     }
 }

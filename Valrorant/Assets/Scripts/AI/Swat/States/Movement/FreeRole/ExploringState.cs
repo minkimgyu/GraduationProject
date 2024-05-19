@@ -93,12 +93,6 @@ namespace AI.SwatFSM
             _bt.SetUp(rootNode);
         }
 
-        public override void OnStateEnter()
-        {
-            Debug.Log("ExploringState");
-        }
-
-
         public override void OnStateExit()
         {
             _bt.OnDisable();

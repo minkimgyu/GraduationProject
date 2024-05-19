@@ -10,9 +10,8 @@ namespace Agent.Component
         [SerializeField] private Transform _direction;
 
         [SerializeField] private Transform _cameraHolder;
-
-        [SerializeField] private Transform _camPivot;
-        [SerializeField] private Transform _cam;
+        private Transform _camPivot;
+        private Transform _cam;
 
         //protected Vector2 _viewRotation;
 
@@ -24,13 +23,15 @@ namespace Agent.Component
 
         private Vector2 CameraViewRotation { get { return _viewRotation + _cameraRotationMultiplier; } } // 카메라 회전 프로퍼티
         private Vector2 ActorBoneViewRotation { get { return _viewRotation + _actorBoneRotationMultiplier; } } // 모델링 회전 프로퍼티
-        //private Vector2 FireViewRotation { get { return _viewRotation + _firePointRotationMultiplier; } } // 총 발사 시작 지점 회전 값 프로퍼티
-
-        //public Vector3 ReturnRaycastPos() { return _firePoint.position; }
-        //public Vector3 ReturnRaycastDir() { return _firePoint.forward; }
 
         public void Initialize(float viewYRange, Vector2 viewSensitivity)
         {
+            CameraContainer controller = FindObjectOfType<CameraContainer>();
+
+            _camPivot = controller._cameraParent;
+            _cam = controller._mainCamera.transform;
+            _firePoint = controller._firePoint;
+
             _viewYRange = viewYRange;
             _viewSensitivity = viewSensitivity;
         }
@@ -57,10 +58,8 @@ namespace Agent.Component
         public override void ResetCamera()
         {
             base.ResetCamera();
-            // _direction.eulerAngles.y
             _camPivot.position = _cameraHolder.position;
             _cam.rotation = Quaternion.Euler(CameraViewRotation.y, CameraViewRotation.x, 0);
-            //_firePoint.rotation = Quaternion.Euler(FireViewRotation.y, FireViewRotation.x, 0);
         }
     }
 }

@@ -5,59 +5,100 @@ using AI;
 
 public class Commander : MonoBehaviour
 {
-    [SerializeField] Helper _helperPrefab;
-    [SerializeField] int _helperCnt = 1;
-    [SerializeField] float _startRange = 10f;
-    List<ICommandListener> _listeners = new List<ICommandListener>();
+    Dictionary<CharacterPlant.Name, ICommandListener> _listeners = new Dictionary<CharacterPlant.Name, ICommandListener>();
+    CharacterPlant.Name[] helperNames = { CharacterPlant.Name.Oryx, CharacterPlant.Name.Rook, CharacterPlant.Name.Warden };
 
-    Vector3 ReturnPlayerPos() { return transform.position; }
+    float _startRange;
 
-    public void Initialize()
+    public void Initialize(float startRange)
     {
-        // HelperFactory 구현 필요함
-        //HelperViewer viewer =  FindObjectOfType<HelperViewer>();
-        //viewer.
+        _startRange = startRange;
 
         CharacterPlant plant = FindObjectOfType<CharacterPlant>();
+        HelperViewer viewer = FindObjectOfType<HelperViewer>();
+        Player player = FindObjectOfType<Player>();
 
-        for (int i = 0; i < _helperCnt; i++)
+        for (int i = 0; i < helperNames.Length; i++)
         {
-            Vector2 startPos = Random.insideUnitCircle * _startRange;
+            viewer.AddProfile(helperNames[i]);
+            ProfileViewer profile = viewer.ReturnProfile(helperNames[i]);
 
-            plant.Create(CharacterPlant.Name.Oryx);
+            Vector2 startPos = Random.insideUnitCircle * startRange;
+            Transform helper = plant.Create(helperNames[i], player.ReturnPos, profile.OnWeaponProfileChangeRequested, 
+                profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(helperNames[i]); ResetFormationData(); });
 
-            Helper swat = Instantiate(_helperPrefab, new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x), Quaternion.identity);
-            //swat.Initialize(ReturnPlayerPos);
+            helper.position = new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x);
+            helper.rotation = Quaternion.identity;
 
-            ICommandListener listener = swat.GetComponent<ICommandListener>();
-            _listeners.Add(listener);
+            ICommandListener listener = helper.GetComponent<ICommandListener>();
+            _listeners.Add(helperNames[i], listener);
+
         }
+
+        ResetFormationData();
+    }
+
+    public void AddListener()
+    {
+        bool canAdd = false;
+        CharacterPlant.Name name = CharacterPlant.Name.Oryx;
+
+        for (int i = 0; i < helperNames.Length; i++)
+        {
+            bool containKey = _listeners.ContainsKey(helperNames[i]);
+            if (containKey == true) continue;
+
+            name = helperNames[i];
+            canAdd = true;
+            break;
+        }
+
+        if (canAdd == false) return;
+
+        CharacterPlant plant = FindObjectOfType<CharacterPlant>();
+        HelperViewer viewer = FindObjectOfType<HelperViewer>();
+        Player player = FindObjectOfType<Player>();
+        ProfileViewer profile = viewer.ReturnProfile(name);
+
+        profile.OnActiveProfileRequested(); // 재활성화
+
+        Vector2 startPos = Random.insideUnitCircle * _startRange;
+        Transform helper = plant.Create(name, player.ReturnPos, profile.OnWeaponProfileChangeRequested,
+            profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(name); ResetFormationData(); });
+
+        helper.position = new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x);
+        helper.rotation = Quaternion.identity;
+
+        ICommandListener listener = helper.GetComponent<ICommandListener>();
+        _listeners.Add(name, listener);
 
         ResetFormationData();
     }
 
     public void ResetFormationData()
     {
-        for (int i = 0; i < _listeners.Count; i++)
+        int index = 0;
+        foreach (var listener in _listeners)
         {
-            FormationData data = new FormationData(i + 1, _listeners.Count, _listeners);
-            _listeners[i].ResetFormationData(data);
+            FormationData data = new FormationData(index, _listeners.Count, _listeners);
+            listener.Value.ResetFormationData(data);
+            index++;
         }
     }
 
     public void BuildFormation()
     {
-        for (int i = 0; i < _listeners.Count; i++)
+        foreach (var listener in _listeners)
         {
-            _listeners[i].GoToBuildFormationState();
+            listener.Value.GoToBuildFormationState();
         }
     }
 
     public void FreeRole()
     {
-        for (int i = 0; i < _listeners.Count; i++)
+        foreach (var listener in _listeners)
         {
-            _listeners[i].GoToFreeRoleState();
+            listener.Value.GoToFreeRoleState();
         }
     }
 

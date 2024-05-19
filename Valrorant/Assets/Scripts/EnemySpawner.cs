@@ -5,7 +5,6 @@ using AI;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] Zombie _zombiePrefab;
     [SerializeField] float _spawnDelay;
     [SerializeField] float _radius;
     [SerializeField] float _yPos = 0.5f;
@@ -14,8 +13,12 @@ public class EnemySpawner : MonoBehaviour
 
     StopwatchTimer _timer;
 
+    System.Func<CharacterPlant.Name, Transform> SpawnEnemy;
+
     private void Start()
     {
+        SpawnEnemy = FindObjectOfType<CharacterPlant>().Create;
+
         _timer = new StopwatchTimer();
         _timer.Start(_spawnDelay);
     }
@@ -39,7 +42,10 @@ public class EnemySpawner : MonoBehaviour
 
     void Spawn(Vector3 pos)
     {
-        Zombie zombie = Instantiate(_zombiePrefab, pos, Quaternion.identity);
-        //zombie.Initialize();
+        Vector2 startPos = Random.insideUnitCircle * _radius;
+        Transform zombie = SpawnEnemy(CharacterPlant.Name.Zombie);
+
+        zombie.position = new Vector3(transform.position.x + pos.y, transform.position.y, transform.position.z + pos.x);
+        zombie.rotation = Quaternion.identity;
     }
 }

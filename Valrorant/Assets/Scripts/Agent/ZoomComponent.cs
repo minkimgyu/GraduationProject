@@ -15,8 +15,12 @@ public class ZoomComponent : MonoBehaviour//, IObserver<GameObject, bool, float,
 
     Action<bool> SwitchCrosshair;
 
-    void Start()
+    public void Initialize()
     {
+        CameraContainer controller = FindObjectOfType<CameraContainer>();
+        _cameras[0] = controller._mainCamera;
+        _cameras[1] = controller._subCamera;
+
         _timer = new StopwatchTimer();
 
         CrosshairController crosshairController = FindObjectOfType<CrosshairController>();

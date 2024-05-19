@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
 using DamageUtility;
+using System;
 
 abstract public class BaseFactory<T1, T2>
 {
     protected JsonAssetGenerator _jsonAssetGenerator = new JsonAssetGenerator();
 
     public abstract void Initialize(T2 data);
-    public abstract T1 Create();
+    public virtual T1 Create() { return default; }
+
+    public virtual T1 Create(
+        Func<Vector3> ReturnPlayerPos, 
+        Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
+        Action<float> OnHpChangeRequested,
+        Action OnDieRequested
+    ) 
+    { return default; }
+
+    public virtual T1 Create(
+        Func<ShopBlackboard> ReturnBlackboard
+    )
+    { return default; }
 }
 
 abstract public class WeaponFactory<T1> : BaseFactory<BaseWeapon, WeaponFactoryData>

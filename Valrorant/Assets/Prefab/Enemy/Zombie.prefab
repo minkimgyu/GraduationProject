@@ -1460,7 +1460,7 @@ Transform:
   m_GameObject: {fileID: 4020267693671052458}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.48, y: -0.419, z: -11.64}
+  m_LocalPosition: {x: 7.48, y: -0.5, z: -11.64}
   m_LocalScale: {x: 1.1, y: 1.1, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1554,32 +1554,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f33b2d5531a617429ac4b4f8158b518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHp: 100
-  _maxArmor: 50
-  _destoryDelay: 5
   _animator: {fileID: 4605134255178337921}
-  _angleOffset: 30
-  _angleChangeAmount: 0.1
-  _stateChangeDelay: 7
-  _flockingMoveSpeed: 1
-  _moveSpeed: 2
-  _viewSpeed: 5
-  _attackDamage: 20
-  _wanderOffset: 7
-  _flockingCaptureRadius: 8
-  _targetCaptureRadius: 13
-  _targetCaptureAdditiveRadius: 1
-  _targetCaptureAngle: 180
-  _noiseCaptureRadius: 20
-  _maxNoiseQueueSize: 3
   _sightPoint: {fileID: 179535957374384782}
   _attackPoint: {fileID: 3472333409533829373}
-  _additiveAttackRadius: 1
-  _attackRange: 3.5
-  _attackCircleRadius: 3.5
-  _preAttackDelay: 1
-  _delayForNextAttack: 5
-  _pathFindDelay: 0.5
   _modelObj: {fileID: 3480658270435469148}
   _myRig: {fileID: 992507544516441}
 --- !u!114 &9112297127195924527

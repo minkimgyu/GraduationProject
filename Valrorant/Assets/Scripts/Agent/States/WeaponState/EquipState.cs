@@ -17,7 +17,8 @@ namespace Agent.States
 
         Action<BaseWeapon> ResetEquipedWeapon;
 
-        Action<float> OnWeaponChangeRequested;
+        Action<float> OnWeaponWeightChangeRequested;
+        Action<BaseWeapon.Name> OnProfileChangeRequested;
 
         Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon;
 
@@ -31,7 +32,8 @@ namespace Agent.States
 
             Func<BaseWeapon.Type, BaseWeapon> ReturnSameTypeWeapon,
 
-            Action<float> OnWeaponChangeRequested,
+            Action<float> OnWeaponWeightChangeRequested,
+            Action<BaseWeapon.Name> OnProfileChangeRequested,
 
             Func<BaseWeapon> ReturnEquipedWeapon)
         {
@@ -43,14 +45,14 @@ namespace Agent.States
 
             this.ReturnSameTypeWeapon = ReturnSameTypeWeapon;
 
-            this.OnWeaponChangeRequested = OnWeaponChangeRequested;
+            this.OnProfileChangeRequested = OnProfileChangeRequested;
+            this.OnWeaponWeightChangeRequested = OnWeaponWeightChangeRequested;
 
             this.ReturnEquipedWeapon = ReturnEquipedWeapon;
         }
 
         public override void OnMessageReceived(string message, BaseWeapon.Type weaponTypeToEquip)
         {
-            Debug.Log(message);
             _weaponTypeToEquip = weaponTypeToEquip;
         }
 
@@ -86,7 +88,8 @@ namespace Agent.States
             weaponToEquip.gameObject.SetActive(true);
             weaponToEquip.OnEquip();
 
-            OnWeaponChangeRequested?.Invoke(weaponToEquip.SlowDownRatioByWeaponWeight);
+            OnProfileChangeRequested?.Invoke(weaponToEquip.WeaponName);
+            OnWeaponWeightChangeRequested?.Invoke(weaponToEquip.SlowDownRatioByWeaponWeight);
         }
 
         public override void OnStateEnter()

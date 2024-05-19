@@ -88,6 +88,7 @@ namespace Agent.Controller
             _viewComponent.Initialize(viewYRange, viewSensitivity);
 
             _zoomComponent = GetComponent<ZoomComponent>();
+            _zoomComponent.Initialize();
 
             _movementFSM = new StateMachine<MovementState>();
             _postureFSM = new StateMachine<PostureState>();

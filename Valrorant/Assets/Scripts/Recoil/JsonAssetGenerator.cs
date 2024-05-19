@@ -66,9 +66,11 @@ public class JsonAssetGenerator
     }
 
     // newtonSoft로 대체해주기
-    string ToJson(object objectToParse)
+    public string ToJson(object objectToParse)
     {
-        return JsonConvert.SerializeObject(objectToParse);
+        var settings = new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.All };
+
+        return JsonConvert.SerializeObject(objectToParse, settings);
     }
 
 

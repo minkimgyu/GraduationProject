@@ -79,11 +79,12 @@ namespace BehaviorTree.Nodes
 
             List<Vector3> nearHelperPos = new List<Vector3>();
 
+
+            // isightTarget 넣어서 반영해줌
             FormationData data = ReturnFormationData();
-            for (int i = 0; i < data.Listeners.Count; i++)
+            foreach (var listener in data.Listeners)
             {
-                if (i == data.Index) continue;
-                nearHelperPos.Add(data.Listeners[i].ReturnPos());
+                nearHelperPos.Add(listener.Value.ReturnPos());
             }
 
             Vector3 playerPos = ReturnPlayerPos();

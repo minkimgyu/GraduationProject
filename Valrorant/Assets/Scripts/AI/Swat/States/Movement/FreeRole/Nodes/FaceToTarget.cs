@@ -49,7 +49,7 @@ namespace BehaviorTree.Nodes
             if (distance <= 2f)
             {
                 Vector3 targetDir = (sightPoint.position - _sightPoint.position);
-                nextPos = sightPoint.position + (targetDir * 2f);
+                nextPos = sightPoint.position + (targetDir * 5f);
             }
             else
             {

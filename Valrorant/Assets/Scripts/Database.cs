@@ -27,6 +27,7 @@ public class Database : MonoBehaviour
         DMRIcon,
         KnifeIcon,
         LMGIcon,
+        ReviveIcon
     }
 
     [Serializable]
@@ -34,7 +35,8 @@ public class Database : MonoBehaviour
     {
         Warden,
         Rook,
-        Oryx
+        Oryx,
+        Me
     }
 
     static Database _instance = null;

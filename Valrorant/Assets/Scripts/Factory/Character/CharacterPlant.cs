@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 abstract public class CharacterFactory<T1> : BaseFactory<Transform, CharacterFactoryData>
 {
@@ -16,9 +17,7 @@ abstract public class CharacterFactory<T1> : BaseFactory<Transform, CharacterFac
 }
 
 [System.Serializable]
-public class CharacterFactoryData : BaseFactoryData
-{
-}
+public class CharacterFactoryData : BaseFactoryData { }
 
 public class CharacterPlant : MonoBehaviour
 {
@@ -57,5 +56,11 @@ public class CharacterPlant : MonoBehaviour
     public Transform Create(Name name)
     {
         return _characterFactories[name].Create();
+    }
+
+    public Transform Create(Name name, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, 
+        Action<float> OnHpChangeRequested, Action OnDieRequested)
+    {
+        return _characterFactories[name].Create(ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
     }
 }

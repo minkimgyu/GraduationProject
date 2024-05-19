@@ -52,7 +52,9 @@ namespace Agent.Controller
         }
 
         StateMachine<State> _weaponFSM;
-        public Action<float> OnWeaponChangeRequested;
+        public Action<float> OnWeaponWeightChangeRequested;
+
+        Action<BaseWeapon.Name> OnProfileChangeRequested;
 
         Action<BaseWeapon.Name, BaseWeapon.Type> AddPreview;
         Action<BaseWeapon.Type> RemovePreview;
@@ -64,11 +66,12 @@ namespace Agent.Controller
 
         // 여기에 이밴트 넣어서 WeaponEventBlackboard 이거 하당해주자
         public void Initialize(float weaponThrowPower, bool isTPS, Action<bool, float, Vector3, float> OnZoomRequested, 
-            Action<string, int, float> OnPlayOwnerAnimation, Action<bool, int, int> OnShowRounds = null,
+            Action<string, int, float> OnPlayOwnerAnimation, Action<bool, int, int> OnShowRounds = null, Action<BaseWeapon.Name> OnProfileChangeRequested = null,
             Action<BaseWeapon.Name, BaseWeapon.Type> AddPreview = null, Action<BaseWeapon.Type> RemovePreview = null)
         {
             this.AddPreview = AddPreview;
             this.RemovePreview = RemovePreview;
+            this.OnProfileChangeRequested = OnProfileChangeRequested;
 
             _inputState = InputState.Enable;
 
@@ -169,7 +172,6 @@ namespace Agent.Controller
         { 
             _weaponsContainer.Add(weapon.WeaponType, weapon);
             AddPreview?.Invoke(weapon.WeaponName, weapon.WeaponType);
-            Debug.Log(weapon.WeaponType);
         }
 
         public BaseWeapon ReturnSameTypeWeapon(BaseWeapon.Type type) 
@@ -220,7 +222,8 @@ namespace Agent.Controller
 
             BaseState idle = new IdleState(SetState, SetState, SwitchToNewWeapon, ReturnEquipedWeapon);
 
-            BaseState equip = new EquipState(SetState, SwitchToNewWeapon, ResetEquipedWeapon, ReturnSameTypeWeapon, OnWeaponChangeRequested, ReturnEquipedWeapon);
+            BaseState equip = new EquipState(SetState, SwitchToNewWeapon, ResetEquipedWeapon, 
+                ReturnSameTypeWeapon, OnWeaponWeightChangeRequested, OnProfileChangeRequested, ReturnEquipedWeapon);
 
             BaseState reload = new ReloadState(_isTPS, SetState, SetState, SwitchToNewWeapon, ReturnEquipedWeapon);
 

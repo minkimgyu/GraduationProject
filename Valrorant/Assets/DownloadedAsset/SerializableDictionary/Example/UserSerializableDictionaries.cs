@@ -14,6 +14,10 @@ public class WeaponDataDictionary : SerializableDictionary<BaseWeapon.Name, Weap
 public class CharacterDataDictionary : SerializableDictionary<CharacterPlant.Name, CharacterFactoryData> { }
 
 [Serializable]
+public class SlotDataDictionary : SerializableDictionary<SlotPlant.Name, SlotFactoryData> { }
+
+
+[Serializable]
 public class SpriteDictionary : SerializableDictionary<Database.IconName, Sprite> { }
 
 [Serializable]

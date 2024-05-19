@@ -11,14 +11,14 @@ public class BaseCommand
     public BaseCommand(Action<BaseWeapon.Type> DoAction) { }
     public BaseCommand(Action<BaseWeapon.EventType> DoAction) { }
     public BaseCommand(Action<Vector3> DoAction) { }
-    public BaseCommand(Action<float, float> DoAction) { }
+    public BaseCommand(Action<float> DoAction) { }
 
     public virtual void Execute() { }
     public virtual void Execute(BaseWeapon weapon) { }
     public virtual void Execute(BaseWeapon.Type type) { }
     public virtual void Execute(BaseWeapon.EventType type) { }
     public virtual void Execute(Vector3 dir) { }
-    public virtual void Execute(float hp, float armor) { }
+    public virtual void Execute(float hp) { }
 }
 
 public class Command : BaseCommand
@@ -94,14 +94,14 @@ public class WeaponCommand : BaseCommand
 
 public class HealCommand : BaseCommand
 {
-    Action<float, float> DoAction;
-    public HealCommand(Action<float, float> DoAction) : base(DoAction)
+    Action<float> DoAction;
+    public HealCommand(Action<float> DoAction) : base(DoAction)
     {
         this.DoAction = DoAction;
     }
 
-    public override void Execute(float hp, float armor)
+    public override void Execute(float hp)
     {
-        DoAction?.Invoke(hp, armor);
+        DoAction?.Invoke(hp);
     }
 }

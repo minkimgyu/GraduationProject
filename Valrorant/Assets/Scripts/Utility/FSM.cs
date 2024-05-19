@@ -19,7 +19,7 @@ namespace FSM
         public override void OnStateLateUpdate() { }
         public override void OnNoiseReceived() { }
         public override void OnDamaged(float damage) { }
-        public override void OnHeal(float hpPoint, float armorPoint) { }
+        public override void OnHeal(float hpPoint) { }
 
         public override void OnStateCollisionEnter(Collision collision) { }
         public override void OnStateTriggerEnter(Collider collider) { }
@@ -64,7 +64,7 @@ namespace FSM
         public abstract void OnStateLateUpdate();
         public abstract void OnNoiseReceived();
         public abstract void OnDamaged(float damage);
-        public abstract void OnHeal(float hpPoint, float armorPoint);
+        public abstract void OnHeal(float hpPoint);
 
 
         public abstract void OnStateCollisionEnter(Collision collision);
@@ -111,10 +111,10 @@ namespace FSM
             _currentState.OnDamaged(damage);
         }
 
-        public void OnHeal(float hpPoint, float armorPoint)
+        public void OnHeal(float hpPoint)
         {
             if (_currentState == null) return;
-            _currentState.OnHeal(hpPoint, armorPoint);
+            _currentState.OnHeal(hpPoint);
         }
 
         public void OnWeaponReceived(BaseWeapon weapon)

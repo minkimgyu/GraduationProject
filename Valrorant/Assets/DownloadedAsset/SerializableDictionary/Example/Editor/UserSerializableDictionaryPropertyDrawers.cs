@@ -6,6 +6,8 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(RecoilDataDictionary))]
 [CustomPropertyDrawer(typeof(WeaponDataDictionary))]
 [CustomPropertyDrawer(typeof(CharacterDataDictionary))]
+[CustomPropertyDrawer(typeof(SlotDataDictionary))]
+
 [CustomPropertyDrawer(typeof(SpriteDictionary))]
 [CustomPropertyDrawer(typeof(ProfileDictionary))]
 [CustomPropertyDrawer(typeof(ItemSlotDictionary))]

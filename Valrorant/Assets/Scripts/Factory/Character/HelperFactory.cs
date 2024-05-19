@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AI;
+using System;
+using Object = UnityEngine.Object;
 
 [System.Serializable]
 public class HelperData
@@ -46,20 +48,17 @@ public class HelperData
 
     public float formationOffset = 3;
     public float formationOffsetChangeDuration = 5;
+
+    public string ragdollName;
 }
 
 public class HelperFactory : CharacterFactory<HelperData>
 {
-    public override Transform Create()
+    public override Transform Create(Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, Action<float> OnHpChangeRequested,
+        Action OnDieRequested)
     {
-        GameObject playerObj = GameObject.FindWithTag("Player");
-        if (playerObj == null) return null;
-
-        Player player = playerObj.GetComponent<Player>();
-        if (player == null) return null;
-
         Helper helper = Object.Instantiate(_prefab).GetComponent<Helper>();
-        helper.Initialize(_data, player.ReturnPos);
+        helper.Initialize(_data, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
         return helper.transform;
     }
 }

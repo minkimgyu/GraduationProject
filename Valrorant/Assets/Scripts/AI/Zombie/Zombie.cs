@@ -75,7 +75,7 @@ namespace AI
             _lifeFsm.Initialize(
                new Dictionary<LifeState, BaseState>
                {
-                    {LifeState.Alive, new AliveState(data.maxHp, data.maxArmor, (state) => {_lifeFsm.SetState(state); }) },
+                    {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }) },
                     {LifeState.Die, new DieState("ZombieRagdoll", transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
                }
             );

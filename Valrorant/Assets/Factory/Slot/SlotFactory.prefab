@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2678929005256136530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8964046610246096602}
+  - component: {fileID: 5736831424426016175}
+  m_Layer: 0
+  m_Name: SlotFactory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8964046610246096602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2678929005256136530}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5736831424426016175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2678929005256136530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a29a1a1e2be0edd489606bfd58329e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _slotDatas:
+    m_keys: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a000000
+    m_values:
+    - _prefab: {fileID: 2175607665187435842, guid: 215c757eee2de9f449a4aac89c478ab8, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: b280921e8a0ac8e41873d9148d0782e4, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: 71adf68b56777fb41b8b1b949249be3b, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 883caa7bbd7482242854e15338cc5a08, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: 37f4e24cc90496147bda7b3425ca7c6c, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 6313aed70a177414eb496276e8e0e75d, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: aeea21e959f8bf046a55cbdda26d4d06, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: a971da10550ab70479444c4658b6c8ee, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: f008c674301fc3d40a2ed789a5acca4d, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 354874e1f9eb166479f6020484788e1a, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: ea2172e354756004e8112627a695489b, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 8983c89249e520d468b271b4b5b1fd29, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 708d1eff7e93f6d40bd16d5a0c605b80, type: 3}
+    - _prefab: {fileID: 2175607665187435842, guid: e3caf489b4c29b6418b599877b4c8b06, type: 3}
+      _jsonAsset: {fileID: 4900000, guid: 0b872276868388f4381065efe894f559, type: 3}

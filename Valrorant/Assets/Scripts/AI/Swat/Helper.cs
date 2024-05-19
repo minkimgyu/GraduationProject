@@ -13,7 +13,7 @@ namespace AI
 {
     public struct FormationData
     {
-        public FormationData(int index, int maxCount, List<ICommandListener> listeners)
+        public FormationData(int index, int maxCount, Dictionary<CharacterPlant.Name, ICommandListener> listeners)
         {
             Index = index;
             MaxCount = maxCount;
@@ -22,7 +22,7 @@ namespace AI
 
         public int Index { get; } // 개별 인덱스
         public int MaxCount { get; } // 최대 개수
-        public List<ICommandListener> Listeners { get; } // 최대 개수
+        public Dictionary<CharacterPlant.Name, ICommandListener> Listeners { get; } // 최대 개수
     }
 
     public class Helper : MonoBehaviour, ICommandListener, IDamageable, ISightTarget
@@ -69,15 +69,20 @@ namespace AI
         public void ResetFormationData(FormationData data) { _formationData = data; }
         FormationData ReturnFormationData() { return _formationData; }
 
-        public void Initialize(HelperData data, Func<Vector3> ReturnPlayerPos)
+        Action OnDisableProfileRequested;
+
+        public void Initialize(HelperData data, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
+            Action<float> OnHpChangeRequested, Action OnDisableProfileRequested)
         {
+            this.OnDisableProfileRequested = OnDisableProfileRequested;
+
             MyType = TargetType.Human;
 
             _lifeFsm.Initialize(
               new Dictionary<LifeState, BaseState>
               {
-                    {LifeState.Alive, new AliveState(data.maxHp, data.maxArmor, (state) => {_lifeFsm.SetState(state); }) },
-                    {LifeState.Die, new DieState("TPSRagdoll", transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
+                    {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }, OnHpChangeRequested) },
+                    {LifeState.Die, new DieState(data.ragdollName, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
               }
            );
             _lifeFsm.SetState(LifeState.Alive);
@@ -133,7 +138,7 @@ namespace AI
 
 
             _weaponController = GetComponent<WeaponController>();
-            _weaponController.Initialize(data.weaponThrowPower, true, null, PlayAnimation);
+            _weaponController.Initialize(data.weaponThrowPower, true, null, PlayAnimation, null, OnWeaponProfileChangeRequested);
 
             _interactionController = GetComponentInChildren<InteractionController>();
             _interactionController.Initialize();
@@ -151,16 +156,14 @@ namespace AI
             _battleFsm.SetState(BattleState.Idle);
         }
 
-        bool _isDie = false;
-
         public bool IsUntrackable()
         {
-            return _isDie;
+            return _lifeFsm.CurrentStateName == LifeState.Die;
         }
 
         void OnDieRequested(float delayForDestroy)
         {
-            _isDie = true;
+            OnDisableProfileRequested?.Invoke();
             Invoke("DestroyMe", delayForDestroy);
         }
 

@@ -6,14 +6,10 @@ using TMPro;
 public class HpViewer : MonoBehaviour
 {
     [SerializeField]
-    TMP_Text _hp;
+    HpBarViewer _barViewer;
 
-    [SerializeField]
-    TMP_Text _armor;
-
-    public void OnHpChange(int hp, int armor)
+    public void OnHpChange(float ratio)
     {
-        _hp.text = hp.ToString();
-        _armor.text = armor.ToString();
+        _barViewer.OnChangeHpViewer(ratio);
     }
 }
