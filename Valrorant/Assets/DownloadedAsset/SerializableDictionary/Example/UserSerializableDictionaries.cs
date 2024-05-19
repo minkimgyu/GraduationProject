@@ -21,7 +21,7 @@ public class SlotDataDictionary : SerializableDictionary<SlotPlant.Name, SlotFac
 public class SpriteDictionary : SerializableDictionary<Database.IconName, Sprite> { }
 
 [Serializable]
-public class ProfileDictionary : SerializableDictionary<Database.HelperName, Sprite> { }
+public class ProfileDictionary : SerializableDictionary<Database.PersonName, Sprite> { }
 
 [Serializable]
 public class ItemSlotDictionary : SerializableDictionary<ItemSlot.Type, ItemSlot> { }

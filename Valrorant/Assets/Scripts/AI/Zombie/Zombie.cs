@@ -36,10 +36,14 @@ namespace AI
         public TargetType MyType { get; set; }
 
         ZombieBlackboard _blackboard;
-
-        public void Initialize(ZombieData data)
+        Action<int> AddMoney;
+        int moneyPerOne;
+        public void Initialize(ZombieData data, Action<int> AddMoney)
         {
             MyType = TargetType.Zombie;
+
+            this.AddMoney = AddMoney;
+            moneyPerOne = data.moneyPerOne;
 
             _attackLayer = LayerMask.GetMask("CollisionableTarget");
 
@@ -100,6 +104,7 @@ namespace AI
 
         void OnDieRequested(float delayForDestroy)
         {
+            AddMoney?.Invoke(moneyPerOne);
             Invoke("DestroyMe", delayForDestroy);
         }
 

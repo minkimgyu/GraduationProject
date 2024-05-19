@@ -8,6 +8,8 @@ public class BaseCommand
 {
     public BaseCommand(Action DoAction) { }
     public BaseCommand(Action<BaseWeapon> DoAction) { }
+    public BaseCommand(Action<CharacterPlant.Name, BaseWeapon> DoAction) { }
+    public BaseCommand(Action<CharacterPlant.Name> DoAction) { }
     public BaseCommand(Action<BaseWeapon.Type> DoAction) { }
     public BaseCommand(Action<BaseWeapon.EventType> DoAction) { }
     public BaseCommand(Action<Vector3> DoAction) { }
@@ -15,6 +17,8 @@ public class BaseCommand
 
     public virtual void Execute() { }
     public virtual void Execute(BaseWeapon weapon) { }
+    public virtual void Execute(CharacterPlant.Name name, BaseWeapon weapon) { }
+    public virtual void Execute(CharacterPlant.Name name) { }
     public virtual void Execute(BaseWeapon.Type type) { }
     public virtual void Execute(BaseWeapon.EventType type) { }
     public virtual void Execute(Vector3 dir) { }
@@ -91,6 +95,35 @@ public class WeaponCommand : BaseCommand
         DoAction?.Invoke(type);
     }
 }
+
+public class WeaponToHelperCommand : BaseCommand
+{
+    Action<CharacterPlant.Name, BaseWeapon> DoAction;
+    public WeaponToHelperCommand(Action<CharacterPlant.Name, BaseWeapon> DoAction) : base(DoAction)
+    {
+        this.DoAction = DoAction;
+    }
+
+    public override void Execute(CharacterPlant.Name name, BaseWeapon type)
+    {
+        DoAction?.Invoke(name, type);
+    }
+}
+
+public class ReviveHelperCommand : BaseCommand
+{
+    Action<CharacterPlant.Name> DoAction;
+    public ReviveHelperCommand(Action<CharacterPlant.Name> DoAction) : base(DoAction)
+    {
+        this.DoAction = DoAction;
+    }
+
+    public override void Execute(CharacterPlant.Name name)
+    {
+        DoAction?.Invoke(name);
+    }
+}
+
 
 public class HealCommand : BaseCommand
 {

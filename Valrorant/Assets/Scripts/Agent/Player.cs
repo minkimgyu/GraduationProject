@@ -5,6 +5,7 @@ using Agent.Controller;
 using Agent.Component;
 using FSM;
 using AI.ZombieFSM;
+using System;
 
 public enum LifeState
 {
@@ -41,8 +42,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         //Cursor.visible = false;
         MyType = TargetType.Human;
 
-        base.Start();
-
         HpViewer hpViwer = FindObjectOfType<HpViewer>();
         RoundViwer roundViwer = FindObjectOfType<RoundViwer>();
 
@@ -63,9 +62,16 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.Interact, new Command(_interactionController.OnHandleInteract));
 
 
+        Action<BaseWeapon.Name, BaseWeapon.Type> AddWeaponPreview;
+        Action<BaseWeapon.Type> RemoveWeaponPreview;
+
+        Shop shop = FindObjectOfType<Shop>();
+        shop.AddProfileViewer(data.personName, out AddWeaponPreview, out RemoveWeaponPreview);
+
         WeaponViewer weaponViewer = FindObjectOfType<WeaponViewer>();
 
         ZoomComponent zoomComponent = GetComponent<ZoomComponent>();
+
         _weaponController = GetComponent<WeaponController>();
         _weaponController.Initialize(
             data.weaponThrowPower,
@@ -74,8 +80,8 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
             (name, layer, nomalizedTime) => _ownerAnimator.Play(name, layer, nomalizedTime),
             roundViwer.OnRoundCountChange,
             null,
-            weaponViewer.AddPreview,
-            weaponViewer.RemovePreview
+            (BaseWeapon.Name name, BaseWeapon.Type type) => { weaponViewer.AddPreview(name, type); AddWeaponPreview?.Invoke(name, type); },
+            (BaseWeapon.Type type) => { weaponViewer.RemovePreview(type); RemoveWeaponPreview?.Invoke(type); }
         );
 
         _weaponController.OnHandleEquip(BaseWeapon.Type.Sub);
@@ -100,7 +106,7 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.Walk, new MoveCommand(_actionController.OnHandleMove));
 
         Commander commander = GetComponent<Commander>();
-        commander.Initialize(data.startRange);
+        commander.Initialize(ReturnPos, data.startRange);
 
         InputHandler.AddInputEvent(InputHandler.Type.FreeRole, new Command(commander.FreeRole));
         InputHandler.AddInputEvent(InputHandler.Type.BuildFormation, new Command(commander.BuildFormation));
@@ -111,13 +117,18 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.TurnOnOffPlayerRoutine, new Command(TurnOnOffRoutine));
 
 
-        Shop shop = FindObjectOfType<Shop>();
         if (shop == null) return;
 
         // 상점에 Event를 등록시켜준다.
         shop.AddEvent(Shop.EventType.BuyWeapon, new WeaponCommand(_weaponController.OnWeaponReceived));
-        shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp) => _lifeFsm.OnHeal(hp)));
-        shop.AddEvent(Shop.EventType.BuyAmmo, new Command(_weaponController.RefillAmmo));
+
+        shop.AddEvent(Shop.EventType.BuyWeaponToHelper, new WeaponToHelperCommand(commander.BuyWeaponToListener));
+        shop.AddEvent(Shop.EventType.ReviveHelper, new ReviveHelperCommand(commander.ReviveListener));
+
+
+        // 이 둘은 조력자와 플레이어 모두 적용시켜주기
+        shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp) => { _lifeFsm.OnHeal(hp); commander.HealListeners(hp); }));
+        shop.AddEvent(Shop.EventType.BuyAmmo, new Command(() => { _weaponController.RefillAmmo(); commander.RefillAmmoToListeners(); }));
     }
 
     void TurnOnOffRoutine()

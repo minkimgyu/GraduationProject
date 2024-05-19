@@ -108,13 +108,13 @@ namespace Agent.Controller
         {
             WeaponPlant plant = FindObjectOfType<WeaponPlant>();
 
-            BaseWeapon lmg = plant.Create(BaseWeapon.Name.AR);
-            lmg.transform.SetParent(_weaponParent);
+            //BaseWeapon lmg = plant.Create(BaseWeapon.Name.AR);
+            //lmg.transform.SetParent(_weaponParent);
 
-            lmg.OnRooting(_eventBlackboard);
-            AddWeaponToContainer(lmg);
+            //lmg.OnRooting(_eventBlackboard);
+            //AddWeaponToContainer(lmg);
 
-            BaseWeapon pistol = plant.Create(BaseWeapon.Name.SMG);
+            BaseWeapon pistol = plant.Create(BaseWeapon.Name.Pistol);
             pistol.transform.SetParent(_weaponParent);
 
             pistol.OnRooting(_eventBlackboard);

@@ -14,6 +14,10 @@ public class AmmoSlot : ItemSlot
 
     protected override void Buy()
     {
+        if (ReturnBlackboard().CanBuy(_cost) == false) return;
+
+        ReturnBlackboard().Buy(_cost);
+
         ShopBlackboard blackboard = ReturnBlackboard();
         blackboard.OnBuyAmmo();
     }

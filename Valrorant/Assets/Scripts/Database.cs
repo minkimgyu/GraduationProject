@@ -31,12 +31,12 @@ public class Database : MonoBehaviour
     }
 
     [Serializable]
-    public enum HelperName
+    public enum PersonName
     {
         Warden,
         Rook,
         Oryx,
-        Me
+        Player
     }
 
     static Database _instance = null;
@@ -69,7 +69,7 @@ public class Database : MonoBehaviour
         return _instance._previewDictionary[name];
     }
 
-    public static Sprite ReturnProfile(HelperName name)
+    public static Sprite ReturnProfile(PersonName name)
     {
         return _instance._profileDictionary[name];
     }

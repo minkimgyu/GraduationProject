@@ -27,7 +27,7 @@ public class ProfileViewer : MonoBehaviour
 
     public void Initialize(CharacterPlant.Name name)
     {
-        Database.HelperName helperName = ParseEnum<Database.HelperName>(name.ToString());
+        Database.PersonName helperName = ParseEnum<Database.PersonName>(name.ToString());
         _profile.sprite = Database.ReturnProfile(helperName);
         _name.text = name.ToString();
     }

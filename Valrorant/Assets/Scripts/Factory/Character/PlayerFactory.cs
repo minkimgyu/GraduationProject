@@ -12,6 +12,7 @@ public class CharacterData
 [System.Serializable]
 public class PlayerData
 {
+    public Database.PersonName personName;
     public float maxHp = 100;
     public float maxArmor = 100;
 

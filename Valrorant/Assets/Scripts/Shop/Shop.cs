@@ -3,11 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Agent.Controller;
+using UnityEngine.UI;
+using TMPro;
 
 public struct ShopBlackboard
 {
     public ShopBlackboard(Action<Sprite, string, string> TurnOnPreview, Action TurnOffPreview, Action OnBuyAmmo,
-        Action<BaseWeapon> OnBuyWeapon, Action<float> OnBuyHealpack, Func<BaseWeapon.Name, BaseWeapon> CreateWeapon)
+        Action<BaseWeapon> OnBuyWeapon, Action<float> OnBuyHealpack, Func<BaseWeapon.Name, BaseWeapon> CreateWeapon,
+
+        Action<CharacterPlant.Name, BaseWeapon> BuyWeaponToHelper,
+        Action<CharacterPlant.Name> ReviveHelper,
+        Func<int, bool> CanBuy,
+        Action<int> Buy,
+
+        Action<Sprite, Vector3, Action<CharacterPlant.Name>> OnDragStart, Action<Vector3> OnDrag, Action OnDragEnd)
     {
         this.TurnOnPreview = TurnOnPreview;
         this.TurnOffPreview = TurnOffPreview;
@@ -16,6 +25,15 @@ public struct ShopBlackboard
         this.OnBuyWeapon = OnBuyWeapon;
         this.OnBuyHealpack = OnBuyHealpack;
         this.CreateWeapon = CreateWeapon;
+
+        this.BuyWeaponToHelper = BuyWeaponToHelper;
+        this.ReviveHelper = ReviveHelper;
+        this.CanBuy = CanBuy;
+        this.Buy = Buy;
+
+        this.OnDragStart = OnDragStart;
+        this.OnDrag = OnDrag;
+        this.OnDragEnd = OnDragEnd;
     }
 
     public Action<Sprite, string, string> TurnOnPreview { get; }
@@ -25,6 +43,15 @@ public struct ShopBlackboard
     public Action<BaseWeapon> OnBuyWeapon { get; }
     public Action<float> OnBuyHealpack { get; }
     public Func<BaseWeapon.Name, BaseWeapon> CreateWeapon { get; }
+
+    public Action<CharacterPlant.Name, BaseWeapon> BuyWeaponToHelper { get; }
+    public Action<CharacterPlant.Name> ReviveHelper { get; }
+    public Func<int, bool> CanBuy { get; }
+    public Action<int> Buy { get; }
+
+    public Action<Sprite, Vector3, Action<CharacterPlant.Name>> OnDragStart { get; }
+    public Action<Vector3> OnDrag { get; }
+    public Action OnDragEnd { get; }
 }
 
 public class Shop : MonoBehaviour
@@ -38,6 +65,52 @@ public class Shop : MonoBehaviour
 
     Dictionary<Category, List<SlotPlant.Name>> _itemDictionary;
 
+    [SerializeField] ShopProfileViewer _profileViewerPrefab;
+    [SerializeField] Transform _profileContent;
+    Dictionary<Database.PersonName, ShopProfileViewer> _profileViewers = new Dictionary<Database.PersonName, ShopProfileViewer>();
+
+    [SerializeField] DragSlot _dragSlot;
+    [SerializeField] GameObject _helperViewerObj;
+    [SerializeField] GameObject _weaponViewerObj;
+
+    int _money = 0;
+    [SerializeField] TMP_Text _moneyTxt;
+    [SerializeField] TMP_Text _fieldMoneyTxt;
+
+    public void AddMoney(int moneyPerOne)
+    {
+        _money += moneyPerOne;
+        ResetMoney();
+    }
+
+    bool CanBuy(int cost)
+    {
+        return _money >= cost;
+    }
+
+    void Buy(int cost)
+    {
+        _money -= cost;
+        ResetMoney();
+    }
+
+    void ResetMoney()
+    {
+        _moneyTxt.text = _money.ToString();
+        _fieldMoneyTxt.text = _money.ToString();
+    }
+
+    public void AddProfileViewer(Database.PersonName name, out Action<BaseWeapon.Name, BaseWeapon.Type> AddWeaponPreview, out Action<BaseWeapon.Type> RemoveWeaponPreview)
+    {
+        ShopProfileViewer viewer = Instantiate(_profileViewerPrefab, _profileContent);
+
+        viewer.Initialize(name, _dragSlot.CallShopingEvent);
+        AddWeaponPreview = viewer.AddWeaponPreview;
+        RemoveWeaponPreview = viewer.RemoveWeaponPreview;
+
+        _profileViewers[name] = viewer;
+    }
+
     public enum Category
     {
         Comsumable,
@@ -50,7 +123,10 @@ public class Shop : MonoBehaviour
     {
         BuyWeapon,
         BuyAmmo,
-        BuyHealPack
+        BuyHealPack,
+
+        BuyWeaponToHelper,
+        ReviveHelper,
     }
 
     private void Start() => Initialize();
@@ -59,11 +135,15 @@ public class Shop : MonoBehaviour
     {
         if (_panel.activeSelf == true)
         {
+            _helperViewerObj.SetActive(true);
+            _weaponViewerObj.SetActive(true);
             ActivatePanel(false);
             Cursor.lockState = CursorLockMode.Locked;
         }
         else
         {
+            _helperViewerObj.SetActive(false);
+            _weaponViewerObj.SetActive(false);
             ActivatePanel(true);
             Cursor.lockState = CursorLockMode.None;
         }
@@ -93,8 +173,16 @@ public class Shop : MonoBehaviour
             _commands[EventType.BuyAmmo].Execute,
             (weapon) => { _commands[EventType.BuyWeapon].Execute(weapon); },
             (hp) => { _commands[EventType.BuyHealPack].Execute(hp); },
+            CreateWeapon,
 
-            CreateWeapon
+            (name, weapon) => { _commands[EventType.BuyWeaponToHelper].Execute(name, weapon); },
+            (name) => { _commands[EventType.ReviveHelper].Execute(name); },
+            CanBuy,
+            Buy,
+
+            _dragSlot.OnDragStart,
+            _dragSlot.OnDraging,
+            _dragSlot.OnDragEnd
         );
 
         return shopBlackboard;
@@ -105,6 +193,10 @@ public class Shop : MonoBehaviour
     private void Initialize()
     {
         ActivatePanel(false);
+
+        _moneyTxt.text = _money.ToString();
+        _fieldMoneyTxt.text = _money.ToString();
+
         _itemPreview.TurnOffPreview();
         CreateWeapon = FindObjectOfType<WeaponPlant>().Create;
 

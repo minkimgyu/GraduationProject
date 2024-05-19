@@ -8,6 +8,7 @@ using Object = UnityEngine.Object;
 [System.Serializable]
 public class HelperData
 {
+    public Database.PersonName personName;
     public float maxHp = 100;
     public float maxArmor = 50;
 

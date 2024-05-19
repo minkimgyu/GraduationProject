@@ -10,6 +10,9 @@ public interface ICommandListener
     void GoToFreeRoleState();
 
     void ResetFormationData(FormationData data);
+    void ReceiveWeapon(BaseWeapon weapon);
+    void Heal(float hpRatio);
+    void RefillAmmo();
 
     Vector3 ReturnPos(); // 위치 반환
 }

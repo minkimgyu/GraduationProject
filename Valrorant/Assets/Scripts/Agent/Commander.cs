@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AI;
+using System;
+using Random = UnityEngine.Random;
 
 public class Commander : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class Commander : MonoBehaviour
 
     float _startRange;
 
-    public void Initialize(float startRange)
+    public void Initialize(Func<Vector3> ReturnPlayerPos, float startRange)
     {
         _startRange = startRange;
 
@@ -24,7 +26,7 @@ public class Commander : MonoBehaviour
             ProfileViewer profile = viewer.ReturnProfile(helperNames[i]);
 
             Vector2 startPos = Random.insideUnitCircle * startRange;
-            Transform helper = plant.Create(helperNames[i], player.ReturnPos, profile.OnWeaponProfileChangeRequested, 
+            Transform helper = plant.Create(helperNames[i], ReturnPlayerPos, profile.OnWeaponProfileChangeRequested, 
                 profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(helperNames[i]); ResetFormationData(); });
 
             helper.position = new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x);
@@ -38,23 +40,8 @@ public class Commander : MonoBehaviour
         ResetFormationData();
     }
 
-    public void AddListener()
+    public void ReviveListener(CharacterPlant.Name name)
     {
-        bool canAdd = false;
-        CharacterPlant.Name name = CharacterPlant.Name.Oryx;
-
-        for (int i = 0; i < helperNames.Length; i++)
-        {
-            bool containKey = _listeners.ContainsKey(helperNames[i]);
-            if (containKey == true) continue;
-
-            name = helperNames[i];
-            canAdd = true;
-            break;
-        }
-
-        if (canAdd == false) return;
-
         CharacterPlant plant = FindObjectOfType<CharacterPlant>();
         HelperViewer viewer = FindObjectOfType<HelperViewer>();
         Player player = FindObjectOfType<Player>();
@@ -73,6 +60,27 @@ public class Commander : MonoBehaviour
         _listeners.Add(name, listener);
 
         ResetFormationData();
+    }
+
+    public void BuyWeaponToListener(CharacterPlant.Name name, BaseWeapon weapon)
+    {
+        _listeners[name].ReceiveWeapon(weapon);
+    }
+
+    public void HealListeners(float hpRatio)
+    {
+        foreach (var listener in _listeners)
+        {
+            listener.Value.Heal(hpRatio);
+        }
+    }
+
+    public void RefillAmmoToListeners()
+    {
+        foreach (var listener in _listeners)
+        {
+            listener.Value.RefillAmmo();
+        }
     }
 
     public void ResetFormationData()

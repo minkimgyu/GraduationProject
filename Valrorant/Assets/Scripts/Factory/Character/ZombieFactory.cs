@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using AI;
+using System;
+using Object = UnityEngine.Object;
 
 [System.Serializable]
 public class ZombieData
 {
+    public int moneyPerOne = 30;
     public float maxHp = 300;
     public float maxArmor = 50;
 
@@ -39,10 +42,18 @@ public class ZombieData
 
 public class ZombieFactory : CharacterFactory<ZombieData>
 {
+    Action<int> AddMoney;
+
+    public override void Initialize(CharacterFactoryData data)
+    {
+        base.Initialize(data);
+        AddMoney = Object.FindObjectOfType<Shop>().AddMoney;
+    }
+
     public override Transform Create()
     {
         Zombie zombie = Object.Instantiate(_prefab).GetComponent<Zombie>();
-        zombie.Initialize(_data);
+        zombie.Initialize(_data, AddMoney);
         return zombie.transform;
     }
 }

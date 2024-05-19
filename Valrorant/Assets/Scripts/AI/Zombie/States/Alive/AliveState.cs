@@ -38,9 +38,9 @@ public class AliveState : State
         OnHpChangeRequested?.Invoke(_hp / _maxHp);
     }
 
-    public override void OnHeal(float hpPoint)
+    public override void OnHeal(float hpRatio)
     {
-        _hp += hpPoint;
+        _hp = hpRatio * _maxHp;
         OnHpChangeRequested?.Invoke(_hp / _maxHp);
     }
 }

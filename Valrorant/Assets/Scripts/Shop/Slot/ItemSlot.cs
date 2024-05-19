@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
 
-public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public enum Type
     {
@@ -24,6 +24,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     string _name;
     string _info;
+    protected int _cost;
     Sprite _previewModel;
 
     protected Func<ShopBlackboard> ReturnBlackboard;
@@ -34,10 +35,14 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public virtual void Initialize(AmmoSlotData data, Func<ShopBlackboard> ReturnBlackboard) { }
 
     protected virtual void Buy() { }
+
+    protected virtual void BuyToHelper(CharacterPlant.Name name) { }
+
     protected void ResetSlot(string name, int cost, string info, Database.IconName iconName)
     {
         _name = name;
         _info = info;
+        _cost = cost;
 
         _nameTxt.text = _name;
         _costTxt.text = "$" + cost.ToString();
@@ -53,5 +58,20 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerExit(PointerEventData eventData)
     {
         ReturnBlackboard().TurnOffPreview();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        ReturnBlackboard().OnDragStart(_iconImg.sprite, eventData.position, BuyToHelper);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        ReturnBlackboard().OnDrag(eventData.position);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        ReturnBlackboard().OnDragEnd();
     }
 }

@@ -13,7 +13,13 @@ public class ReviveSlot : ItemSlot
         _button.onClick.AddListener(Buy);
     }
 
-    protected override void Buy()
+    protected override void BuyToHelper(CharacterPlant.Name name)
     {
+        if (ReturnBlackboard().CanBuy(_cost) == false) return;
+
+        ReturnBlackboard().Buy(_cost);
+
+        ShopBlackboard blackboard = ReturnBlackboard();
+        blackboard.ReviveHelper?.Invoke(name);
     }
 }

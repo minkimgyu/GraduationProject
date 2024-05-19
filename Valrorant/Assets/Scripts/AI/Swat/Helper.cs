@@ -137,8 +137,23 @@ namespace AI
             _movementFsm.SetState(MovementState.FreeRole);
 
 
+            Action<BaseWeapon.Name, BaseWeapon.Type> AddWeaponPreview;
+            Action<BaseWeapon.Type> RemoveWeaponPreview;
+
+            Shop shop = FindObjectOfType<Shop>();
+            shop.AddProfileViewer(data.personName, out AddWeaponPreview, out RemoveWeaponPreview);
+
             _weaponController = GetComponent<WeaponController>();
-            _weaponController.Initialize(data.weaponThrowPower, true, null, PlayAnimation, null, OnWeaponProfileChangeRequested);
+            _weaponController.Initialize(
+                data.weaponThrowPower, 
+                true, 
+                null, 
+                PlayAnimation, 
+                null, 
+                OnWeaponProfileChangeRequested,
+                AddWeaponPreview,
+                RemoveWeaponPreview
+            );
 
             _interactionController = GetComponentInChildren<InteractionController>();
             _interactionController.Initialize();
@@ -221,6 +236,21 @@ namespace AI
         public Transform ReturnTransform()
         {
             return transform;
+        }
+
+        public void ReceiveWeapon(BaseWeapon weapon)
+        {
+            _weaponController.OnWeaponReceived(weapon);
+        }
+
+        public void Heal(float hpRatio)
+        {
+            _lifeFsm.OnHeal(hpRatio);
+        }
+
+        public void RefillAmmo()
+        {
+            _weaponController.RefillAmmo();
         }
     }
 }

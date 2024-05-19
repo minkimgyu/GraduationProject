@@ -18,8 +18,23 @@ public class WeaponSlot : ItemSlot
 
     protected override void Buy()
     {
+        if (ReturnBlackboard().CanBuy(_cost) == false) return;
+
+        ReturnBlackboard().Buy(_cost);
+
         ShopBlackboard blackboard = ReturnBlackboard();
         BaseWeapon weapon = blackboard.CreateWeapon(_weaponNameToSpawn);
         blackboard.OnBuyWeapon(weapon);
+    }
+
+    protected override void BuyToHelper(CharacterPlant.Name name)
+    {
+        if (ReturnBlackboard().CanBuy(_cost) == false) return;
+
+        ReturnBlackboard().Buy(_cost);
+
+        ShopBlackboard blackboard = ReturnBlackboard();
+        BaseWeapon weapon = blackboard.CreateWeapon(_weaponNameToSpawn);
+        blackboard.BuyWeaponToHelper?.Invoke(name, weapon);
     }
 }

@@ -24,14 +24,14 @@ namespace AI.SwatFSM
         public override void OnStateEnter()
         {
             BaseWeapon mainWeapon = ReturnWeapon(BaseWeapon.Type.Main);
-            if (mainWeapon.IsAmmoEmpty() == false)
+            if (mainWeapon != null && mainWeapon.IsAmmoEmpty() == false)
             {
                 EquipWeapon(BaseWeapon.Type.Main);
                 return;
             }
 
             BaseWeapon subWeapon = ReturnWeapon(BaseWeapon.Type.Sub);
-            if (subWeapon.IsAmmoEmpty() == false)
+            if (subWeapon != null && subWeapon.IsAmmoEmpty() == false)
             {
                 EquipWeapon(BaseWeapon.Type.Sub);
                 return;

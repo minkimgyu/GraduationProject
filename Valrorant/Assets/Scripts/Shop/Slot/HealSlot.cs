@@ -18,6 +18,10 @@ public class HealSlot : ItemSlot
 
     protected override void Buy()
     {
+        if (ReturnBlackboard().CanBuy(_cost) == false) return;
+
+        ReturnBlackboard().Buy(_cost);
+
         ShopBlackboard blackboard = ReturnBlackboard();
         blackboard.OnBuyHealpack(_hpRatio);
     }
