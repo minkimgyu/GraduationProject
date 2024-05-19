@@ -9,7 +9,6 @@ public class GameManager : MonoBehaviour
     {
         CharacterPlant plant = FindObjectOfType<CharacterPlant>();
         Transform player = plant.Create(CharacterPlant.Name.Player);
-        player.position = new Vector3(0, -0.5f, 0);
     }
 
     private void OnApplicationFocus(bool focus)

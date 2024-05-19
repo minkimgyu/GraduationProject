@@ -131,8 +131,12 @@ public class Shop : MonoBehaviour
 
     private void Start() => Initialize();
 
+    public bool _isActive = false;
+
     private void TurnOnOffPanel()
     {
+        if (_isActive == false) return;
+
         if (_panel.activeSelf == true)
         {
             _helperViewerObj.SetActive(true);

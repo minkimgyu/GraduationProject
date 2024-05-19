@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4000013233772874}
   - component: {fileID: 33000013007648786}
   - component: {fileID: 23000011865386072}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fan_v1_1_bb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,13 +25,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000010432436620}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.00000008146034, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0375057, y: 0.011939768, z: -0.014703572}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000013503586546}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33000013007648786
 MeshFilter:
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4000012365928174}
   - component: {fileID: 33000013231684726}
   - component: {fileID: 23000013481398122}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fan_v1_1_frame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -108,13 +108,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011668080560}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.000000021855694, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0375057, y: 0.011939768, z: -0.014703572}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000013503586546}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33000013231684726
 MeshFilter:
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4000012299663686}
   - component: {fileID: 33000012312836142}
   - component: {fileID: 23000013514879702}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fan_v1_1_blades
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,13 +191,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011781134722}
+  serializedVersion: 2
   m_LocalRotation: {x: 0.99556196, y: -0, z: 0, w: 0.094108604}
   m_LocalPosition: {x: -0.022365168, y: 0.011939768, z: -0.014703572}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4000013503586546}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &33000012312836142
 MeshFilter:
@@ -259,9 +259,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4000013503586546}
   - component: {fileID: 111000013620108158}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Fan_v1_1
-  m_TagString: Untagged
+  m_TagString: CanNotPass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -273,6 +273,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1000011892285424}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -282,7 +283,6 @@ Transform:
   - {fileID: 4000012299663686}
   - {fileID: 4000012365928174}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!111 &111000013620108158
 Animation:
