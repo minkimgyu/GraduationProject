@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 [System.Serializable]
 public class CharacterData
@@ -38,10 +39,10 @@ public class PlayerData
 
 public class PlayerFactory : CharacterFactory<PlayerData>
 {
-    public override Transform Create()
+    public override GameObject Create(Vector3 pos)
     {
-        Player player = Object.Instantiate(_prefab).GetComponent<Player>();
-        player.Initialize(_data);
-        return player.transform;
+        Player character = Object.Instantiate(_prefab, pos, Quaternion.identity).GetComponent<Player>();
+        character.Initialize(_data);
+        return character.gameObject;
     }
 }

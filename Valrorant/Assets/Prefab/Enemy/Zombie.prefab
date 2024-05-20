@@ -379,7 +379,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6067281761255645525}
   - component: {fileID: 5579682638464028739}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Paladin_J_Nordstrom_Helmet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1559,6 +1559,7 @@ MonoBehaviour:
   _attackPoint: {fileID: 3472333409533829373}
   _modelObj: {fileID: 3480658270435469148}
   _myRig: {fileID: 992507544516441}
+  _ragDoll: {fileID: 8459700095719493247, guid: eac7e94ddf8e4764a94f2d5f8f30cde2, type: 3}
 --- !u!114 &9112297127195924527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2734,7 +2735,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8100032556148029488}
   - component: {fileID: 1432643446136039144}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Paladin_J_Nordstrom
   m_TagString: Untagged
   m_Icon: {fileID: 0}

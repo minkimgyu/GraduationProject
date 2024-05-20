@@ -55,8 +55,11 @@ namespace Grid.Pathfinder
             Vector3Int startIndex = ReturnNodeIndex(startPos);
             Vector3Int endIndex = ReturnNodeIndex(targetPos);
 
-            Node startNode = FindPassNode(startIndex);
-            Node endNode = FindPassNode(endIndex);
+            Node startNode = ReturnNode(startIndex);
+            Node endNode = ReturnNode(endIndex);
+
+            if (startNode == null || endNode == null) return null;
+
             _openList.Insert(startNode);
 
             HashSet<Vector3Int> cantPassIndexes = new HashSet<Vector3Int>();

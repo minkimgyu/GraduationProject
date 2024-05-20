@@ -15,12 +15,14 @@ public class Ragdoll : MonoBehaviour
 
     void DisableGo()
     {
-        gameObject.SetActive(false);
+        Destroy(gameObject);
+
+        //gameObject.SetActive(false);
     }
 
     private void OnDisable()
     {
-        CancelInvoke();
-        ObjectPooler.ReturnToPool(gameObject);
+        //CancelInvoke();
+        //ObjectPooler.ReturnToPool(gameObject);
     }
 }

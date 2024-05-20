@@ -11,8 +11,9 @@ abstract public class BaseFactory<T1, T2>
 
     public abstract void Initialize(T2 data);
     public virtual T1 Create() { return default; }
-
+    public virtual T1 Create(Vector3 pos) { return default; }
     public virtual T1 Create(
+        Vector3 pos,
         Func<Vector3> ReturnPlayerPos, 
         Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
         Action<float> OnHpChangeRequested,

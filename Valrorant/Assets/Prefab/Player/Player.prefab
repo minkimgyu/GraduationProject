@@ -1206,6 +1206,7 @@ MonoBehaviour:
   canSpawnDamageTxt: 1
   _sightPoint: {fileID: 1306582570910460098}
   _ownerAnimator: {fileID: 2562251199575857763}
+  _isActive: 0
 --- !u!114 &6441209978133972531
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1231,9 +1232,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8805bc78a85447d42afad15338f1e644, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _helperPrefab: {fileID: 4128203628003963021, guid: 6db37022d492770468b1500d0f5f410e, type: 3}
-  _helperCnt: 1
-  _startRange: 3
 --- !u!114 &6774584805562481681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,8 +1262,6 @@ MonoBehaviour:
   _actorBone: {fileID: 128400268575907987}
   _direction: {fileID: 5640223779607279015}
   _cameraHolder: {fileID: 478260188541099456}
-  _camPivot: {fileID: 0}
-  _cam: {fileID: 0}
   _viewYRange: 40
   _viewSensitivity: {x: 1500, y: 1500}
   _cameraRotationMultiplier: {x: 0, y: 0}

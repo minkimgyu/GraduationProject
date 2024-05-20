@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    System.Func<CharacterPlant.Name, Vector3, GameObject> Spawn;
+
     // Start is called before the first frame update
     void Start()
     {
+        Spawn = FindObjectOfType<CharacterPlant>().Create;
         CharacterPlant plant = FindObjectOfType<CharacterPlant>();
-        Transform player = plant.Create(CharacterPlant.Name.Player);
+        Spawn(CharacterPlant.Name.Player, transform.position);
     }
 
     private void OnApplicationFocus(bool focus)

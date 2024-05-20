@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8941269393229011998}
   - component: {fileID: 4080545118740139864}
   - component: {fileID: 2781852553821390025}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6104886213471051514}
   - component: {fileID: 6543407615554807493}
   - component: {fileID: 2590115405394656134}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sniper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -219,7 +219,6 @@ MonoBehaviour:
   _ammoCountsInMagazine: 0
   _ammoCountsInPossession: 0
   _objectMesh: {fileID: 1368576844436371767}
-  _aimPoint: {fileID: 6329104896126399010}
 --- !u!1 &1482080499291000547
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,7 +228,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6329104896126399010}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: AimPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -262,7 +261,7 @@ GameObject:
   - component: {fileID: 4447747691617875527}
   - component: {fileID: 771674827031248986}
   - component: {fileID: 6525718042173408423}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -348,7 +347,7 @@ GameObject:
   - component: {fileID: 2604365386304666633}
   - component: {fileID: 1378794594936089664}
   - component: {fileID: 127495318941623060}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,7 +430,7 @@ GameObject:
   - component: {fileID: 4101196807448467008}
   - component: {fileID: 5040405790995054526}
   - component: {fileID: 8292041949965616268}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: MuzzleFlash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5401,7 +5400,7 @@ GameObject:
   - component: {fileID: 4685009346936120341}
   - component: {fileID: 7239228549703709017}
   - component: {fileID: 3056609878720411817}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10256,7 +10255,7 @@ GameObject:
   - component: {fileID: 7886706160177589283}
   - component: {fileID: 3372668849771986856}
   - component: {fileID: 7711123156586165456}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15138,7 +15137,7 @@ GameObject:
   - component: {fileID: 3205293891357424023}
   - component: {fileID: 2535858260249864507}
   - component: {fileID: 363779662162209947}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: cheekrest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15221,7 +15220,7 @@ GameObject:
   - component: {fileID: 7000570292935036891}
   - component: {fileID: 6581561261309769584}
   - component: {fileID: 7927909432733939948}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20103,7 +20102,7 @@ GameObject:
   - component: {fileID: 5066093870679142808}
   - component: {fileID: 6149041015339206137}
   - component: {fileID: 4714891417794531463}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20186,7 +20185,7 @@ GameObject:
   - component: {fileID: 5560731931190100879}
   - component: {fileID: 2392990511818778377}
   - component: {fileID: 1111384882969037488}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25068,7 +25067,7 @@ GameObject:
   - component: {fileID: 1368576844436371767}
   - component: {fileID: 3713227652170964081}
   - component: {fileID: 3033263521641146543}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25151,7 +25150,7 @@ GameObject:
   - component: {fileID: 4178375858322186693}
   - component: {fileID: 4412221697990762048}
   - component: {fileID: 4519038584686380348}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: silencer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25234,7 +25233,7 @@ GameObject:
   - component: {fileID: 3040846001574376698}
   - component: {fileID: 3617481754749415169}
   - component: {fileID: 7872930014346824532}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: clip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25318,7 +25317,7 @@ GameObject:
   - component: {fileID: 2397631790819997551}
   - component: {fileID: 4069627556197094444}
   - component: {fileID: 5104833460311735367}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Lens1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25401,7 +25400,7 @@ GameObject:
   - component: {fileID: 2994055775045622872}
   - component: {fileID: 8616918703911248777}
   - component: {fileID: 7236977943498753553}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30283,7 +30282,7 @@ GameObject:
   - component: {fileID: 3950375028182228774}
   - component: {fileID: 8960788812342875383}
   - component: {fileID: 8098800673128255560}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: 556x45_Casing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35182,7 +35181,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7336753557101198376}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: MuzzlePosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35215,7 +35214,7 @@ GameObject:
   - component: {fileID: 8297654080143413835}
   - component: {fileID: 1635098924555452060}
   - component: {fileID: 4660886933244923692}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35298,7 +35297,7 @@ GameObject:
   - component: {fileID: 4519159519364184682}
   - component: {fileID: 6013160490608866586}
   - component: {fileID: 7541679322791157687}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Plane3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40180,7 +40179,7 @@ GameObject:
   - component: {fileID: 4162596720516989806}
   - component: {fileID: 3228967047891698000}
   - component: {fileID: 343065298587035543}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: boltrear
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -108,12 +108,6 @@ namespace Agent.Controller
         {
             WeaponPlant plant = FindObjectOfType<WeaponPlant>();
 
-            //BaseWeapon lmg = plant.Create(BaseWeapon.Name.AR);
-            //lmg.transform.SetParent(_weaponParent);
-
-            //lmg.OnRooting(_eventBlackboard);
-            //AddWeaponToContainer(lmg);
-
             BaseWeapon pistol = plant.Create(BaseWeapon.Name.Pistol);
             pistol.transform.SetParent(_weaponParent);
 
@@ -163,13 +157,19 @@ namespace Agent.Controller
         WeaponEventBlackboard ReturnEventBlackboard() { return _eventBlackboard; }
 
         void RemoveWeaponInContainer(BaseWeapon.Type type) 
-        { 
+        {
+            // 플레이어인 경우 레이어 변경
+            if (_weaponsContainer[type] != null && _isTPS == false) _weaponsContainer[type].ChangeWeaponLayer(false);
+
             _weaponsContainer.Remove(type);
             RemovePreview?.Invoke(type);
         }
 
         void AddWeaponToContainer(BaseWeapon weapon) 
-        { 
+        {
+            // 플레이어인 경우 레이어 변경
+            if (weapon != null && _isTPS == false) weapon.ChangeWeaponLayer(true);
+
             _weaponsContainer.Add(weapon.WeaponType, weapon);
             AddPreview?.Invoke(weapon.WeaponName, weapon.WeaponType);
         }

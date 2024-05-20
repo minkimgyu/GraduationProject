@@ -30,6 +30,6 @@ public class Classic : Gun
         _recoilStrategies[EventType.Sub] = new ManualRecoilGenerator(data.subShootInterval, data.recoveryDuration, subRangeData);
 
 
-        _reloadStrategy = new MagazineReload(_weaponName, data.reloadFinishDuration, data.reloadExitDuration, _maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
+        _reloadStrategy = new MagazineReload(_weaponName, data.reloadFinishDuration, data.reloadExitDuration, data.maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
     }
 }

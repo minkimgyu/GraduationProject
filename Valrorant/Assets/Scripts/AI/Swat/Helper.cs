@@ -71,6 +71,11 @@ namespace AI
 
         Action OnDisableProfileRequested;
 
+        //private void Awake()
+        //{
+            
+        //}
+
         public void Initialize(HelperData data, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
             Action<float> OnHpChangeRequested, Action OnDisableProfileRequested)
         {
@@ -82,7 +87,7 @@ namespace AI
               new Dictionary<LifeState, BaseState>
               {
                     {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }, OnHpChangeRequested) },
-                    {LifeState.Die, new DieState(data.ragdollName, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
+                    {LifeState.Die, new DieState(null, data.ragdollName, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
               }
            );
             _lifeFsm.SetState(LifeState.Alive);
@@ -251,6 +256,11 @@ namespace AI
         public void RefillAmmo()
         {
             _weaponController.RefillAmmo();
+        }
+
+        public void ResetPos(Vector3 pos)
+        {
+            transform.position += pos;
         }
     }
 }

@@ -6,7 +6,6 @@ using Agent.Controller;
 
 abstract public class Gun : BaseWeapon, IInteractable
 {
-
     // 드랍 시 아이템을 버리는 방향
     protected Func<Vector3> ReturnRaycastDir;
 

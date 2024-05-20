@@ -50,10 +50,10 @@ public class ZombieFactory : CharacterFactory<ZombieData>
         AddMoney = Object.FindObjectOfType<Shop>().AddMoney;
     }
 
-    public override Transform Create()
+    public override GameObject Create(Vector3 pos)
     {
-        Zombie zombie = Object.Instantiate(_prefab).GetComponent<Zombie>();
+        Zombie zombie = Object.Instantiate(_prefab, pos, Quaternion.identity).GetComponent<Zombie>();
         zombie.Initialize(_data, AddMoney);
-        return zombie.transform;
+        return zombie.gameObject;
     }
 }

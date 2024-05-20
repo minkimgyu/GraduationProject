@@ -73,7 +73,7 @@ public class Shop : MonoBehaviour
     [SerializeField] GameObject _helperViewerObj;
     [SerializeField] GameObject _weaponViewerObj;
 
-    int _money = 0;
+    int _money = 5000000;
     [SerializeField] TMP_Text _moneyTxt;
     [SerializeField] TMP_Text _fieldMoneyTxt;
 

@@ -45,7 +45,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         HpViewer hpViwer = FindObjectOfType<HpViewer>();
         RoundViwer roundViwer = FindObjectOfType<RoundViwer>();
 
-
         //(state) => {_lifeFsm.SetState(state); }, hpViwer.OnHpChange)
 
         _lifeFsm.Initialize(
@@ -129,8 +128,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         // 이 둘은 조력자와 플레이어 모두 적용시켜주기
         shop.AddEvent(Shop.EventType.BuyHealPack, new HealCommand((hp) => { _lifeFsm.OnHeal(hp); commander.HealListeners(hp); }));
         shop.AddEvent(Shop.EventType.BuyAmmo, new Command(() => { _weaponController.RefillAmmo(); commander.RefillAmmoToListeners(); }));
-
-        transform.position = new Vector3(84.2f, 1.90f, 19.82f);
     }
 
     public bool _isActive = false;

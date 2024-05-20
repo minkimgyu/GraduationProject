@@ -15,4 +15,5 @@ public interface ICommandListener
     void RefillAmmo();
 
     Vector3 ReturnPos(); // 위치 반환
+    void ResetPos(Vector3 pos); // 위치 반환
 }

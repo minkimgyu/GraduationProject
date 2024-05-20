@@ -21,6 +21,7 @@ namespace AI
 
         [SerializeField] GameObject _modelObj;
         [SerializeField] Transform _myRig;
+        [SerializeField] Ragdoll _ragDoll;
 
         StateMachine<LifeState> _lifeFsm = new StateMachine<LifeState>();
 
@@ -80,7 +81,7 @@ namespace AI
                new Dictionary<LifeState, BaseState>
                {
                     {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }) },
-                    {LifeState.Die, new DieState("ZombieRagdoll", transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
+                    {LifeState.Die, new DieState(_ragDoll, "ZombieRagdoll", transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
                }
             );
             _lifeFsm.SetState(LifeState.Alive);

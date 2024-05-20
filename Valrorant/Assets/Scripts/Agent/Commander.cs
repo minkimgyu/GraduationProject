@@ -25,14 +25,12 @@ public class Commander : MonoBehaviour
             viewer.AddProfile(helperNames[i]);
             ProfileViewer profile = viewer.ReturnProfile(helperNames[i]);
 
-            Vector2 startPos = Random.insideUnitCircle * startRange;
-            Transform helper = plant.Create(helperNames[i], ReturnPlayerPos, profile.OnWeaponProfileChangeRequested, 
+            Vector2 pos = Random.insideUnitCircle * startRange;
+            GameObject helperObj = plant.Create(helperNames[i], new Vector3(pos.y, -0.5f, pos.x), ReturnPlayerPos, profile.OnWeaponProfileChangeRequested,
                 profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(helperNames[i]); ResetFormationData(); });
 
-            helper.position = new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x);
-            helper.rotation = Quaternion.identity;
-
-            ICommandListener listener = helper.GetComponent<ICommandListener>();
+            helperObj.transform.rotation = Quaternion.identity;
+            ICommandListener listener = helperObj.GetComponent<ICommandListener>();
             _listeners.Add(helperNames[i], listener);
 
         }
@@ -50,13 +48,10 @@ public class Commander : MonoBehaviour
         profile.OnActiveProfileRequested(); // 재활성화
 
         Vector2 startPos = Random.insideUnitCircle * _startRange;
-        Transform helper = plant.Create(name, player.ReturnPos, profile.OnWeaponProfileChangeRequested,
+        GameObject helperObj = plant.Create(name, new Vector3(startPos.y, -0.5f, startPos.x), player.ReturnPos, profile.OnWeaponProfileChangeRequested,
             profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(name); ResetFormationData(); });
 
-        helper.position = new Vector3(transform.position.x + startPos.y, transform.position.y, transform.position.z + startPos.x);
-        helper.rotation = Quaternion.identity;
-
-        ICommandListener listener = helper.GetComponent<ICommandListener>();
+        ICommandListener listener = helperObj.GetComponent<ICommandListener>();
         _listeners.Add(name, listener);
 
         ResetFormationData();

@@ -35,7 +35,6 @@ abstract public class BaseWeapon : MonoBehaviour
     protected float _range;
 
     [SerializeField] protected Name _weaponName;
-
     [SerializeField] protected Type _weaponType;
 
     public Name WeaponName { get { return _weaponName; } }
@@ -48,7 +47,6 @@ abstract public class BaseWeapon : MonoBehaviour
     protected Dictionary<EventType, BaseRecoilStrategy> _recoilStrategies = new Dictionary<EventType, BaseRecoilStrategy>();
 
     protected ReloadStrategy _reloadStrategy;
-
 
     protected float _equipFinishTime;
     public float EquipFinishTime { get { return _equipFinishTime; } }
@@ -63,6 +61,23 @@ abstract public class BaseWeapon : MonoBehaviour
 
     protected WeaponEventBlackboard _weaponEventBlackboard;
 
+    public void ChangeWeaponLayer(bool changeLayer)
+    {
+        if(changeLayer)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Weapons");
+            }
+        }
+        else
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Default");
+            }
+        }
+    }
 
     public virtual void SetDefaultValue()
     {
@@ -71,6 +86,7 @@ abstract public class BaseWeapon : MonoBehaviour
 
         _targetLayer = LayerMask.GetMask("PenetratableTarget", "ParallelProcessingTarget"); // 레이어 할당해준다.
     }
+
     public virtual void MatchStrategy() { }
 
     // 여러 개 만들어주기

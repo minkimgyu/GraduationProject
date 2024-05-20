@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-abstract public class CharacterFactory<T1> : BaseFactory<Transform, CharacterFactoryData>
+abstract public class CharacterFactory<T1> : BaseFactory<GameObject, CharacterFactoryData>
 {
     protected T1 _data;
     protected GameObject _prefab;
@@ -31,12 +31,12 @@ public class CharacterPlant : MonoBehaviour
         Warden
     }
 
-    Dictionary<Name, BaseFactory<Transform, CharacterFactoryData>> _characterFactories;
+    Dictionary<Name, BaseFactory<GameObject, CharacterFactoryData>> _characterFactories;
     [SerializeField] CharacterDataDictionary _characterDatas; // 무기 prefab을 모아서 넣어준다.
 
     private void Awake()
     {
-        _characterFactories = new Dictionary<Name, BaseFactory<Transform, CharacterFactoryData>>();
+        _characterFactories = new Dictionary<Name, BaseFactory<GameObject, CharacterFactoryData>>();
         Initialize();
     }
 
@@ -53,14 +53,14 @@ public class CharacterPlant : MonoBehaviour
         foreach (var item in _characterFactories) item.Value.Initialize(_characterDatas[item.Key]);
     }
 
-    public Transform Create(Name name)
+    public GameObject Create(Name name, Vector3 pos)
     {
-        return _characterFactories[name].Create();
+        return _characterFactories[name].Create(pos);
     }
 
-    public Transform Create(Name name, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, 
+    public GameObject Create(Name name, Vector3 pos, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, 
         Action<float> OnHpChangeRequested, Action OnDieRequested)
     {
-        return _characterFactories[name].Create(ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
+        return _characterFactories[name].Create(pos, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
     }
 }
