@@ -2619,9 +2619,6 @@ MonoBehaviour:
   - _tag: TrajectoryLine
     _prefab: {fileID: 8984947879229990854, guid: 997c43a00f772f74d8390f7450c5a066, type: 3}
     _size: 10
-  - _tag: ObjectFragmentation
-    _prefab: {fileID: 7822548912446641591, guid: ccf6d1329f2a7d849ae487552b8fbd5b, type: 3}
-    _size: 10
   - _tag: BulletHole
     _prefab: {fileID: 2267626635118132936, guid: 5d43854294262cd4d8a79db5d22350f0, type: 3}
     _size: 10
@@ -2640,9 +2637,6 @@ MonoBehaviour:
   - _tag: Noise
     _prefab: {fileID: 6510160126245473104, guid: ff88748744d774c4ca93d0aed978c4fd, type: 3}
     _size: 20
-  - _tag: SfxPlayer
-    _prefab: {fileID: 2887737764793504610, guid: 1280468f98ffa164c9739956feafdd00, type: 3}
-    _size: 50
 --- !u!1001 &144891870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15875,7 +15869,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &888578133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15943,55 +15937,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 35.11994, y: 5.911119, z: 0.8482439}
   m_Center: {x: 18.056839, y: 2.4555595, z: 0.075877994}
---- !u!1 &891667951
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 891667953}
-  - component: {fileID: 891667952}
-  m_Layer: 0
-  m_Name: SoundManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &891667952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 891667951}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d188ae66bf289f4b9ae8154c1be0769, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sounds:
-  - name: Fire
-    audioClip: {fileID: 8300000, guid: e52499799711d6a46bae733dc8b68c65, type: 3}
-  _sfxMasterVolume: 0.1
-  _bgmMasterVolume: 1
---- !u!4 &891667953
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 891667951}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &894038969
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -39625,5 +39570,4 @@ SceneRoots:
   - {fileID: 795621212}
   - {fileID: 1359212164}
   - {fileID: 279501372}
-  - {fileID: 891667953}
   - {fileID: 2141801081}

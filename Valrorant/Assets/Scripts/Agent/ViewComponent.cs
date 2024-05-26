@@ -45,7 +45,7 @@ namespace Agent.Component
 
         public void OnRecoilRequested(Vector2 recoilForce)
         {
-            _firePoint.rotation = Quaternion.Euler(FireViewRotation.y, FireViewRotation.x, 0);
+            _firePointRotationMultiplier = recoilForce * 0.5f;
             _cameraRotationMultiplier = recoilForce * 0.5f; // 카메라만 영향을 반만 받음
             _actorBoneRotationMultiplier = recoilForce * 0.5f;
         }
