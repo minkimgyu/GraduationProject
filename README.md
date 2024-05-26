@@ -1,10 +1,10 @@
 # Zombie Factory
 
 ## 프로젝트 소개
-Unity를 사용하여 개발한 모바일 2D 액션 게임
+Unity를 사용하여 개발한 FPS 게임
 
 ## 개발 기간
-24. 03 ~ 24. 06
+23. 09. ~ 24. 05.
 
 ## 인원
 1인 개발
@@ -14,39 +14,25 @@ Unity를 사용하여 개발한 모바일 2D 액션 게임
 
 ## 기능 설명
 
-<details>
-	<summary>Google Sheet를 이용한 데이터 저장</summary>
-    
-   트리거 내용 넣기
-   
-</details>
+FSM을 활용한 Player 제작
+
+FSM + Behavior Tree를 활용한 AI 제작
 
 
-<details>
-	<summary>로그인, 회원 가입 및 데이터 불러오기</summary>
-    
-   내용을 적어주세요.
-   
-</details>
+A* 알고리즘을 활용한 길 찾기 시스템 개발 및 최적화
 
+Object Pool를 활용한 이펙트, 소음 생성 시스템 개발 및 최적화
 
+State 패턴을 사용하여 무기 시스템 개발
 
-<details>
-	<summary>MVC 패턴 적용</summary>
-    
-   내용을 적어주세요.
-   
-</details>
+Factory 패턴을 사용한 생성 시스템 개발
 
+Command 패턴을 활용한 조력자 이벤트 시스템 개발
 
-<details>
-	<summary>FSM을 활용한 Scene State 관리</summary>
-    
-   내용을 적어주세요.
-   
-</details>
+UI Toolkit를 사용하여 반동 커스텀 에디터 개발
+
+Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
+
 
 ## 회고
 
-* Google Sheet를 사용하여 데이터를 저장하고 불러오는 기능을 구현해보면서 Google Apps Script를 새롭개 배우게 되었습니다.
-* 클라이언트에서 데이터를 전달하거나 불러오기 위해 UnityWebRequest를 사용해보았습니다. 처음 해보는 작업이라 많은 시행착오를 거쳤지만 앞으로 비슷한 프로젝트를 진행한다면 수월하게 진행할 수 있을 것 같습니다.
