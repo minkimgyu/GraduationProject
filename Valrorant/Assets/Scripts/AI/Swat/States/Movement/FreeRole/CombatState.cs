@@ -67,7 +67,7 @@ namespace AI.SwatFSM
                                         ),
 
                                         new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration,
-                                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                                        blackboard.ReturnPlayerPos, blackboard.FollowPath, blackboard.View, 
                                         blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
                                     }
                                 ),
@@ -85,7 +85,7 @@ namespace AI.SwatFSM
 
         public override void OnStateEnter()
         {
-            Debug.Log("CombatState");
+            //Debug.Log("CombatState");
         }
 
         public override void OnStateExit()

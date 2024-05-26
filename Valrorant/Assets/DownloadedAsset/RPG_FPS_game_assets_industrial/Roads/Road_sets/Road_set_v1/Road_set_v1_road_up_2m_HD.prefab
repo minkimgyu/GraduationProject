@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 33000010072517976}
   - component: {fileID: 23000010978309592}
   - component: {fileID: 64000011184834540}
-  m_Layer: 0
+  - component: {fileID: 9142675950832125911}
+  m_Layer: 10
   m_Name: Road_set_v1_road_up_2m_HD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,9 +104,21 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300082, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+--- !u!114 &9142675950832125911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011659925856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000013324406544
 GameObject:
   m_ObjectHideFlags: 0
@@ -115,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000012314437004}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Road_set_v1_road_up_2m_HD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +164,8 @@ GameObject:
   - component: {fileID: 33000011170885006}
   - component: {fileID: 23000013324693350}
   - component: {fileID: 64000013256377202}
-  m_Layer: 0
+  - component: {fileID: 3289214171928803623}
+  m_Layer: 10
   m_Name: Road_set_v1_road_up_2m_HD_f
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -242,6 +256,18 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300102, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+--- !u!114 &3289214171928803623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013492621064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

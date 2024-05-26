@@ -7,6 +7,13 @@ using Random = UnityEngine.Random;
 
 abstract public class ActionStrategy : BaseStrategy
 {
+    public ActionStrategy(Action<SoundType, bool> PlaySound)
+    {
+        this.PlaySound = PlaySound;
+    }
+
+    protected Action<SoundType, bool> PlaySound;
+
     /// <summary>
     /// Action을 호출할 수 있는지 확인하는 함수
     /// </summary>
@@ -23,7 +30,12 @@ abstract public class ActionStrategy : BaseStrategy
     public virtual void TurnOffZoomDirectly() { }
 }
 
-public class NoAction : ActionStrategy { }
+public class NoAction : ActionStrategy
+{
+    public NoAction(Action<SoundType, bool> PlaySound) : base(PlaySound)
+    {
+    }
+}
 
 public class BaseZoomStrategy : ActionStrategy
 {
@@ -45,7 +57,7 @@ public class BaseZoomStrategy : ActionStrategy
     protected Action<bool> OnZoomRequested;
 
     public BaseZoomStrategy(Vector3 zoomCameraPosition, float zoomDuration, float normalFieldOfView, float zoomFieldOfView,
-        Action<bool> OnZoomRequested)
+        Action<bool> OnZoomRequested, Action<SoundType, bool> PlaySound) : base(PlaySound)
     {
         _zoomDuration = zoomDuration;
         _zoomCameraPosition = zoomCameraPosition;
@@ -79,7 +91,7 @@ public class ZoomStrategy : BaseZoomStrategy
     State _state;
 
     public ZoomStrategy(Vector3 zoomCameraPosition, float zoomDuration, float normalFieldOfView, float zoomFieldOfView,
-        Action<bool> OnZoomRequested) : base(zoomCameraPosition, zoomDuration, normalFieldOfView, zoomFieldOfView, OnZoomRequested)
+        Action<bool> OnZoomRequested, Action<SoundType, bool> PlaySound) : base(zoomCameraPosition, zoomDuration, normalFieldOfView, zoomFieldOfView, OnZoomRequested, PlaySound)
     {
         _state = State.Idle;
     }
@@ -126,8 +138,8 @@ public class DoubleZoomStrategy : BaseZoomStrategy
     State _state;
 
     public DoubleZoomStrategy(Vector3 zoomCameraPosition, float zoomDuration, float normalFieldOfView, float zoomFieldOfView,
-        float doubleZoomFieldOfView, Action<bool> OnZoomRequested) 
-        : base(zoomCameraPosition, zoomDuration, normalFieldOfView, zoomFieldOfView, OnZoomRequested)
+        float doubleZoomFieldOfView, Action<bool> OnZoomRequested, Action<SoundType, bool> PlaySound) 
+        : base(zoomCameraPosition, zoomDuration, normalFieldOfView, zoomFieldOfView, OnZoomRequested, PlaySound)
     {
         _state = State.Idle;
         _doubleZoomFieldOfView = doubleZoomFieldOfView;
@@ -200,7 +212,7 @@ abstract public class ApplyAttack : ActionStrategy
     BaseWeapon.Name _weaponName;
 
     public ApplyAttack(BaseWeapon.Name weaponName, float range, int targetLayer, 
-        Action<string, int, float> OnPlayWeaponAnimation)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<SoundType, bool> PlaySound) : base(PlaySound)
     {
         _weaponName = weaponName;
         _range = range;
@@ -295,9 +307,9 @@ abstract public class PenetrateAttack : ApplyAttack //, IDisplacement
         float penetratePower, float displacementDecreaseRatio, Dictionary<HitArea, DistanceAreaData[]> damageDictionary,
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
-        : base(weaponName, range, targetLayer, OnPlayWeaponAnimation)
+        : base(weaponName, range, targetLayer, OnPlayWeaponAnimation, PlaySound)
     {
         _fireCountInOnce = fireCountInOnce;
         _penetratePower = penetratePower;
@@ -572,6 +584,7 @@ abstract public class PenetrateAttack : ApplyAttack //, IDisplacement
         Vector3 muzzlePos = ReturnMuzzlePos();
         // _muzzle 사용
         OnNoiseGenerateRequested?.Invoke(muzzlePos);
+        PlaySound?.Invoke(SoundType.Attack, true);
 
         // 여기에 사운드 발생 기능 추가
         PlayAnimation("Fire");
@@ -624,11 +637,11 @@ public class SingleProjectileAttack : PenetrateAttack
         float penetratePower, float displacementDecreaseRatio, Dictionary<HitArea, DistanceAreaData[]> damageDictionary,
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
         : base(weaponName, range, targetLayer, fireCountInOnce, penetratePower, displacementDecreaseRatio, 
             damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount,
-            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested)
+            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound)
     {
     }
 
@@ -664,11 +677,11 @@ public class SingleProjectileAttackWithWeight : SingleProjectileAttack // 가중치
         
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
         : base(weaponName, range, targetLayer, fireCountInOnce, penetratePower, displacementDecreaseRatio, 
             damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount,
-            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested)
+            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound)
     {
         _weightApplier = weightApplier;
     }
@@ -700,11 +713,11 @@ public class ScatterProjectileAttack : PenetrateAttack // 산탄은 가중치가 적용되
         Dictionary<HitArea, DistanceAreaData[]> damageDictionary,
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
         : base(weaponName, range, targetLayer, fireCountInOnce, penetratePower, displacementDecreaseRatio, 
             damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount,
-            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested)
+            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound)
     {
         _pelletCount = pelletCount;
         _spreadOffset = spreadOffset;
@@ -753,11 +766,11 @@ public class ScatterProjectileAttackWithWeight : ScatterProjectileAttack
         Dictionary<HitArea, DistanceAreaData[]> damageDictionary,
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
         : base(weaponName, range, targetLayer, fireCountInOnce, penetratePower, displacementDecreaseRatio, pelletCount, 
             spreadOffset, damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount,
-            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested)
+            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound)
     {
         _weightApplier = weightApplier;
     }
@@ -785,11 +798,11 @@ public class ExplosionScatterProjectileAttack : ScatterProjectileAttack // 산탄�
         string explosionEffectName, Dictionary<HitArea, DistanceAreaData[]> damageDictionary,
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested)
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound)
 
         : base(weaponName, range, targetLayer, fireCountInOnce, penetratePower, displacementDecreaseRatio, pelletCount, spreadOffset,
             damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount,
-            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested)
+            DecreaseAmmoCount, SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound)
     {
         _frontDistance = frontDistance;
         _explosionEffectName = explosionEffectName;
@@ -837,19 +850,19 @@ public class SingleAndExplosionScatterAttackCombination : ActionStrategy // Atta
 
 
         Action<string, int, float> OnPlayWeaponAnimation, Func<Vector3> ReturnMuzzlePos, Func<int> ReturnLeftAmmoCount,
-        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested
-        )
+        Action<int> DecreaseAmmoCount, Action SpawnMuzzleFlashEffect, Action SpawnEmptyCartridge, Action<Vector3> OnNoiseGenerateRequested, Action<SoundType, bool> PlaySound
+        ) : base(PlaySound)
     {
         _targetLayer = targetLayer;
         _findRange = findRange;
 
         singleProjectileAttack = new SingleProjectileAttack(weaponName, range, targetLayer, singleBulletCountsInOneShoot, singlePenetratePower, singleDisplacementDecreaseRatio,
             damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount, 
-            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested);
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound);
 
         scatterProjectileGunAttack = new ExplosionScatterProjectileAttack(weaponName, range, targetLayer, scatterBulletCountsInOneShoot, scatterPenetratePower, scatterDisplacementDecreaseRatio,
             pelletCount, spreadOffset, frontDistance, explosionEffectName, scatterDamageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
-            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested);
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnNoiseGenerateRequested, PlaySound);
     }
 
     //public override void ResetLeftBulletCount(int leftBulletCount) 
@@ -908,8 +921,8 @@ abstract public class BaseKnifeAttack : ApplyAttack
 
     public BaseKnifeAttack(BaseWeapon.Name weaponName, float range, int targetLayer, float delaysForNextStab, DirectionData directionData,
         
-        Action<string, int, float> OnPlayWeaponAnimation) 
-        : base(weaponName, range, targetLayer, OnPlayWeaponAnimation)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<SoundType, bool> PlaySound) 
+        : base(weaponName, range, targetLayer, OnPlayWeaponAnimation, PlaySound)
     {
         _damageConverter = new DirectionBasedDamageConverter(directionData);
 
@@ -949,6 +962,8 @@ abstract public class BaseKnifeAttack : ApplyAttack
     {
         Vector3 camPos = ReturnRaycastPos();
         Vector3 camFowardDir = ReturnRaycastDir();
+
+        PlaySound?.Invoke(SoundType.Attack, true);
 
         RaycastHit hit;
         Physics.Raycast(camPos, camFowardDir, out hit, _range, _targetLayer);
@@ -1000,8 +1015,8 @@ public class RightKnifeAttack : BaseKnifeAttack
     public RightKnifeAttack(BaseWeapon.Name weaponName, float range, int targetLayer, 
         float delayForNextStab, DirectionData directionData,
 
-        Action<string, int, float> OnPlayWeaponAnimation)
-        : base(weaponName, range, targetLayer, delayForNextStab, directionData, OnPlayWeaponAnimation)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<SoundType, bool> PlaySound)
+        : base(weaponName, range, targetLayer, delayForNextStab, directionData, OnPlayWeaponAnimation, PlaySound)
     {
     }
 
@@ -1020,8 +1035,8 @@ public class LeftKnifeAttack : BaseKnifeAttack
     public LeftKnifeAttack(BaseWeapon.Name weaponName, float range, int targetLayer,
         int animationCnt, float delayForNextStab, float attackLinkDuration, DirectionData directionData,
 
-        Action<string, int, float> OnPlayWeaponAnimation)
-        : base(weaponName, range, targetLayer, delayForNextStab, directionData, OnPlayWeaponAnimation)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<SoundType, bool> PlaySound)
+        : base(weaponName, range, targetLayer, delayForNextStab, directionData, OnPlayWeaponAnimation, PlaySound)
     {
         _stabLinkDuration = attackLinkDuration;
 

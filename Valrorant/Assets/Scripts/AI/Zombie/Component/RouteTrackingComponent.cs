@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Random = UnityEngine.Random;
 
 public class RouteTrackingComponent : MonoBehaviour
 {
@@ -16,11 +17,13 @@ public class RouteTrackingComponent : MonoBehaviour
     int _pathIndex = 0;
 
     StopwatchTimer _stopwatchTimer;
-    float _pathFindDelay = 0.3f;
+    float _pathFindDelay;
 
 
     bool _isFollowingFinish = false;
     Vector3 _storedTargetPos; // 저장된 타겟의 위치
+
+    //Action<SoundType, bool> PlaySFX;
 
 
     public void Initialize(float pathFindDelay, Action<Vector3> Move, Action Stop, Action<Vector3> View, 
@@ -33,6 +36,8 @@ public class RouteTrackingComponent : MonoBehaviour
         this.Stop = Stop;
         this.View = View;
         this.FindPath = FindPath;
+
+        //this.PlaySFX = PlaySFX;
     }
 
     void ResetPath()
@@ -55,7 +60,7 @@ public class RouteTrackingComponent : MonoBehaviour
 
         if (_stopwatchTimer.CurrentState == StopwatchTimer.State.Running) return;
        
-        if (_stopwatchTimer.CurrentState == StopwatchTimer.State.Finish)
+        if (_stopwatchTimer.CurrentState == StopwatchTimer.State.Finish || _stopwatchTimer.CurrentState == StopwatchTimer.State.Ready)
         {
             _stopwatchTimer.Reset();
             _stopwatchTimer.Start(_pathFindDelay);
@@ -84,7 +89,8 @@ public class RouteTrackingComponent : MonoBehaviour
 
         Vector3 nextPathPos = new Vector3(_paths[_pathIndex].x, transform.position.y, _paths[_pathIndex].z);
 
-        if(lookPath) View?.Invoke((_paths[_pathIndex] - transform.position).normalized);
+
+        if(lookPath) View?.Invoke((nextPathPos - transform.position).normalized);
 
         Vector3 dir = (nextPathPos - transform.position).normalized;
         Move?.Invoke(dir);
@@ -92,6 +98,9 @@ public class RouteTrackingComponent : MonoBehaviour
         float distance = Vector3.Distance(transform.position, nextPathPos);
         if (distance < 0.1f)
         {
+            int randomFootSound = Random.Range((int)SoundType.FootStep1, (int)SoundType.FootStep3 + 1);
+            //PlaySFX?.Invoke((SoundType)randomFootSound, true);
+
             if (_paths.Count - 1 <= _pathIndex)
             {
                 ResetPath();

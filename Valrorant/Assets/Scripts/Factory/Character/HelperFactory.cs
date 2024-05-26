@@ -55,11 +55,11 @@ public class HelperData
 
 public class HelperFactory : CharacterFactory<HelperData>
 {
-    public override GameObject Create(Vector3 pos, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, Action<float> OnHpChangeRequested,
-        Action OnDieRequested)
+    public override GameObject Create(Vector3 pos, CharacterPlant.Name name, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, Action<float> OnHpChangeRequested,
+        Action<CharacterPlant.Name> OnDieRequested)
     {
         Helper helper = Object.Instantiate(_prefab, pos, Quaternion.identity).GetComponent<Helper>();
-        helper.Initialize(_data, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
+        helper.Initialize(_data, name, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
         return helper.gameObject;
     }
 }

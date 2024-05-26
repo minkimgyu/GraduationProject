@@ -43,13 +43,13 @@ public class Knife : BaseWeapon
         _eventStrategies[EventType.Sub] = new AutoEvent(EventType.Sub, data.subAttackDelay, OnEventStart, OnEventUpdate, OnEventEnd, OnAction);
 
         _actionStrategies[EventType.Main] = new LeftKnifeAttack(data.weaponName, data.range, _targetLayer,
-           data.mainAnimationCount, data.mainAttackEffectDelayTime, data.attackLinkDuration, data.mainAttackDamageData, OnPlayWeaponAnimation);
+           data.mainAnimationCount, data.mainAttackEffectDelayTime, data.attackLinkDuration, data.mainAttackDamageData, OnPlayWeaponAnimation, PlaySFX);
 
         _actionStrategies[EventType.Sub] = new RightKnifeAttack(data.weaponName, data.range, _targetLayer,
-           data.subAttackEffectDelayTime, data.mainAttackDamageData, OnPlayWeaponAnimation);
+           data.subAttackEffectDelayTime, data.mainAttackDamageData, OnPlayWeaponAnimation, PlaySFX);
 
         _recoilStrategies[EventType.Main] = new NoRecoilGenerator();
         _recoilStrategies[EventType.Sub] = new NoRecoilGenerator();
-        _reloadStrategy = new NoReload();
+        _reloadStrategy = new NoReload(PlaySFX);
     }
 }

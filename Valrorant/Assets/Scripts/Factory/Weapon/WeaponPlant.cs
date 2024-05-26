@@ -14,10 +14,11 @@ abstract public class BaseFactory<T1, T2>
     public virtual T1 Create(Vector3 pos) { return default; }
     public virtual T1 Create(
         Vector3 pos,
+        CharacterPlant.Name name,
         Func<Vector3> ReturnPlayerPos, 
         Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
         Action<float> OnHpChangeRequested,
-        Action OnDieRequested
+        Action<CharacterPlant.Name> OnDieRequested
     ) 
     { return default; }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using FSM;
 using System;
 using Object = UnityEngine.Object;
@@ -15,7 +16,6 @@ public class DieState : State
     GameObject _model;
     CapsuleCollider _modelCol;
     Ragdoll _ragdoll;
-    string _ragdoolName;
 
     private void CopyAnimCharacterTransformToRagdoll(Transform origin, Transform rag)
     {
@@ -46,17 +46,13 @@ public class DieState : State
             CopyAnimCharacterTransformToRagdoll(_myRig, ragdoll.Rig);
         }
 
-        // 그냥 여기서 생성시켜버리자
-        //Ragdoll ragObj = ObjectPooler.SpawnFromPool<Ragdoll>(_ragdoolName);
-        //CopyAnimCharacterTransformToRagdoll(_myRig, ragObj.Rig);
         _model.SetActive(false);
         DestoryMe(_destoryDelay);
     }
 
-    public DieState(Ragdoll ragdoll, string ragdoolName, Transform myTransform, GameObject model, Transform myRig, float destoryDelay, Action<float> DestoryMe)
+    public DieState(Ragdoll ragdoll, Transform myTransform, GameObject model, Transform myRig, float destoryDelay, Action<float> DestoryMe)
     {
         _ragdoll = ragdoll;
-        _ragdoolName = ragdoolName;
         _myTransform = myTransform;
         _model = model;
         _myRig = myRig;
@@ -67,5 +63,18 @@ public class DieState : State
     public override void OnStateEnter()
     {
         OnDieRequested();
+    }
+}
+
+public class ExitGameState : State
+{
+
+    public ExitGameState()
+    {
+    }
+
+    public override void OnStateEnter()
+    {
+        SceneManager.LoadScene("DefeatScene");
     }
 }

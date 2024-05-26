@@ -26,7 +26,7 @@ public class JsonAssetGenerator
 
         string jsonAsset = ToJson(objectToParse);
         File.WriteAllText(path, jsonAsset); // 이런 방식으로 생성시켜줌
-        AssetDatabase.Refresh();
+        //AssetDatabase.Refresh();
     }
 
     string ReturnPath(string filePath, string fileName)

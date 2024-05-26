@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 33000014169494080}
   - component: {fileID: 23000014090315290}
   - component: {fileID: 65000012913242684}
+  - component: {fileID: 423346180117594403}
   m_Layer: 10
   m_Name: Concrete_fence_v2_S
   m_TagString: CanNotPass
@@ -138,6 +139,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5380497, y: 1.0200385, z: 5.6724796}
   m_Center: {x: -0.0000019073484, y: -0.7727375, z: -0.000003814698}
+--- !u!114 &423346180117594403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013693227596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000014037010034
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,6 +163,7 @@ GameObject:
   - component: {fileID: 33000012874370198}
   - component: {fileID: 23000011800568128}
   - component: {fileID: 65000010613152302}
+  - component: {fileID: 5105546849128207638}
   m_Layer: 10
   m_Name: Concrete_fence_v2_lattice_S
   m_TagString: CanNotPass
@@ -243,3 +257,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0, y: 1.4342282, z: 5.672476}
   m_Center: {x: 0, y: -0.000000029802322, z: 0}
+--- !u!114 &5105546849128207638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000014037010034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

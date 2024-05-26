@@ -23,12 +23,16 @@ public class CharacterPlant : MonoBehaviour
 {
     public enum Name
     {
-        Zombie,
         Player,
 
         Oryx,
         Rook,
-        Warden
+        Warden,
+
+        Mask,
+        Police,
+        Witch,
+        Mild
     }
 
     Dictionary<Name, BaseFactory<GameObject, CharacterFactoryData>> _characterFactories;
@@ -44,11 +48,16 @@ public class CharacterPlant : MonoBehaviour
     {
         // 여기서 추가
         _characterFactories[Name.Player] = new PlayerFactory();
-        _characterFactories[Name.Zombie] = new ZombieFactory();
+
 
         _characterFactories[Name.Oryx] = new HelperFactory();
         _characterFactories[Name.Rook] = new HelperFactory();
         _characterFactories[Name.Warden] = new HelperFactory();
+
+        _characterFactories[Name.Mask] = new ZombieFactory();
+        _characterFactories[Name.Police] = new ZombieFactory();
+        _characterFactories[Name.Witch] = new ZombieFactory();
+        _characterFactories[Name.Mild] = new ZombieFactory();
 
         foreach (var item in _characterFactories) item.Value.Initialize(_characterDatas[item.Key]);
     }
@@ -59,8 +68,8 @@ public class CharacterPlant : MonoBehaviour
     }
 
     public GameObject Create(Name name, Vector3 pos, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested, 
-        Action<float> OnHpChangeRequested, Action OnDieRequested)
+        Action<float> OnHpChangeRequested, Action<Name> OnDieRequested)
     {
-        return _characterFactories[name].Create(pos, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
+        return _characterFactories[name].Create(pos, name, ReturnPlayerPos, OnWeaponProfileChangeRequested, OnHpChangeRequested, OnDieRequested);
     }
 }

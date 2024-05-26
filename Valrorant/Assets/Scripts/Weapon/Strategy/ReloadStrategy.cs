@@ -6,7 +6,10 @@ using System;
 // 장전 테스크 적용
 abstract public class ReloadStrategy : BaseStrategy
 {
-    public ReloadStrategy() : base() { }
+    public ReloadStrategy(Action<SoundType, bool> PlaySound) : base() { this.PlaySound = PlaySound; }
+
+    protected Action<SoundType, bool> PlaySound;
+
 
     public virtual void Execute(bool isTPS, int ammoCountInMagazine, int ammoCountInPossession) { }
 
@@ -51,7 +54,7 @@ abstract public class ReloadStrategy : BaseStrategy
 
 public class NoReload : ReloadStrategy
 {
-    public NoReload() : base() { }
+    public NoReload(Action<SoundType, bool> PlaySound) : base(PlaySound) { }
 }
 
 abstract public class BaseReload : ReloadStrategy
@@ -79,7 +82,7 @@ abstract public class BaseReload : ReloadStrategy
     protected Action<int, int> OnReloadRequested;
 
     public BaseReload(BaseWeapon.Name weaponName, float reloadExitDuration, int maxAmmoCountInMagazine,
-        Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested, Action<SoundType, bool> PlaySound) : base(PlaySound)
     {
         _reloadTimer = new StopwatchTimer();
         _reloadExitTimer = new StopwatchTimer();
@@ -123,8 +126,8 @@ public class MagazineReload : BaseReload
     protected float _reloadDuration;
 
     public MagazineReload(BaseWeapon.Name weaponName, float reloadDuration, float reloadExitDuration, int maxAmmoCountInMagazine,
-         Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested) 
-        : base(weaponName, reloadExitDuration, maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested)
+         Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested, Action<SoundType, bool> PlaySound) 
+        : base(weaponName, reloadExitDuration, maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested, PlaySound)
     {
         _reloadDuration = reloadDuration;
     }
@@ -149,6 +152,7 @@ public class MagazineReload : BaseReload
     {
         if(_reloadTimer.CurrentState == StopwatchTimer.State.Finish)
         {
+            PlaySound(SoundType.Reload, true);
             CalculateAmmoWhenReload();
             _reloadTimer.Reset();
         }
@@ -191,8 +195,8 @@ public class RoundByRoundReload : BaseReload
 
     public RoundByRoundReload(BaseWeapon.Name weaponName, float reloadBeforeDuration, float reloadDurationPerRound, 
         float reloadExitDuration, int maxAmmoCountInMagazine, 
-        Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested)
-        : base(weaponName, reloadExitDuration, maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested)
+        Action<string, int, float> OnPlayWeaponAnimation, Action<int, int> OnReloadRequested, Action<SoundType, bool> PlaySound)
+        : base(weaponName, reloadExitDuration, maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested, PlaySound)
     {
         _reloadBeforeDuration = reloadBeforeDuration;
         _reloadDurationPerRound = reloadDurationPerRound;

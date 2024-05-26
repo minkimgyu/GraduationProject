@@ -34,7 +34,6 @@ public class ProfileViewer : MonoBehaviour
 
     public void OnWeaponProfileChangeRequested(BaseWeapon.Name name)
     {
-        Debug.Log(name.ToString() + "Icon");
         Database.IconName iconName = ParseEnum<Database.IconName>(name.ToString() + "Icon");
         _equipedWeaponImg.sprite = Database.ReturnIcon(iconName);
     }

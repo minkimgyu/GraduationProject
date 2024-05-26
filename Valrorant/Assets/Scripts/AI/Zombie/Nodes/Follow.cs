@@ -21,7 +21,7 @@ namespace BehaviorTree.Nodes
         {
             ITarget target = ReturnTargetInSight();
             Vector3 pos = target.ReturnPos();
-            FollowPath?.Invoke(pos, null, false);
+            FollowPath?.Invoke(pos, null, true);
 
             return NodeState.SUCCESS;
         }

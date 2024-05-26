@@ -28,7 +28,7 @@ namespace AI.SwatFSM
                     new List<Node>()
                     {
                         new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration, 
-                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                        blackboard.ReturnPlayerPos, blackboard.FollowPath, blackboard.View, 
                         blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
 
                         new Selector

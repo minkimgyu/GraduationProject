@@ -12,9 +12,10 @@ GameObject:
   - component: {fileID: 33000014030599530}
   - component: {fileID: 23000013965629674}
   - component: {fileID: 64000011000010816}
+  - component: {fileID: 2493082507983217014}
   m_Layer: 10
   m_Name: Object089
-  m_TagString: Untagged
+  m_TagString: CanNotPass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -103,9 +104,21 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: 165b285d8813c4b459ac04e83c94db1b, type: 3}
+--- !u!114 &2493082507983217014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010491514970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000011254384922
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,9 +131,10 @@ GameObject:
   - component: {fileID: 33000010763039198}
   - component: {fileID: 23000011836317424}
   - component: {fileID: 64000014232975922}
+  - component: {fileID: 8323608173070714229}
   m_Layer: 10
   m_Name: Object086
-  m_TagString: Untagged
+  m_TagString: CanNotPass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -209,9 +223,21 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300006, guid: 165b285d8813c4b459ac04e83c94db1b, type: 3}
+--- !u!114 &8323608173070714229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011254384922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000012491009290
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,9 +250,10 @@ GameObject:
   - component: {fileID: 33000011052324856}
   - component: {fileID: 23000012025676550}
   - component: {fileID: 64000012037115136}
+  - component: {fileID: 2043186221349418661}
   m_Layer: 10
   m_Name: Object1040
-  m_TagString: Untagged
+  m_TagString: CanNotPass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -315,9 +342,21 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300010, guid: 165b285d8813c4b459ac04e83c94db1b, type: 3}
+--- !u!114 &2043186221349418661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012491009290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000013012713382
 GameObject:
   m_ObjectHideFlags: 0

@@ -61,22 +61,44 @@ abstract public class BaseWeapon : MonoBehaviour
 
     protected WeaponEventBlackboard _weaponEventBlackboard;
 
-    public void ChangeWeaponLayer(bool changeLayer)
+
+
+    [SerializeField] AudioSource _audioSource;
+    [SerializeField] AudioClipDictionary _clips;
+
+    protected void PlaySFX(SoundType type, bool oneShot = false)
     {
-        if(changeLayer)
+        if (_clips.ContainsKey(type) == false) return;
+
+        if(oneShot)
         {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Weapons");
-            }
+            _audioSource.PlayOneShot(_clips[type]);
         }
         else
         {
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                transform.GetChild(i).gameObject.layer = LayerMask.NameToLayer("Default");
-            }
+            _audioSource.clip = _clips[type];
+            _audioSource.Play();
         }
+    }
+
+    void ChangeChildLayer(Transform child, int layer)
+    {
+        child.gameObject.layer = layer;
+
+        for (int i = 0; i < child.childCount; i++)
+        {
+            Transform childTransform = child.GetChild(i);
+            ChangeChildLayer(childTransform, layer);
+        }
+    }
+
+    public void ChangeWeaponLayer(bool changeLayer)
+    {
+        int layer;
+        if (changeLayer) layer = LayerMask.NameToLayer("Weapons");
+        else layer = LayerMask.NameToLayer("Default");
+
+        ChangeChildLayer(transform, layer);
     }
 
     public virtual void SetDefaultValue()
@@ -117,6 +139,8 @@ abstract public class BaseWeapon : MonoBehaviour
 
     public virtual void OnEquip()
     {
+        PlaySFX(SoundType.Equip, true);
+
         _weaponEventBlackboard.OnPlayOwnerAnimation?.Invoke(_weaponName + "Equip", -1, 0);
         OnPlayWeaponAnimation?.Invoke("Equip", -1, 0);
     }

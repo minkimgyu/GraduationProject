@@ -11,8 +11,7 @@ public struct SwatMovementBlackboard
         float farFromPlayerDistance, float farFromPlayerDistanceOffset, float closeDistance, float closeDistanceOffset,
         float farFromTargetDistance, float farFromTargetDistanceOffset, float formationRadius, float offset, float offsetChangeDuration,
 
-        Action<Vector3, List<Vector3>, bool> FollowPath, Action<Vector3> View, Action Stop, Func<Vector3, int, Vector3> ReturnNodePos,
-        Func<Vector3> ReturnPlayerPos, Func<FormationData> ReturnFormationData,
+        Action<Vector3, List<Vector3>, bool> FollowPath, Action<Vector3> View, Action Stop, Func<Vector3> ReturnPlayerPos, Func<FormationData> ReturnFormationData,
 
 
         Func<List<ISightTarget>> ReturnAllTargetInLargeSight,
@@ -58,8 +57,6 @@ public struct SwatMovementBlackboard
         this.ModifySmallCaptureRadius = ModifySmallCaptureRadius;
 
         this.ReturnPlayerPos = ReturnPlayerPos;
-
-        this.ReturnNodePos = ReturnNodePos;
         this.ReturnFormationData = ReturnFormationData;
     }
 
@@ -107,7 +104,6 @@ public struct SwatMovementBlackboard
 
     public Func<Vector3> ReturnPlayerPos { get; }
 
-    public Func<Vector3, int, Vector3> ReturnNodePos { get; }
     public Func<FormationData> ReturnFormationData { get; }
 
     // FreeRole

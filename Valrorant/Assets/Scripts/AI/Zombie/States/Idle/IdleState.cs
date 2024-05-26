@@ -21,8 +21,7 @@ namespace AI.ZombieFSM
             this.SetState = SetState;
             IsTargetInSight = blackboard.IsTargetInSight;
 
-            WanderingFSM wanderingFSM = new WanderingFSM(blackboard.MyTransform, blackboard.WanderOffset, 
-                blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, blackboard.Stop);
+            WanderingFSM wanderingFSM = new WanderingFSM(blackboard.MyTransform, blackboard.WanderOffset, blackboard.FollowPath, blackboard.View, blackboard.Stop);
             ChangeToRandomState changeState = new ChangeToRandomState(wanderingFSM.FSM.SetState);
 
             _bt = new Tree();

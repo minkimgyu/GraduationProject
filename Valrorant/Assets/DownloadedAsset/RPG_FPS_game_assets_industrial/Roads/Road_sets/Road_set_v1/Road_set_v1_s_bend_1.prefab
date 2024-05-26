@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000010721903726}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Road_set_v1_s_bend_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,8 @@ GameObject:
   - component: {fileID: 33000010761016650}
   - component: {fileID: 23000013738059912}
   - component: {fileID: 64000012806440694}
-  m_Layer: 0
+  - component: {fileID: 4824569106670140357}
+  m_Layer: 10
   m_Name: Road_set_v1_s_bend_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,9 +137,21 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300122, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+--- !u!114 &4824569106670140357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012157107748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000012379229482
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,8 +163,9 @@ GameObject:
   - component: {fileID: 4000011276936740}
   - component: {fileID: 33000011138873016}
   - component: {fileID: 23000011520281732}
-  - component: {fileID: 64000011125478918}
-  m_Layer: 0
+  - component: {fileID: 7868437385628214017}
+  - component: {fileID: 4169455950521019475}
+  m_Layer: 10
   m_Name: Road_set_v1_s_bend_1f
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -223,8 +237,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000011125478918
-MeshCollider:
+--- !u!65 &7868437385628214017
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -241,7 +255,18 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300124, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 10.000004, y: 0.0000008828938, z: 10.000002}
+  m_Center: {x: 0.00000071525574, y: 0, z: 0.00000023841858}
+--- !u!114 &4169455950521019475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012379229482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

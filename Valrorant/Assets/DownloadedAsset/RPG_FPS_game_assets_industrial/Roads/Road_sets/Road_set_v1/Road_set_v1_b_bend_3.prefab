@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4000011794556414}
   - component: {fileID: 33000010476375034}
   - component: {fileID: 23000010019585692}
-  - component: {fileID: 64000013758466730}
   m_Layer: 0
   m_Name: Road_set_v1_b_bend_3
   m_TagString: Untagged
@@ -84,28 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000013758466730
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010935188556}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300074, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
 --- !u!1 &1000011694186388
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +127,7 @@ GameObject:
   - component: {fileID: 4000011148640582}
   - component: {fileID: 33000012219322882}
   - component: {fileID: 23000010348050502}
-  - component: {fileID: 64000014183501814}
+  - component: {fileID: 7852112840703569682}
   m_Layer: 0
   m_Name: Road_set_v1_b_bend_3f
   m_TagString: Untagged
@@ -223,8 +200,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000014183501814
-MeshCollider:
+--- !u!65 &7852112840703569682
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -241,7 +218,6 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300126, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 20.000004, y: 0.0000037895516, z: 19.999998}
+  m_Center: {x: 0.0000009536743, y: 0, z: -0.0000009536743}

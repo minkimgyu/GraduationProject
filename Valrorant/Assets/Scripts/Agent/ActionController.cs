@@ -171,7 +171,7 @@ namespace Agent.Controller
 
         public void OnLateUpdate()
         {
-            _viewComponent.ResetCamera();
+            _viewComponent.ApplyRecoilToCamera();
         }
 
         public void OnCollisionEnterRequested(Collision collision)

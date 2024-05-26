@@ -55,8 +55,8 @@ namespace Grid.Pathfinder
             Vector3Int startIndex = ReturnNodeIndex(startPos);
             Vector3Int endIndex = ReturnNodeIndex(targetPos);
 
-            Node startNode = ReturnNode(startIndex);
-            Node endNode = ReturnNode(endIndex);
+            Node startNode = FindPassNode(startIndex);
+            Node endNode = FindPassNode(endIndex);
 
             if (startNode == null || endNode == null) return null;
 

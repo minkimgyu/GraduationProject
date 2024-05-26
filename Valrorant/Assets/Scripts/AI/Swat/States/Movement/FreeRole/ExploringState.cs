@@ -26,8 +26,7 @@ namespace AI.SwatFSM
         {
             this.SetState = SetState;
 
-            WanderingFSM wanderingFSM = new WanderingFSM(blackboard.MyTransform, blackboard.WanderOffset,
-                blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, blackboard.Stop);
+            WanderingFSM wanderingFSM = new WanderingFSM(blackboard.MyTransform, blackboard.WanderOffset, blackboard.FollowPath, blackboard.View, blackboard.Stop);
 
             IsFarAwayFromPlayer isFarAwayFromPlayer = new IsFarAwayFromPlayer(blackboard.MyTransform, blackboard.FarFromPlayerDistance, blackboard.FarFromPlayerDistanceOffset,
                 blackboard.ReturnPlayerPos);
@@ -61,7 +60,7 @@ namespace AI.SwatFSM
                                         isFarAwayFromPlayer,
 
                                         new StickToPlayer(blackboard.FormationRadius, blackboard.Offset, blackboard.OffsetChangeDuration,
-                                        blackboard.ReturnPlayerPos, blackboard.ReturnNodePos, blackboard.FollowPath, blackboard.View, 
+                                        blackboard.ReturnPlayerPos, blackboard.FollowPath, blackboard.View, 
                                         blackboard.ReturnFormationData, blackboard.ReturnAllTargetInLargeSight),
                                     }
                                 ),

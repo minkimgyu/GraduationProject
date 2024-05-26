@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4000010613112490}
   - component: {fileID: 33000011247498782}
   - component: {fileID: 23000012961811354}
-  - component: {fileID: 64000011643444578}
+  - component: {fileID: 1991494913427269689}
   m_Layer: 0
   m_Name: Road_set_v1_b_bend_2f
   m_TagString: Untagged
@@ -117,8 +117,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000011643444578
-MeshCollider:
+--- !u!65 &1991494913427269689
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -135,10 +135,9 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300130, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 20, y: 0.000006519258, z: 20.000006}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1000013938108112
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,7 +149,6 @@ GameObject:
   - component: {fileID: 4000013491695032}
   - component: {fileID: 33000011549314814}
   - component: {fileID: 23000010470827172}
-  - component: {fileID: 64000010411694968}
   m_Layer: 0
   m_Name: Road_set_v1_b_bend_2
   m_TagString: Untagged
@@ -223,25 +221,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000010411694968
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000013938108112}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300072, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}

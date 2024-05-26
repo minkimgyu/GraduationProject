@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sound : MonoBehaviour {
+//public class Sound : MonoBehaviour {
 	
-	public AudioSource shell;
+//	public AudioSource shell;
 
-	void Start () {
+//	void Start () {
 		
-		shell = GetComponent<AudioSource>();
-		shell.Play();
-	}
-}
+//		shell = GetComponent<AudioSource>();
+//		shell.Play();
+//	}
+//}

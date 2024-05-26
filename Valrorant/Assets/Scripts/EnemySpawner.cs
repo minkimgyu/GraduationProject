@@ -13,11 +13,18 @@ public class EnemySpawner : MonoBehaviour
     StopwatchTimer _timer;
 
     System.Func<CharacterPlant.Name, Vector3, GameObject> SpawnEnemy;
+    CharacterPlant.Name[] _zombieNames = 
+    { 
+        CharacterPlant.Name.Police, 
+        CharacterPlant.Name.Mask, 
+        CharacterPlant.Name.Mild, 
+        CharacterPlant.Name.Witch 
+    };
+
 
     private void Start()
     {
         SpawnEnemy = FindObjectOfType<CharacterPlant>().Create;
-        _timer = new StopwatchTimer();
         ActivateSpawn();
     }
 
@@ -28,8 +35,7 @@ public class EnemySpawner : MonoBehaviour
 
     public void ActivateSpawn()
     {
-        if (_timer == null) return;
-
+        _timer = new StopwatchTimer();
         _timer.Start(_spawnDelay);
     }
 
@@ -42,19 +48,15 @@ public class EnemySpawner : MonoBehaviour
     {
         if (_timer == null) return;
 
+        int randomIndex = Random.Range(0, _zombieNames.Length);
+
         if(_timer.CurrentState == StopwatchTimer.State.Finish)
         {
             Vector2 posInCircle = Random.insideUnitCircle * _radius;
 
-            Spawn(new Vector3(posInCircle.x + transform.position.x, transform.position.y, posInCircle.y + transform.position.z));
+            SpawnEnemy(_zombieNames[randomIndex], new Vector3(posInCircle.x + transform.position.x, transform.position.y - 0.5f, posInCircle.y + transform.position.z));
             _timer.Reset();
             _timer.Start(_spawnDelay);
         }
-    }
-
-    void Spawn(Vector3 pos)
-    {
-        Vector2 startPos = Random.insideUnitCircle * _radius;
-        SpawnEnemy(CharacterPlant.Name.Zombie, pos + new Vector3(startPos.y, startPos.x));
     }
 }

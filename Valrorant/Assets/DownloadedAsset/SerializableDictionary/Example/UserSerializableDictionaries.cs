@@ -5,6 +5,9 @@ using UnityEngine;
 using DamageUtility;
 
 [Serializable]
+public class AudioClipDictionary : SerializableDictionary<SoundType, AudioClip> { }
+
+[Serializable]
 public class RecoilDataDictionary : SerializableDictionary<BaseWeapon.EventType, TextAsset> { }
 
 [Serializable]

@@ -9,7 +9,6 @@ namespace BehaviorTree.Nodes
     public class StickToPlayer : Node
     {
         Func<Vector3> ReturnPlayerPos;
-        Func<Vector3, int, Vector3> ReturnNodePos;
         Action<Vector3, List<Vector3>, bool> FollowPath;
 
         Func<FormationData> ReturnFormationData;
@@ -23,8 +22,8 @@ namespace BehaviorTree.Nodes
 
         Func<List<ISightTarget>> ReturnAllTargetInLargeSight;
 
-        public StickToPlayer(float radius, float offset, float offsetChangeDuration,  Func<Vector3> ReturnPlayerPos, Func<Vector3, int, Vector3> ReturnNodePos,
-            Action<Vector3, List<Vector3>, bool> FollowPath, Action<Vector3> View, Func<FormationData> ReturnFormationData, Func<List<ISightTarget>> ReturnAllTargetInLargeSight)
+        public StickToPlayer(float radius, float offset, float offsetChangeDuration,  Func<Vector3> ReturnPlayerPos, Action<Vector3, List<Vector3>, bool> FollowPath, 
+            Action<Vector3> View, Func<FormationData> ReturnFormationData, Func<List<ISightTarget>> ReturnAllTargetInLargeSight)
         {
             _timer = new StopwatchTimer();
             _posOffset = Vector3.zero;
@@ -35,7 +34,6 @@ namespace BehaviorTree.Nodes
 
             this.ReturnPlayerPos = ReturnPlayerPos;
 
-            this.ReturnNodePos = ReturnNodePos;
             this.FollowPath = FollowPath;
             this.ReturnFormationData = ReturnFormationData;
 
@@ -79,7 +77,6 @@ namespace BehaviorTree.Nodes
 
             List<Vector3> nearHelperPos = new List<Vector3>();
 
-
             // isightTarget 넣어서 반영해줌
             FormationData data = ReturnFormationData();
             foreach (var listener in data.Listeners)
@@ -100,8 +97,7 @@ namespace BehaviorTree.Nodes
 
             // 공격 중 후퇴의 경우 View를 돌리지 않음
             Vector3 circlePos = ReturnCirclePos();
-            Vector3 _targetPos = ReturnNodePos.Invoke(circlePos + _posOffset, 0);
-            FollowPath?.Invoke(_targetPos, nearHelperPos, false);
+            FollowPath?.Invoke(circlePos + _posOffset, nearHelperPos, false);
 
             return NodeState.SUCCESS;
         }

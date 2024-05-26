@@ -22,10 +22,7 @@ namespace Agent.States
 
         public override void OnStateCollisionEnter(Collision collision)
         {
-            if (collision.transform.tag == "Ground")
-            {
-                RevertToPreviousState?.Invoke(); // 이전 상태로 돌려줌
-            }
+            RevertToPreviousState?.Invoke(); // 이전 상태로 돌려줌
         }
 
         public override void OnStateEnter()

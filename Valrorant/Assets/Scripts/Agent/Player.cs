@@ -50,8 +50,8 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         _lifeFsm.Initialize(
               new Dictionary<LifeState, BaseState>
               {
-                    {LifeState.Alive, new AliveState(data.maxHp, null, hpViwer.OnHpChange)},
-                    //{LifeState.Die, new DieState(gameObject, _destoryDelay, ResetAnimatorValue) },
+                    {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }, hpViwer.OnHpChange)},
+                    {LifeState.Die, new ExitGameState() },
               }
            );
         _lifeFsm.SetState(LifeState.Alive);
@@ -122,7 +122,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         shop.AddEvent(Shop.EventType.BuyWeapon, new WeaponCommand(_weaponController.OnWeaponReceived));
 
         shop.AddEvent(Shop.EventType.BuyWeaponToHelper, new WeaponToHelperCommand(commander.BuyWeaponToListener));
-        shop.AddEvent(Shop.EventType.ReviveHelper, new ReviveHelperCommand(commander.ReviveListener));
 
 
         // 이 둘은 조력자와 플레이어 모두 적용시켜주기

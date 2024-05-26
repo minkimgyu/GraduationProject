@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 33000012639821618}
   - component: {fileID: 23000013700982860}
   - component: {fileID: 64000010413768088}
+  - component: {fileID: 3976490358462879776}
   m_Layer: 10
   m_Name: Concrete_fence_v2_L
   m_TagString: CanNotPass
@@ -139,6 +140,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300010, guid: ed9ec036e5afbd34dae4f1602a3d77b8, type: 3}
+--- !u!114 &3976490358462879776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011211479386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1000012361127368
 GameObject:
   m_ObjectHideFlags: 0
@@ -151,6 +164,7 @@ GameObject:
   - component: {fileID: 33000013183271066}
   - component: {fileID: 23000014290354140}
   - component: {fileID: 64000011381781962}
+  - component: {fileID: 8465589982750668252}
   m_Layer: 10
   m_Name: Concrete_fence_v2_lattice_L
   m_TagString: CanNotPass
@@ -245,3 +259,15 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300014, guid: ed9ec036e5afbd34dae4f1602a3d77b8, type: 3}
+--- !u!114 &8465589982750668252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000012361127368}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

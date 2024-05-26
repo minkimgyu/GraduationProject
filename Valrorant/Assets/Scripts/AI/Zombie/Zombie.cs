@@ -9,6 +9,17 @@ using System;
 using AI.Component;
 using AI.ZombieFSM;
 
+public enum SoundType
+{
+    Attack,
+    Reload,
+    Zoom,
+    Equip,
+    FootStep1,
+    FootStep2,
+    FootStep3
+}
+
 namespace AI
 {
     public class Zombie : MonoBehaviour, IDamageable, ISightTarget
@@ -22,6 +33,25 @@ namespace AI
         [SerializeField] GameObject _modelObj;
         [SerializeField] Transform _myRig;
         [SerializeField] Ragdoll _ragDoll;
+
+        [SerializeField] AudioSource _audioSource;
+        [SerializeField] AudioClipDictionary _clips;
+
+        protected void PlaySFX(SoundType type, bool oneShot = false)
+        {
+            if (_clips.ContainsKey(type) == false) return;
+
+            if (oneShot)
+            {
+                _audioSource.PlayOneShot(_clips[type]);
+            }
+            else
+            {
+                _audioSource.clip = _clips[type];
+                _audioSource.Play();
+            }
+        }
+
 
         StateMachine<LifeState> _lifeFsm = new StateMachine<LifeState>();
 
@@ -72,16 +102,16 @@ namespace AI
                 data.targetCaptureAdditiveRadius, data.additiveAttackRadius, data.attackRange, data.attackCircleRadius, data.delayForNextAttack, data.preAttackDelay, _attackLayer, 
                 _attackPoint,
 
-                routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, viewCaptureComponent.IsTargetInSight, gridManager.ReturnNodePos,
+                routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, viewCaptureComponent.IsTargetInSight,
                 noiseListener.ClearAllNoise, noiseListener.IsQueueEmpty, noiseListener.ReturnFrontNoise, routeTrackingComponent.IsFollowingFinish, viewCaptureComponent.ModifyCaptureRadius,
-                ResetAnimatorValue, ResetAnimatorValue, viewCaptureComponent.ReturnTargetInSight
+                ResetAnimatorValue, ResetAnimatorValue, viewCaptureComponent.ReturnTargetInSight, PlaySFX
             );
 
             _lifeFsm.Initialize(
                new Dictionary<LifeState, BaseState>
                {
                     {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }) },
-                    {LifeState.Die, new DieState(_ragDoll, "ZombieRagdoll", transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
+                    {LifeState.Die, new DieState(_ragDoll, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
                }
             );
             _lifeFsm.SetState(LifeState.Alive);

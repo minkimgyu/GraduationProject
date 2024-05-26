@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 4000013617410114}
   - component: {fileID: 33000010859226580}
   - component: {fileID: 23000010923951450}
-  - component: {fileID: 64000013561810672}
-  m_Layer: 0
+  - component: {fileID: 2342862256028268978}
+  - component: {fileID: 2811711905374279972}
+  m_Layer: 10
   m_Name: Road_set_v1_s_floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -84,8 +85,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64000013561810672
-MeshCollider:
+--- !u!65 &2342862256028268978
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -102,7 +103,18 @@ MeshCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300066, guid: c7f7a9ec09a97d144963b6dd16448dc3, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 10, y: 0.2354993, z: 10}
+  m_Center: {x: 0.0000038146973, y: -0.117799655, z: 0}
+--- !u!114 &2811711905374279972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010587196672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

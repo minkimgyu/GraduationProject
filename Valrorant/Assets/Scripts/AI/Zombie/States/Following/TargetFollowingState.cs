@@ -52,7 +52,7 @@ namespace AI.ZombieFSM
                                             {
                                                 new Stop(blackboard.Stop), // 정지 하는 코드 넣기
                                                 new Attack(blackboard.AttackPoint, blackboard.AttackDamage, blackboard.PreAttackDelay, blackboard.DelayForNextAttack,
-                                                blackboard.AttackCircleRadius, blackboard.AttackLayer, blackboard.ResetAnimatorTrigger, blackboard.IsTargetInSight, blackboard.ReturnTargetInSight),
+                                                blackboard.AttackCircleRadius, blackboard.AttackLayer, blackboard.ResetAnimatorTrigger, blackboard.IsTargetInSight, blackboard.ReturnTargetInSight, blackboard.PlaySFX),
                                                 // Wander에 이벤트를 보내는 방식으로 방향을 돌려준다.
                                             }
                                         ),

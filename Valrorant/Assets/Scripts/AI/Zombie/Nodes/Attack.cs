@@ -22,9 +22,10 @@ namespace BehaviorTree.Nodes
 
         Func<bool> IsTargetInSight;
         Func<ISightTarget> ReturnTargetInSight;
+        Action<SoundType, bool> PlaySFX;
 
         public Attack(Transform attackPoint, float attackDamage, float attackPreDelay, float attackAfterDelay, float attackRadius, LayerMask attackLayer
-            , Action<string> ResetAnimatorValue, Func<bool> IsTargetInSight, Func<ISightTarget> ReturnTargetInSight)
+            , Action<string> ResetAnimatorValue, Func<bool> IsTargetInSight, Func<ISightTarget> ReturnTargetInSight, Action<SoundType, bool> PlaySFX)
         {
             _attackPreTimer = new StopwatchTimer();
             _attackAfterTimer = new StopwatchTimer();
@@ -40,11 +41,14 @@ namespace BehaviorTree.Nodes
             _attackRadius = attackRadius;
             _attackLayer = attackLayer;
             this.ResetAnimatorValue = ResetAnimatorValue;
+            this.PlaySFX = PlaySFX;
         }
         public override NodeState Evaluate()
         {
             if (_attackPreTimer.CurrentState == StopwatchTimer.State.Finish)
             {
+                PlaySFX(SoundType.Attack, true);
+
                 bool isIn = IsTargetInSight();
                 if (isIn == false) return NodeState.FAILURE;
 
@@ -70,6 +74,7 @@ namespace BehaviorTree.Nodes
             if (_attackAfterTimer.CurrentState == StopwatchTimer.State.Finish) _attackAfterTimer.Reset();
 
             ResetAnimatorValue?.Invoke("NowAttack");
+
             _attackPreTimer.Start(_attackPreDelay);
             _attackAfterTimer.Start(_attackAfterDelay);
 

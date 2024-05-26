@@ -35,4 +35,9 @@ public class HpBarViewer : MonoBehaviour
         _content.DOFillAmount(ratio, 0.5f);
         _content.DOBlendableColor(mixColor, 0.5f);
     }
+
+    private void OnDisable()
+    {
+        DOTween.Kill(_content);
+    }
 }

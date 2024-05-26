@@ -38,6 +38,7 @@ namespace AI.Component
             //Vector3 changeDir = transform.TransformDirection(dir);
             //Debug.DrawRay(transform.position, changeDir);
 
+
             Vector3 changeDir = transform.InverseTransformDirection(dir);
             Debug.DrawRay(transform.position, changeDir);
 

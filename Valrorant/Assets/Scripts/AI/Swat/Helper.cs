@@ -41,11 +41,30 @@ namespace AI
         SwatBattleBlackboard _battleBlackboard;
 
         WeaponController _weaponController;
-        InteractionController _interactionController;
 
         Action ApplyRecoil;
         [SerializeField] GameObject _modelObj;
         [SerializeField] Transform _myRig;
+
+        [SerializeField] Ragdoll _ragDoll;
+
+        [SerializeField] AudioSource _audioSource;
+        [SerializeField] AudioClipDictionary _clips;
+
+        protected void PlaySFX(SoundType type, bool oneShot = false)
+        {
+            if (_clips.ContainsKey(type) == false) return;
+
+            if (oneShot)
+            {
+                _audioSource.PlayOneShot(_clips[type]);
+            }
+            else
+            {
+                _audioSource.clip = _clips[type];
+                _audioSource.Play();
+            }
+        }
 
         public enum MovementState
         {
@@ -69,25 +88,28 @@ namespace AI
         public void ResetFormationData(FormationData data) { _formationData = data; }
         FormationData ReturnFormationData() { return _formationData; }
 
-        Action OnDisableProfileRequested;
+        Action<CharacterPlant.Name> OnDisableProfileRequested;
 
         //private void Awake()
         //{
-            
+
         //}
 
-        public void Initialize(HelperData data, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
-            Action<float> OnHpChangeRequested, Action OnDisableProfileRequested)
+        CharacterPlant.Name _name;
+
+        public void Initialize(HelperData data, CharacterPlant.Name name, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
+            Action<float> OnHpChangeRequested, Action<CharacterPlant.Name> OnDisableProfileRequested)
         {
             this.OnDisableProfileRequested = OnDisableProfileRequested;
 
+            _name = name;
             MyType = TargetType.Human;
 
             _lifeFsm.Initialize(
               new Dictionary<LifeState, BaseState>
               {
                     {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }, OnHpChangeRequested) },
-                    {LifeState.Die, new DieState(null, data.ragdollName, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
+                    {LifeState.Die, new DieState(_ragDoll, transform, _modelObj, _myRig, data.destoryDelay, OnDieRequested) },
               }
            );
             _lifeFsm.SetState(LifeState.Alive);
@@ -102,10 +124,10 @@ namespace AI
             MoveComponent moveComponent = GetComponent<MoveComponent>();
             moveComponent.Initialize(_sightPoint, data.moveSpeed, (id, value) => _ownerAnimator.SetFloat(id, value), (id) => _ownerAnimator.GetFloat(id));
 
-            ViewComponent viewComponent = GetComponent<ViewComponent>();
+            RecoilViewComponent viewComponent = GetComponent<RecoilViewComponent>();
             viewComponent.Initialize(data.viewSpeed);
 
-            ApplyRecoil = viewComponent.ResetCamera;
+            ApplyRecoil = viewComponent.ApplyRecoilToCamera;
 
             RouteTrackingComponent routeTrackingComponent = GetComponent<RouteTrackingComponent>();
             routeTrackingComponent.Initialize(data.pathFindDelay, moveComponent.Move, moveComponent.Stop, viewComponent.View, pathfinder.FindPath);
@@ -124,8 +146,7 @@ namespace AI
                 data.farFromPlayerDistance, data.farFromPlayerDistanceOffset, data.closeDistance, data.closeDistanceOffset,
                 data.farFromTargetDistance, data.farFromTargetDistanceOffset, data.formationRadius, data.formationOffset, data.formationOffsetChangeDuration,
 
-                routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop,
-                gridManager.ReturnNodePos, ReturnPlayerPos, ReturnFormationData,
+                routeTrackingComponent.FollowPath, viewComponent.View, moveComponent.Stop, ReturnPlayerPos, ReturnFormationData,
 
 
                 _largeAreaCaptureComponent.ReturnAllTargets,
@@ -160,9 +181,6 @@ namespace AI
                 RemoveWeaponPreview
             );
 
-            _interactionController = GetComponentInChildren<InteractionController>();
-            _interactionController.Initialize();
-
             _battleBlackboard = new SwatBattleBlackboard(data.attackDuration, data.attackDelay, IsTargetInLargetSight, ReturnTargetInLargeSight, _weaponController.OnHandleEquip,
                 _weaponController.OnHandleEventStart, _weaponController.OnHandleEventEnd, _weaponController.IsAmmoEmpty, _weaponController.ReturnSameTypeWeapon);
 
@@ -183,7 +201,8 @@ namespace AI
 
         void OnDieRequested(float delayForDestroy)
         {
-            OnDisableProfileRequested?.Invoke();
+            _ownerAnimator.enabled = false;
+            OnDisableProfileRequested?.Invoke(_name);
             Invoke("DestroyMe", delayForDestroy);
         }
 

@@ -43,7 +43,7 @@ namespace Agent.States
         public override void OnStateTriggerEnter(Collider collider)
         {
             IInteractable newTarget = collider.GetComponent<IInteractable>();
-            if (newTarget.IsInteractable() == false) return; // IsInteractable 거짓이면 리턴
+            if (newTarget == null || newTarget.IsInteractable() == false) return; // IsInteractable 거짓이면 리턴
 
             IInteractable oldTarget = ReturnTarget();
             if (oldTarget != null)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+[CustomPropertyDrawer(typeof(AudioClipDictionary))]
 [CustomPropertyDrawer(typeof(RecoilDataDictionary))]
 [CustomPropertyDrawer(typeof(WeaponDataDictionary))]
 [CustomPropertyDrawer(typeof(CharacterDataDictionary))]

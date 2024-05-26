@@ -80,7 +80,7 @@ namespace Agent.Controller
 
             _weaponsContainer = new Dictionary<BaseWeapon.Type, BaseWeapon>();
             _rigidbody = GetComponent<Rigidbody>();
-            RecoilReceiver recoilReceiver = GetComponent<RecoilReceiver>();
+            IRecoilReceiver recoilReceiver = GetComponent<IRecoilReceiver>();
 
             _eventBlackboard = new WeaponEventBlackboard(
                OnZoomRequested,

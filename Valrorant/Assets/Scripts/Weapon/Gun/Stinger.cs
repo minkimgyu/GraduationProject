@@ -7,8 +7,11 @@ public class Stinger : VariationGun
 {
     public override void Initialize(StingerData data, RecoilMapData mainMapData, RecoilRangeData subRangeData)
     {
-        _ammoCountsInMagazine = data.maxAmmoCountInMagazine;
-        _ammoCountsInPossession = data.maxAmmoCountsInPossession;
+        _maxAmmoCountInMagazine = data.maxAmmoCountInMagazine;
+        _maxAmmoCountsInPossession = data.maxAmmoCountsInPossession;
+
+        _ammoCountsInMagazine = _maxAmmoCountInMagazine;
+        _ammoCountsInPossession = _maxAmmoCountsInPossession;
 
         _eventStorage.Add(new(EventType.Main, Conditon.ZoomIn),
             new BurstEvent(EventType.Main, data.burstFireInterval, data.burstFireCntInOneAction, OnEventStart, OnEventUpdate, OnEventEnd, OnAction));
@@ -23,16 +26,16 @@ public class Stinger : VariationGun
         _actionStorage.Add(new(EventType.Main, Conditon.ZoomIn),
             new SingleProjectileAttackWithWeight(data.weaponName, data.range, _targetLayer, data.mainFireCnt,
             data.penetratePower, data.bulletSpreadPowerDecreaseRatio, data.weightApplier, data.damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
-            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
+            SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest, PlaySFX));
 
         _actionStorage.Add(new(EventType.Main, Conditon.ZoomOut),
              new SingleProjectileAttack(data.weaponName, data.range, _targetLayer, data.mainFireCnt,
              data.penetratePower, data.bulletSpreadPowerDecreaseRatio, data.damageDictionary, OnPlayWeaponAnimation, ReturnMuzzlePos, ReturnLeftAmmoCount, DecreaseAmmoCount,
-             SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest));
+             SpawnMuzzleFlashEffect, SpawnEmptyCartridge, OnGenerateNoiseRequest, PlaySFX));
 
 
         _actionStorage.Add(new(EventType.Sub, Conditon.Both),
-            new ZoomStrategy(data.zoomCameraPosition.V3, data.zoomDuration, data.normalFieldOfView, data.zoomFieldOfView, OnZoomRequested));
+            new ZoomStrategy(data.zoomCameraPosition.V3, data.zoomDuration, data.normalFieldOfView, data.zoomFieldOfView, OnZoomRequested, PlaySFX));
 
         _recoilStorage.Add(new(EventType.Main, Conditon.ZoomOut),
             new AutoRecoilGenerator(data.autoFireInterval, data.recoveryDuration, data.recoilRatio, mainMapData));
@@ -43,6 +46,6 @@ public class Stinger : VariationGun
         _recoilStorage.Add(new(EventType.Sub, Conditon.Both), new NoRecoilGenerator());
 
 
-        _reloadStrategy = new MagazineReload(data.weaponName, data.reloadFinishDuration, data.reloadExitDuration, data.maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested);
+        _reloadStrategy = new MagazineReload(data.weaponName, data.reloadFinishDuration, data.reloadExitDuration, data.maxAmmoCountInMagazine, OnPlayWeaponAnimation, OnReloadRequested, PlaySFX);
     }
 }

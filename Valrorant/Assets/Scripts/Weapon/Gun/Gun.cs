@@ -23,9 +23,9 @@ abstract public class Gun : BaseWeapon, IInteractable
 
     protected string _trajectoryLineEffect = "TrajectoryLine";
 
-    protected int _maxAmmoCountInMagazine = 30;
+    protected int _maxAmmoCountInMagazine;
 
-    protected int _maxAmmoCountsInPossession = 60;
+    protected int _maxAmmoCountsInPossession;
 
     [SerializeField] protected int _ammoCountsInMagazine;
 

@@ -9,16 +9,14 @@ namespace AI.ZombieFSM
 {
     public class MoveState : State
     {
-        Func<Vector3, int, Vector3> ReturnNodePos;
         Action<Vector3, List<Vector3>, bool> FollowPath;
 
         Transform _myTransform;
         int _wanderOffset = 0;
         Vector3 _targetPos;
 
-        public MoveState(Func<Vector3, int, Vector3> ReturnNodePos, Action<Vector3, List<Vector3>, bool> FollowPath, Transform myTransform, int wanderOffset)
+        public MoveState(Action<Vector3, List<Vector3>, bool> FollowPath, Transform myTransform, int wanderOffset)
         {
-            this.ReturnNodePos = ReturnNodePos;
             this.FollowPath = FollowPath;
 
             _myTransform = myTransform;
@@ -28,7 +26,10 @@ namespace AI.ZombieFSM
         public override void OnStateEnter()
         {
             //Debug.Log("Movetate");
-            _targetPos = ReturnNodePos.Invoke(_myTransform.position, _wanderOffset);
+            int xOffset = Random.Range(-_wanderOffset, _wanderOffset);
+            int zOffset = Random.Range(-_wanderOffset, _wanderOffset);
+
+            _targetPos = _myTransform.position + new Vector3(zOffset, 0, xOffset);
         }
 
         public override void OnStateUpdate()

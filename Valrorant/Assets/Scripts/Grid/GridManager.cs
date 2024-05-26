@@ -93,35 +93,33 @@ namespace Grid
                 }
             }
         }
-        
-        // 
+
         public Node FindPassNode(Vector3Int index)
         {
             Node node = _simpleNodes[index.x, index.z][index.y];
             if (node.CanPass == true) return node;
 
-            HashSet<Node> closedHash = new HashSet<Node>();
+            HashSet<Vector3Int> closeHash = new HashSet<Vector3Int>();
             Queue<Node> nodeQueue = new Queue<Node>();
             nodeQueue.Enqueue(node);
 
             while (nodeQueue.Count > 0)
             {
                 Node tmpNode = nodeQueue.Dequeue();
-                closedHash.Add(tmpNode);
 
-                if (tmpNode.CanPass == true)
-                {
-                    return tmpNode;
-                }
-
+                if (tmpNode.CanPass == true) return tmpNode;
                 Vector3Int pos = ReturnNodeIndex(tmpNode.Pos);
 
                 List<Vector3Int> nodeIndexes = ReturnNearNodeIndexes(pos);
                 for (int i = 0; i < nodeIndexes.Count; i++)
                 {
                     Node closeNode = _simpleNodes[nodeIndexes[i].x, nodeIndexes[i].z][nodeIndexes[i].y];
-                    bool nowHave = closedHash.Contains(closeNode);
-                    if(nowHave == false) nodeQueue.Enqueue(closeNode); // 가지고 있지 않다면 넣는다.
+
+                    bool nowHave = closeHash.Contains(nodeIndexes[i]);
+                    if (nowHave == true) continue;
+
+                    closeHash.Add(nodeIndexes[i]);
+                    nodeQueue.Enqueue(closeNode); // 가지고 있지 않다면 넣는다.
                 }
             }
 
@@ -157,7 +155,6 @@ namespace Grid
 
                 if (nodes.Count == 1) yIndex = closeIndex[i].y; // 1인 경우
                 else yIndex = ReturnCloestNodeIndexInYAxis(nodes, currentNodePos.y); // 1이 아닌 경우 가장 가까운 노드 값을 집어넣음
-
                 nearNodePos = _simpleNodes[closeIndex[i].x, closeIndex[i].z][yIndex].SurfacePos;
 
                 bool isIn = IsInMaxAngleBetweenNode(currentNodePos, nearNodePos);
@@ -210,31 +207,6 @@ namespace Grid
             return index;
         }
 
-        public Vector3 ReturnNodePos(Vector3 worldPos, int wanderOffset)
-        {
-            Vector3 nodePos;
-            while (true)
-            {
-                Vector3Int index = ReturnNodeIndex(worldPos, wanderOffset);
-                Node currentNode = _simpleNodes[index.x, index.z][index.y];
-                if (currentNode.CanPass == true)
-                {
-                    nodePos = currentNode.SurfacePos;
-                    break;
-                }
-            }
-
-            return nodePos;
-        }
-
-        Vector3Int ReturnNodeIndex(Vector3 worldPos, int wanderOffset)
-        {
-            int xOffset = UnityEngine.Random.Range(-wanderOffset, wanderOffset);
-            int zOffset = UnityEngine.Random.Range(-wanderOffset, wanderOffset);
-
-            return ReturnNodeIndex(worldPos + new Vector3(xOffset, 0, zOffset));
-        }
-
         public Vector3Int ReturnNodeIndex(Vector3 worldPos)
         {
             Vector3 clampedPos = ReturnClampedRange(worldPos);
@@ -245,7 +217,7 @@ namespace Grid
 
             List<Node> currentNode = _simpleNodes[xIndex, zIndex];
 
-            if (currentNode.Count == 0) return Vector3Int.zero;
+            if (currentNode == null || currentNode.Count == 0) return Vector3Int.zero;
             else if (currentNode.Count == 1) return new Vector3Int(xIndex, 0, zIndex);
             else
             {

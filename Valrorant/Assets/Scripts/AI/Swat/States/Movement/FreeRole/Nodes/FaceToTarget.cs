@@ -56,10 +56,12 @@ namespace BehaviorTree.Nodes
                 nextPos = sightPoint.position;
             }
 
-            _aimPoint.position = Vector3.Lerp(_aimPoint.position, nextPos, Time.deltaTime * 0.7f);
+            _aimPoint.position = Vector3.Lerp(_aimPoint.position, nextPos, Time.deltaTime * 3f);
 
             Vector3 dir = (_aimPoint.position - _sightPoint.position).normalized;
             View?.Invoke(new Vector3(dir.x, 0, dir.z));
+
+
 
             _sightPoint.rotation = Quaternion.LookRotation(dir).normalized;
         }

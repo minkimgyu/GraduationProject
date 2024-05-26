@@ -46,15 +46,6 @@ public class Database : MonoBehaviour
         if (_instance == null)
         {
             _instance = this;
-
-            if (transform.parent != null && transform.root != null)
-            {
-                DontDestroyOnLoad(transform.root.gameObject);
-            }
-            else
-            {
-                DontDestroyOnLoad(gameObject);
-            }
         }
         else Destroy(gameObject);
     }

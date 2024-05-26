@@ -27,7 +27,7 @@ public class Commander : MonoBehaviour
 
             Vector2 pos = Random.insideUnitCircle * startRange;
             GameObject helperObj = plant.Create(helperNames[i], new Vector3(pos.y, -0.5f, pos.x), ReturnPlayerPos, profile.OnWeaponProfileChangeRequested,
-                profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(helperNames[i]); ResetFormationData(); });
+                profile.OnHpChangeRequested, (name) => { profile.OnDisableProfileRequested(); _listeners.Remove(name); ResetFormationData(); });
 
             helperObj.transform.rotation = Quaternion.identity;
             ICommandListener listener = helperObj.GetComponent<ICommandListener>();
@@ -38,35 +38,18 @@ public class Commander : MonoBehaviour
         ResetFormationData();
     }
 
-    public void ReviveListener(CharacterPlant.Name name)
-    {
-        CharacterPlant plant = FindObjectOfType<CharacterPlant>();
-        HelperViewer viewer = FindObjectOfType<HelperViewer>();
-        Player player = FindObjectOfType<Player>();
-        ProfileViewer profile = viewer.ReturnProfile(name);
-
-        profile.OnActiveProfileRequested(); // 재활성화
-
-        Vector2 startPos = Random.insideUnitCircle * _startRange;
-        GameObject helperObj = plant.Create(name, new Vector3(startPos.y, -0.5f, startPos.x), player.ReturnPos, profile.OnWeaponProfileChangeRequested,
-            profile.OnHpChangeRequested, () => { profile.OnDisableProfileRequested(); _listeners.Remove(name); ResetFormationData(); });
-
-        ICommandListener listener = helperObj.GetComponent<ICommandListener>();
-        _listeners.Add(name, listener);
-
-        ResetFormationData();
-    }
-
     public void BuyWeaponToListener(CharacterPlant.Name name, BaseWeapon weapon)
     {
+        if (_listeners.ContainsKey(name) == false) return;
+
         _listeners[name].ReceiveWeapon(weapon);
     }
 
-    public void HealListeners(float hpRatio)
+    public void HealListeners(float hp)
     {
         foreach (var listener in _listeners)
         {
-            listener.Value.Heal(hpRatio);
+            listener.Value.Heal(hp);
         }
     }
 

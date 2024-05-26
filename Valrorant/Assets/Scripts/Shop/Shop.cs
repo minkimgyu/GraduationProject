@@ -73,7 +73,7 @@ public class Shop : MonoBehaviour
     [SerializeField] GameObject _helperViewerObj;
     [SerializeField] GameObject _weaponViewerObj;
 
-    int _money = 5000000;
+    int _money = 5000;
     [SerializeField] TMP_Text _moneyTxt;
     [SerializeField] TMP_Text _fieldMoneyTxt;
 
@@ -215,7 +215,6 @@ public class Shop : MonoBehaviour
                 {
                     SlotPlant.Name.AidKit,
                     SlotPlant.Name.AmmoPack,
-                    SlotPlant.Name.ReviveKit
                 }
             },
             {   Category.Sub, new List<SlotPlant.Name>()
