@@ -183,18 +183,42 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 ### 문제점
 
 <div align="center">
-   평상 시
-   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/2fdd7771-6b03-47af-b5da-539e127759e7" width="100%" height="100%"/>
+   평상시
+   </br>
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/beb36af6-d609-49ba-b960-8dd3ae12a001" width="55%" height="55%"/>
 
    사격 시
-  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/ca26ff8b-81d1-4342-a348-71f1f6ae8e92" width="100%" height="100%"/>
+   </br>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/58d2bba1-a9ea-41a9-ab22-cf30c07f69d6" width="55%" height="55%"/>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/4d1294fb-baac-4da4-8cfd-ed6043fb720a" width="55%" height="55%"/>
 </div>
 
 <div align="center">
-   총기를 발사할 때 생성되는 Effect와 Noise 때문에 프레임이 173까지 떨어지며
+   총기를 발사할 때 Effect와 Noise가 생성되고 파괴되기 때문에 GC Spike가 많이 일어나며 프레임이 249에서 145까지 떨어지는 것을 확인할 수 있다.
 </div>
 
+### 해결 과정
 
+<div align="center">
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/c465c7a58a8f202b31801be35a3033ea732a1cd5/Valrorant/Assets/Scripts/ObjectPool.cs#L26">ObjectPool 코드 보러가기</a>
+</div>
+</br>
+
+<div align="center">
+   Object Pool을 이용하여 Effect와 Noise를 관리해준다.
+</div>
+</br>
+<div align="center">
+   Object Pool 적용
+   </br>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/cfbf2c71-292b-4e66-a131-ee587399fdca" width="55%" height="55%"/>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/a4ad69ad-eeb0-4497-af08-da65a363aef9" width="55%" height="55%"/>
+</div>
+
+</br>
+<div align="center">
+   GC Spike가 눈에 띄게 줄어든 것을 확인할 수 있으며 프레임도 220정도를 유지하는 것을 확인할 수 있다.
+</div>
 
 * ### Factory 패턴을 사용한 생성 시스템 개발
 
