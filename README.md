@@ -202,10 +202,23 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
    총기 밸런싱 작업을 효율적으로 하기 위해 UI ToolKit Package를 사용하여 반동 에디터를 개발해봤습니다.
 </div>
 
-
-
 * ### Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
 
+<div align="center">
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c0eb37c8-92bd-4fa6-94df-e712123e9554" width="50%" height="50%"/>
+   </br>
+   적용 전
+   </br>
+   </br>
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c8d42e5e-06e9-440b-8514-9e3f929dba57" width="50%" height="50%"/>
+   </br>
+   적용 후
+</div>
+</br>
+
+<div align="center">
+   Rig Builder Package를 활용해서 원본 애니메이션에 Inverse Kinematics를 적용해 수정하는 작업을 해봤습니다.
+</div>
 
 ## 회고
 
