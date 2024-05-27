@@ -185,9 +185,84 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 * ### Factory 패턴을 사용한 생성 시스템 개발
 
+<div align="center">
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Factory/Weapon/WeaponPlant.cs#L31C23-L31C36">WeaponFactory 코드 보러가기</a>
+   </br>
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Factory/Character/CharacterPlant.cs#L6">CharacterFactory 코드 보러가기</a>
+</div>
+</br>
+
+```cs
+
+abstract public class BaseFactory<T1, T2>
+{
+    protected JsonAssetGenerator _jsonAssetGenerator = new JsonAssetGenerator();
+
+    public abstract void Initialize(T2 data);
+    public virtual T1 Create() { return default; }
+    public virtual T1 Create(Vector3 pos) { return default; }
+    public virtual T1 Create(
+        Vector3 pos,
+        CharacterPlant.Name name,
+        Func<Vector3> ReturnPlayerPos, 
+        Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
+        Action<float> OnHpChangeRequested,
+        Action<CharacterPlant.Name> OnDieRequested
+    ) 
+    { return default; }
+
+    public virtual T1 Create(
+        Func<ShopBlackboard> ReturnBlackboard
+    )
+    { return default; }
+}
+
+```
+<div align="center">
+   Weapon과 Character(플레이어, 조력자, 좀비)를 Factory 패턴을 사용해 구현했습니다.
+   </br>
+   이를 통해 객체 간의 결합도를 낮췄습니다. 또한 Generic Programming을 적용하여 재사용성을 높혔습니다.
+</div>
+
 * ### Command 패턴을 사용한 입력 이벤트 시스템 개발
 
+<div align="center">
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Input/InputHandler.cs#L6">InputHandler 코드 보러가기</a>
+   </br>
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Agent/Command/BaseCommand.cs#L28">Command 코드 보러가기</a>
+</div>
+</br>
 
+```cs
+
+public class BaseCommand
+{
+    public BaseCommand(Action DoAction) { }
+    public BaseCommand(Action<BaseWeapon> DoAction) { }
+    public BaseCommand(Action<CharacterPlant.Name, BaseWeapon> DoAction) { }
+    public BaseCommand(Action<CharacterPlant.Name> DoAction) { }
+    public BaseCommand(Action<BaseWeapon.Type> DoAction) { }
+    public BaseCommand(Action<BaseWeapon.EventType> DoAction) { }
+    public BaseCommand(Action<Vector3> DoAction) { }
+    public BaseCommand(Action<float> DoAction) { }
+
+    public virtual void Execute() { }
+    public virtual void Execute(BaseWeapon weapon) { }
+    public virtual void Execute(CharacterPlant.Name name, BaseWeapon weapon) { }
+    public virtual void Execute(CharacterPlant.Name name) { }
+    public virtual void Execute(BaseWeapon.Type type) { }
+    public virtual void Execute(BaseWeapon.EventType type) { }
+    public virtual void Execute(Vector3 dir) { }
+    public virtual void Execute(float hp) { }
+}
+
+```
+
+</br>
+
+<div align="center">
+   실행될 기능을 캡슐화함으로써 재사용성을 높혔습니다.
+</div>
 
 * ### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
 
