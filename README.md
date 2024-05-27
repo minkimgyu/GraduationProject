@@ -176,8 +176,16 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 
 * ### A* 알고리즘을 사용한 길 찾기 시스템 개발 및 최적화
-문제점
+### 문제점
 
+<div align="center">
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/e324928c-16b9-46f8-9805-d6c5afac6281" width="75%" height="75%"/>
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c6eee27a-78bf-47c5-91d8-e9770fe2ddc9" width="75%" height="75%"/>
+</div>
+
+<div align="center">
+   유닛을 맵의 끝에서 끝으로 가는 경로를 길찾기 알고리즘을 적용하여 찾았을 때 약 
+</div>
 
 * ### Object Pool를 사용한 이펙트, 소음 생성 시스템 개발 및 최적화
 ### 문제점
@@ -194,7 +202,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 </div>
 
 <div align="center">
-   총기를 발사할 때 Effect와 Noise가 생성되고 파괴되기 때문에 GC Spike가 많이 일어나며 프레임이 249에서 145까지 떨어지는 것을 확인할 수 있다.
+   총기를 발사할 때 Effect와 Noise가 생성되고 파괴되기 때문에 GC Spike가 많이 일어나며 프레임이 249에서 145까지 떨어지는 것을 확인할 수 있습니다.
 </div>
 
 ### 해결 과정
@@ -205,7 +213,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 </br>
 
 <div align="center">
-   Object Pool을 이용하여 Effect와 Noise를 관리해준다.
+   Object Pool을 이용하여 Effect와 Noise를 관리해줍나다.
 </div>
 </br>
 <div align="center">
@@ -217,7 +225,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 </br>
 <div align="center">
-   GC Spike가 눈에 띄게 줄어든 것을 확인할 수 있으며 프레임도 220정도를 유지하는 것을 확인할 수 있다.
+   GC Spike가 눈에 띄게 줄어든 것을 볼 수 있으며 프레임도 220정도를 유지하는 것을 확인할 수 있습니다.
 </div>
 
 * ### Factory 패턴을 사용한 생성 시스템 개발
