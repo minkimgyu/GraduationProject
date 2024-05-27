@@ -16,7 +16,9 @@ Unity를 사용하여 개발한 FPS 게임
 
 * FSM을 활용한 Player 제작
 
-![image](https://github.com/minkimgyu/GraduationProject/assets/48249824/b4d5483e-87c8-4abc-bee2-31c4f8a14cc3)
+   <div align="center">
+    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/3c82aae5-01d4-45c6-8ed9-c6b9378da567" width="100%" height="100%"/>
+  </div>
 
 
 * FSM, Behavior Tree를 활용한 AI 제작
