@@ -14,10 +14,6 @@ Unity를 사용하여 개발한 FPS 게임
 
 ## 기능 설명
 
-* ### 핵심 기능
-   + A* 알고리즘을 사용한 길 찾기 시스템 개발 및 최적화
-   + Object Pool를 사용한 이펙트, 소음 생성 시스템 개발 및 최적화
-
 * ### Finite State Machine을 활용한 Player 구현
 </br>
 <div align="center">
