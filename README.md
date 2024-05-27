@@ -30,7 +30,7 @@ Unity를 사용하여 개발한 FPS 게임
    이동, 자세, 상호작용, 무기 사용 기능을 구현하기 위해 각각의 기능을 독립시켜 복잡도를 낮추기 위해 Concurrent State Machine을 적용했습니다. 앞으로의 확장성을 위해 Hierachical Finite State Machine 방식을 통해 이동 기능을 구현했습니다.
 </br>
 
-* ### FSM, Behavior Tree를 활용한 AI 구현
+* ### Finite State Machine, Behavior Tree를 활용한 AI 구현
 
 AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지보수가 힘들어지는 문제점이 있었습니다.
 
