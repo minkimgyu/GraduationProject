@@ -21,11 +21,9 @@ Unity를 사용하여 개발한 FPS 게임
   
   </div>
 
-  이동, 자세, 상호작용, 무기 사용 기능을 구현하기 위해 각각의 기능을 독립시켜 복잡도를 낮추기 위해 Concurrent State Machine을 적용해봤습니다.
+  
 
-
-
-  또한 이동 기능 구현 시 앞으로 추가될 기능에 대비하여 Hierachical Finite State Machine 방식으로 구현해봤습니다.
+  이동, 자세, 상호작용, 무기 사용 기능을 구현하기 위해 각각의 기능을 독립시켜 복잡도를 낮추기 위해 Concurrent State Machine을 적용해봤습니다. 또한 이동 기능 구현 시 앞으로 추가될 기능에 대비하여 Hierachical Finite State Machine 방식으로 구현해봤습니다.
 
    ```cs
     // FSM.cs
