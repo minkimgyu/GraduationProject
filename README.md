@@ -1,4 +1,4 @@
-![image](https://github.com/minkimgyu/GraduationProject/assets/48249824/77433f3b-7e87-436b-be2b-4609401d8b87)# Zombie Factory
+# Zombie Factory
 
 ## 프로젝트 소개
 Unity를 사용하여 개발한 FPS 게임
