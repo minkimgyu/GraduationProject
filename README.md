@@ -87,7 +87,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 <details>
    <summary>TargetFollow State</summary>
       <div align="center">
-      <a href="https://github.com/minkimgyu/GraduationProject/blob/83793c3f3e063f4d9e2b7ad62e0ca9b39228e8b0/Valrorant/Assets/Scripts/AI/Zombie/States/Idle/IdleState.cs#L13">코드 보러가기</a>
+      <a href="https://github.com/minkimgyu/GraduationProject/blob/ed2ec6f107ff966a7e3540d05ee64a8e2538e2af/Valrorant/Assets/Scripts/AI/Zombie/States/Following/TargetFollowingState.cs#L13">코드 보러가기</a>
       </br>
       <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/d233ac76-5c56-4155-b752-ec5075449a40" width="80%" height="80%"/>
       </br>     
@@ -99,10 +99,11 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 <details>
    <summary>NoiseTracking State</summary>
    <div align="center">
+      <a href="https://github.com/minkimgyu/GraduationProject/blob/ed2ec6f107ff966a7e3540d05ee64a8e2538e2af/Valrorant/Assets/Scripts/AI/Zombie/States/Tracking/NoiseTrackingState.cs#L10">코드 보러가기</a>
+      </br>
       <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/db2fe0fa-7254-4aca-affb-923ad8bbd6c8" width="80%" height="80%"/>
-
-
-      
+      </br>
+      주변에 소음을 탐지하여 추적하는 기능을 구현했습니다.
       가장 먼저 탐지한 Noise 추적하기 위해서 Queue(FIFO)를 사용하여 Noise를 관리했습니다.
    </div>
 </details>
