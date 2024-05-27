@@ -19,7 +19,7 @@ Unity를 사용하여 개발한 FPS 게임
    <div align="center">
     <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/3c82aae5-01d4-45c6-8ed9-c6b9378da567" width="100%" height="100%"/>
 
-   이동, 자세, 상호작용, 무기 사용 기능을 구현하기 FSM을 사용했습니다.
+   이동, 자세, 상호작용, 무기 사용 기능을 구현하기 FSM을 적용해봤습니다.
   </div>
 
 
