@@ -51,11 +51,6 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
    - 좀비 AI
 
---> 기능 설명 움짤 추가
-
-
-
-
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/1fd78ef5-e7b7-4dd8-82ec-f857d11d5a85" width="60%" height="60%"/>
 
