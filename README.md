@@ -104,6 +104,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
       <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/db2fe0fa-7254-4aca-affb-923ad8bbd6c8" width="80%" height="80%"/>
       </br>
       주변에 소음을 탐지하여 추적하는 기능을 구현했습니다.
+      </br>
       가장 먼저 탐지한 Noise 추적하기 위해서 Queue(FIFO)를 사용하여 Noise를 관리했습니다.
    </div>
 </details>
