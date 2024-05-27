@@ -15,7 +15,6 @@ Unity를 사용하여 개발한 FPS 게임
 ## 기능 설명
 
 * ### 핵심 기능
---> 여기에 핵심 기능 링크 넣어주기
 
 * ### Finite State Machine을 활용한 Player 구현
 </br>
@@ -32,8 +31,6 @@ Unity를 사용하여 개발한 FPS 게임
 
    이동, 자세, 상호작용, 무기 사용 기능을 구현하기 위해 각각의 기능을 독립시켜 복잡도를 낮추기 위해 Concurrent State Machine을 적용했습니다. 앞으로의 확장성을 위해 Hierachical Finite State Machine 방식을 통해 이동 기능을 구현했습니다.
 </br>
-
-* ### State 패턴을 사용하여 무기 시스템 구현
 
 * ### FSM, Behavior Tree를 활용한 AI 구현
 
