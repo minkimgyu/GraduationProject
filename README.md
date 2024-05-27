@@ -17,12 +17,8 @@ Unity를 사용하여 개발한 FPS 게임
 * ### 핵심 기능
 --> 여기에 핵심 기능 링크 넣어주기
 
-* ### FSM을 활용한 Player 구현
-
-
-
-
-
+* ### Finite State Machine을 활용한 Player 구현
+</br>
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/ccd318f4-0b3b-4eb4-8866-af6f988f5084" width="100%" height="100%"/>
    </br>
