@@ -87,10 +87,10 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 <details>
    <summary>TargetFollow State</summary>
       <div align="center">
+      <a href="https://github.com/minkimgyu/GraduationProject/blob/83793c3f3e063f4d9e2b7ad62e0ca9b39228e8b0/Valrorant/Assets/Scripts/AI/Zombie/States/Idle/IdleState.cs#L13">코드 보러가기</a>
+      </br>
       <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/d233ac76-5c56-4155-b752-ec5075449a40" width="80%" height="80%"/>
-
-
-                
+      </br>     
       Target을 추적하여 공격하는 기능을 구현했습니다.
    </div>
 </details>
