@@ -179,8 +179,8 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 ### 문제점
 
 <div align="center">
-   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/e324928c-16b9-46f8-9805-d6c5afac6281" width="75%" height="75%"/>
-   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c6eee27a-78bf-47c5-91d8-e9770fe2ddc9" width="75%" height="75%"/>
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/e324928c-16b9-46f8-9805-d6c5afac6281" width="85%" height="85%"/>
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c6eee27a-78bf-47c5-91d8-e9770fe2ddc9" width="85%" height="85%"/>
 </div>
 
 <div align="center">
@@ -204,7 +204,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 <div align="center">
    Min Heap 적용
    </br>
-  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/70af2e2b-e7c6-4f7b-a04f-9afe66244cfb" width="55%" height="55%"/>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/70af2e2b-e7c6-4f7b-a04f-9afe66244cfb" width="85%" height="85%"/>
 </div>
 
 </br>
