@@ -184,8 +184,34 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 </div>
 
 <div align="center">
-   유닛을 맵의 끝에서 끝으로 가는 경로를 길찾기 알고리즘을 적용하여 찾았을 때 약 
+   유닛을 맵의 끝에서 끝으로 가는 경로를 길찾기 알고리즘을 적용하여 찾았을 때 약 1초 가까이 걸리는 것을 확인할 수 있습니다. 이는 너무 느리기 때문에 실제 게임에 적용하기 힘듭니다. 
 </div>
+
+### 해결 과정
+
+<div align="center">
+   A* 알고리즘은 가중치가 가장 작은 노드를 선택해 길찾기를 하는 특성이 있습니다. 기존에는 List를 통해 순회하면서 가중치가 가장 작은 값을 찾았기 때문에 시간 복잡도가 O(n)이었습니다.
+   </br>
+   그러나 Min Heap을 사용한다면 삽입의 경우 시간복잡도가 O(logn)이지만 알고리즘의 특성 상 가장 가중치가 작은 노드를 언제나 트리의 최상단에 위치되므로 가중치가 가장 작은 노드에 시간 복잡도가 O(1)안에 접근할 수 있습니다.
+   </br>
+   이러한 특성을 사용하여 최적화를 진행했습니다.
+</div>
+
+<div align="center">
+   <a href="https://github.com/minkimgyu/GraduationProject/blob/8de6eed4a8071a91e97da948b970a158ca5c180f/Valrorant/Assets/Scripts/Grid/Heap.cs#L12">Min Heap 코드 보러가기</a>
+</div>
+</br>
+<div align="center">
+   Min Heap 적용
+   </br>
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/70af2e2b-e7c6-4f7b-a04f-9afe66244cfb" width="55%" height="55%"/>
+</div>
+
+</br>
+<div align="center">
+   거의 1초에 가깝던 수행 시간이 1/10로 감소한 것을 확인할 수 있습니다.
+</div>
+
 
 * ### Object Pool를 사용한 이펙트, 소음 생성 시스템 개발 및 최적화
 ### 문제점
