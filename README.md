@@ -56,7 +56,7 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 
    
-   각 State에 Behavior Tree를 구현하여 기능을 개발했습니다.
+   Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
 </div>
 
 
