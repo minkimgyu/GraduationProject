@@ -180,7 +180,20 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 
 * ### Object Pool를 사용한 이펙트, 소음 생성 시스템 개발 및 최적화
-문제점
+### 문제점
+
+<div align="center">
+   평상 시
+   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/2fdd7771-6b03-47af-b5da-539e127759e7" width="100%" height="100%"/>
+
+   사격 시
+  <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/ca26ff8b-81d1-4342-a348-71f1f6ae8e92" width="100%" height="100%"/>
+</div>
+
+<div align="center">
+   총기를 발사할 때 생성되는 Effect와 Noise 때문에 프레임이 173까지 떨어지며
+</div>
+
 
 
 * ### Factory 패턴을 사용한 생성 시스템 개발
