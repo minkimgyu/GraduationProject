@@ -56,7 +56,7 @@ public class SoundManager : MonoBehaviour
 
     public static void PlaySFX(Vector3 pos, string name, float sfxVolume = 1)
     {
-        SoundPlayer player = ObjectPooler.SpawnFromPool<SoundPlayer>("SfxPlayer");
+        SoundPlayer player = ObjectPool.Spawn<SoundPlayer>("SfxPlayer");
         if (player == null) return;
 
         Sound sound = _instance._sounds.Find(x => x.Name == name);

@@ -30,7 +30,7 @@ public class Noise : MonoBehaviour, ITarget
 
     private void OnDisable()
     {
-        ObjectPooler.ReturnToPool(gameObject);
+        ObjectPool.ReturnGameObjectToPool(gameObject);
     }
 
     public Vector3 ReturnPos()

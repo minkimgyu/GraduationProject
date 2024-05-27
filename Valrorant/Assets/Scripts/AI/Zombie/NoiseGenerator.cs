@@ -10,7 +10,7 @@ public class NoiseGenerator : MonoBehaviour
 
     public void GenerateNoise(Vector3 pos)
     {
-        Noise noise = ObjectPooler.SpawnFromPool<Noise>("Noise", pos);
+        Noise noise = ObjectPool.Spawn<Noise>("Noise", pos);
         noise.Initialize(_radius, _disableTime);
     }
 }

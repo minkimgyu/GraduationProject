@@ -27,6 +27,6 @@ public class SoundPlayer : MonoBehaviour
     private void OnDisable()
     {
         CancelInvoke();
-        ObjectPooler.ReturnToPool(gameObject);
+        ObjectPool.ReturnGameObjectToPool(gameObject);
     }
 }

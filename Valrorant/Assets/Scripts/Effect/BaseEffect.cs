@@ -22,7 +22,7 @@ abstract public class BaseEffect : MonoBehaviour
     protected virtual void OnDisable()
     {
         _timer.Reset();
-        ObjectPooler.ReturnToPool(gameObject);
+        ObjectPool.ReturnGameObjectToPool(gameObject);
     }
 
     protected void DisableObject() => gameObject.SetActive(false);

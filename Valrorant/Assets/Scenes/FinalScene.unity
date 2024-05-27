@@ -2612,31 +2612,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 143887386}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c792e37ae8c32dc41a68f0c2cd65e086, type: 3}
+  m_Script: {fileID: 11500000, guid: a42f11c3f57ebd64aa22e2e8721b03c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pools:
+  _poolDatas:
+  - _tag: DamageTxt
+    _prefab: {fileID: 3397215424268396227, guid: 4bd9b821b5bacc54bbea8ccc8c7b4885, type: 3}
+    _size: 10
   - _tag: TrajectoryLine
     _prefab: {fileID: 8984947879229990854, guid: 997c43a00f772f74d8390f7450c5a066, type: 3}
     _size: 10
   - _tag: BulletHole
     _prefab: {fileID: 2267626635118132936, guid: 5d43854294262cd4d8a79db5d22350f0, type: 3}
     _size: 10
-  - _tag: WallFragmentation
-    _prefab: {fileID: 2267626635118132936, guid: 7b63112e6b3c77d45bc668c36bbf6df5, type: 3}
-    _size: 10
   - _tag: KnifeMark
     _prefab: {fileID: 2890295069855686850, guid: b543ab61fc008ee4aad73017527384f3, type: 3}
     _size: 10
-  - _tag: DamageTxt
-    _prefab: {fileID: 3397215424268396227, guid: 4bd9b821b5bacc54bbea8ccc8c7b4885, type: 3}
-    _size: 10
-  - _tag: ExplosionEffect
-    _prefab: {fileID: 4553023114891664830, guid: 10c9109995291d64d8d3b96097748025, type: 3}
+  - _tag: WallFragmentation
+    _prefab: {fileID: 2267626635118132936, guid: 7b63112e6b3c77d45bc668c36bbf6df5, type: 3}
     _size: 10
   - _tag: Noise
     _prefab: {fileID: 6510160126245473104, guid: ff88748744d774c4ca93d0aed978c4fd, type: 3}
-    _size: 20
+    _size: 10
 --- !u!1001 &144891870
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -545,7 +545,7 @@ abstract public class PenetrateAttack : ApplyAttack //, IDisplacement
     protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal, bool isBlocked)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
+        bulletHoleEffect = ObjectPool.Spawn<BaseEffect>(name);
 
         bulletHoleEffect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         bulletHoleEffect.PlayEffect();
@@ -554,7 +554,7 @@ abstract public class PenetrateAttack : ApplyAttack //, IDisplacement
     protected override void SpawnEffect(string name, Vector3 hitPosition)
     {
         BaseEffect bulletHoleEffect;
-        bulletHoleEffect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
+        bulletHoleEffect = ObjectPool.Spawn<BaseEffect>(name);
 
         bulletHoleEffect.Initialize(hitPosition);
         bulletHoleEffect.PlayEffect();
@@ -564,7 +564,7 @@ abstract public class PenetrateAttack : ApplyAttack //, IDisplacement
     {
         Vector3 muzzlePos = ReturnMuzzlePos();
 
-        BaseEffect trajectoryLineEffect = ObjectPooler.SpawnFromPool<BaseEffect>(_trajectoryLineEffect);
+        BaseEffect trajectoryLineEffect = ObjectPool.Spawn<BaseEffect>(_trajectoryLineEffect);
         trajectoryLineEffect.Initialize(hitPosition, muzzlePos);
         trajectoryLineEffect.PlayEffect();
     }
@@ -989,7 +989,7 @@ abstract public class BaseKnifeAttack : ApplyAttack
 
     protected override void SpawnEffect(string name, Vector3 hitPosition, Vector3 hitNormal)
     {
-        BaseEffect effect = ObjectPooler.SpawnFromPool<BaseEffect>(name);
+        BaseEffect effect = ObjectPool.Spawn<BaseEffect>(name);
 
         effect.Initialize(hitPosition, hitNormal, Quaternion.LookRotation(-hitNormal));
         effect.PlayEffect();
