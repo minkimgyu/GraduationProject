@@ -69,11 +69,11 @@ AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지
 
 <details>
    <summary>Idle State</summary>
-   
+
    <div align="center">
       <a href="https://github.com/minkimgyu/GraduationProject/blob/83793c3f3e063f4d9e2b7ad62e0ca9b39228e8b0/Valrorant/Assets/Scripts/AI/Zombie/States/Idle/IdleState.cs#L13">코드 보러가기</a>
       </br>
-      <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/fb1b3f6f-e4e8-4823-a8ed-655c76209b28" width="80%" height="80%"/>
+      <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/b9c4c3df-992a-4fe9-b07f-53c0f83cb952" width="80%" height="80%"/>
       </br>
       주변을 배회하는 기능을 구현했습니다.
    </div>
