@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5285,87 +5284,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941791539}
   m_Mesh: {fileID: -610576417524626935, guid: e98bec5a07a9b2c4fa0e76d3590286d2, type: 3}
---- !u!1 &999561923
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 999561925}
-  - component: {fileID: 999561924}
-  m_Layer: 0
-  m_Name: ObjectPooler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &999561924
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999561923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c792e37ae8c32dc41a68f0c2cd65e086, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pools:
-  - _tag: TrajectoryLine
-    _prefab: {fileID: 8984947879229990854, guid: 997c43a00f772f74d8390f7450c5a066, type: 3}
-    _size: 10
-  - _tag: ObjectFragmentation
-    _prefab: {fileID: 7822548912446641591, guid: ccf6d1329f2a7d849ae487552b8fbd5b, type: 3}
-    _size: 10
-  - _tag: BulletHole
-    _prefab: {fileID: 2267626635118132936, guid: 5d43854294262cd4d8a79db5d22350f0, type: 3}
-    _size: 10
-  - _tag: WallFragmentation
-    _prefab: {fileID: 2267626635118132936, guid: 7b63112e6b3c77d45bc668c36bbf6df5, type: 3}
-    _size: 10
-  - _tag: KnifeMark
-    _prefab: {fileID: 2890295069855686850, guid: b543ab61fc008ee4aad73017527384f3, type: 3}
-    _size: 10
-  - _tag: DamageTxt
-    _prefab: {fileID: 3397215424268396227, guid: 4bd9b821b5bacc54bbea8ccc8c7b4885, type: 3}
-    _size: 10
-  - _tag: ExplosionEffect
-    _prefab: {fileID: 4553023114891664830, guid: 10c9109995291d64d8d3b96097748025, type: 3}
-    _size: 10
-  - _tag: Noise
-    _prefab: {fileID: 6510160126245473104, guid: ff88748744d774c4ca93d0aed978c4fd, type: 3}
-    _size: 20
-  - _tag: ZombieRagdoll
-    _prefab: {fileID: 7730228905619340428, guid: eac7e94ddf8e4764a94f2d5f8f30cde2, type: 3}
-    _size: 10
-  - _tag: OryxRagdoll
-    _prefab: {fileID: 4124336818930216864, guid: 756be3f54e0fa1f4394a27a31434c203, type: 3}
-    _size: 3
-  - _tag: RookRagdoll
-    _prefab: {fileID: 1946204075478585602, guid: 2521abd19d417544492835a1461402ec, type: 3}
-    _size: 3
-  - _tag: WardenRagdoll
-    _prefab: {fileID: 7019676798870742620, guid: 0c4813cb647bef1448421f8460f3c5be, type: 3}
-    _size: 3
---- !u!4 &999561925
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 999561923}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1156701231}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1016377563 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4316217940565530294, guid: 8a6bc1959e167e7499f27733fdf676a8, type: 3}
@@ -5769,7 +5687,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 508803988}
-  - {fileID: 999561925}
+  - {fileID: 1823303641}
   - {fileID: 790743760}
   - {fileID: 1933183730}
   - {fileID: 1705030403}
@@ -6227,6 +6145,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0665ef6176754864c90504cfc04270a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1276529727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1276529728}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1276529728
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276529727}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1277424490
 GameObject:
   m_ObjectHideFlags: 0
@@ -9497,6 +9446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a7d7423501eed4fbd420b79ef45df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spawnPoint: {fileID: 1276529728}
 --- !u!1001 &1721983157
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10496,6 +10446,69 @@ Transform:
   - {fileID: 1980426106}
   m_Father: {fileID: 720194021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1823303640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1823303641}
+  - component: {fileID: 1823303642}
+  m_Layer: 0
+  m_Name: ObjectPooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1823303641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823303640}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1156701231}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1823303642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823303640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a42f11c3f57ebd64aa22e2e8721b03c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolDatas:
+  - _tag: DamageTxt
+    _prefab: {fileID: 3397215424268396227, guid: 4bd9b821b5bacc54bbea8ccc8c7b4885, type: 3}
+    _size: 10
+  - _tag: TrajectoryLine
+    _prefab: {fileID: 8984947879229990854, guid: 997c43a00f772f74d8390f7450c5a066, type: 3}
+    _size: 10
+  - _tag: BulletHole
+    _prefab: {fileID: 2267626635118132936, guid: 5d43854294262cd4d8a79db5d22350f0, type: 3}
+    _size: 10
+  - _tag: KnifeMark
+    _prefab: {fileID: 2890295069855686850, guid: b543ab61fc008ee4aad73017527384f3, type: 3}
+    _size: 10
+  - _tag: WallFragmentation
+    _prefab: {fileID: 2267626635118132936, guid: 7b63112e6b3c77d45bc668c36bbf6df5, type: 3}
+    _size: 10
+  - _tag: Noise
+    _prefab: {fileID: 6510160126245473104, guid: ff88748744d774c4ca93d0aed978c4fd, type: 3}
+    _size: 10
 --- !u!1 &1828803932
 GameObject:
   m_ObjectHideFlags: 0
@@ -14426,3 +14439,4 @@ SceneRoots:
   - {fileID: 387606887}
   - {fileID: 1156701231}
   - {fileID: 1457704362}
+  - {fileID: 1276529728}
