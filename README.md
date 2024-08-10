@@ -178,7 +178,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c6eee27a-78bf-47c5-91d8-e9770fe2ddc9" width="85%" height="85%"/>
 </div>
 
-<div align="center">
+<div>
    유닛을 맵의 끝에서 끝으로 가는 경로를 길찾기 알고리즘을 적용하여 찾았을 때 약 1초 가까이 걸리는 것을 확인할 수 있습니다. 이는 너무 느리기 때문에 실제 게임에 적용하기 힘듭니다. 
 </div>
 
