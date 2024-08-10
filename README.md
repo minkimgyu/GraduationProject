@@ -333,7 +333,7 @@ public class BaseCommand
 </br>
 
 <div align="center">
-   실행될 기능을 캡슐화함으로써 재사용성을 높혔습니다.
+   실행될 기능을 캡슐화함으로써 유지보수와 확장성을 높혔습니다.
 </div>
 
 #### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
