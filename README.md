@@ -36,7 +36,7 @@ Unity를 사용하여 개발한 FPS 게임
 
 * ### FSM, Behavior Tree를 활용한 AI 구현
 
-AI를 FSM만으로 기능을 구성하기에 State가 너무 많아져서 유지보수가 힘들어지는 문제점이 있었습니다.
+FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 힘들어지는 문제점이 있었습니다.
 
  <div align="center">
     <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/8fea1e45-d6d2-4ba6-a2c5-77b2fdf8ca8c" width="100%" height="100%"/>
