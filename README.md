@@ -42,11 +42,9 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
     <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/8fea1e45-d6d2-4ba6-a2c5-77b2fdf8ca8c" width="100%" height="100%"/>
  </div>
 
-
+이를 해결하기 위해 Unity Muse Behavior의 FSM과 Behavior Tree가 혼합된 기능을 참고하여 AI를 구현했습니다.
 
 출처 영상: https://www.youtube.com/watch?v=BeqU-njZesY&t=2s
-
-이를 해결하기 위해 Unity Muse Behavior의 FSM과 Behavior Tree가 혼합된 기능을 참고하여 AI를 구현했습니다.
 
 </br>
 
@@ -54,13 +52,11 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/1fd78ef5-e7b7-4dd8-82ec-f857d11d5a85" width="60%" height="60%"/>
-
-
-   
-   Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
 </div>
 
+- Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
 
+</br>
 <details>
    <summary>State 전이 조건</summary>
    <div align="center">
@@ -107,17 +103,17 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 
 </br>
 
-   - 조력자 AI
+- 조력자 AI
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/4c72c1fd-9127-4d93-a48d-e207f5460628" width="80%" height="80%"/>
 
-   FreeRole State 내부에 FSM을 구현하여 Hierachical Finite State Machine 방식을 적용했습니다.
-   </br>
-   Concurrent State Machine을 적용하여 이동 로직과 공격 로직을 나눠서 복잡도를 줄였습니다.
-   </br>
-   Exploring, Combat, BuildFormation State에 Behavior Tree를 구현하여 기능을 개발했습니다.
+
 </div>
+
+- FreeRole State 내부에 FSM을 구현하여 Hierachical Finite State Machine 방식을 적용했습니다.
+- Concurrent State Machine을 적용하여 이동 로직과 공격 로직을 나눠서 복잡도를 줄였습니다.
+- Exploring, Combat, BuildFormation State에 Behavior Tree를 구현하여 기능을 개발했습니다.
 
 </br>
 
@@ -188,12 +184,16 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 
 ### 해결 과정
 
-<div align="center">
+<div>
    A* 알고리즘은 가중치가 가장 작은 노드를 선택해 길찾기를 하는 특성이 있습니다. 기존에는 List를 통해 순회하면서 가중치가 가장 작은 값을 찾았기 때문에 시간 복잡도가 O(n)이었습니다.
+   </br>
    </br>
    그러나 Min Heap을 사용한다면 삽입의 경우 시간복잡도가 O(logn)이지만 알고리즘의 특성 상 가장 가중치가 작은 노드를 언제나 트리의 최상단에 위치되므로 가중치가 가장 작은 노드에 시간 복잡도가 O(1)안에 접근할 수 있습니다.
    </br>
+   </br>
+   <div align="center">
    이러한 특성을 사용하여 최적화를 진행했습니다.
+   </div>
 </div>
 
 <div align="center">
