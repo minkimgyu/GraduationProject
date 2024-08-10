@@ -42,7 +42,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
     <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/8fea1e45-d6d2-4ba6-a2c5-77b2fdf8ca8c" width="100%" height="100%"/>
  </div>
 
-이를 해결하기 위해 Unity Muse Behavior의 FSM과 Behavior Tree가 혼합된 기능을 참고하여 AI를 구현했습니다.
+이를 해결하기 위해 Unity Muse Behavior를 참고하여 FSM과 Behavior Tree가 혼합하여 AI 기능을 구현했습니다.
 
 출처 영상: https://www.youtube.com/watch?v=BeqU-njZesY&t=2s
 
