@@ -226,7 +226,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
   <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/4d1294fb-baac-4da4-8cfd-ed6043fb720a" width="55%" height="55%"/>
 </div>
 
-<div align="center">
+<div>
    총기를 발사할 때 Effect와 Noise가 계속 생성되고 파괴되기 때문에 GC Spike가 많이 일어나며 프레임이 249에서 145까지 떨어지는 것을 확인할 수 있습니다.
 </div>
 
