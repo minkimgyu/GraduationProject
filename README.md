@@ -17,7 +17,7 @@ Unity를 사용하여 개발한 FPS 게임
 
 ## 기능 설명
 
-* ### FSM을 활용한 Player 구현
+### FSM을 활용한 Player 구현
 </br>
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/ccd318f4-0b3b-4eb4-8866-af6f988f5084" width="100%" height="100%"/>
@@ -34,7 +34,7 @@ Unity를 사용하여 개발한 FPS 게임
    * 앞으로의 확장성을 위해 Hierachical Finite State Machine 방식을 통해 Movement FSM을 구현했습니다.
 </br>
 
-* ### FSM, Behavior Tree를 활용한 AI 구현
+### FSM, Behavior Tree를 활용한 AI 구현
 
 FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 힘들어지는 문제점이 있었습니다.
 
@@ -48,13 +48,14 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 
 </br>
 
-   - 좀비 AI
+### 좀비 AI
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/1fd78ef5-e7b7-4dd8-82ec-f857d11d5a85" width="60%" height="60%"/>
 </div>
-
-+ Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
+<div align="center">
+   Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
+</div>
 
 </br>
 <details>
@@ -103,7 +104,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 
 </br>
 
-- 조력자 AI
+### 조력자 AI
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/4c72c1fd-9127-4d93-a48d-e207f5460628" width="80%" height="80%"/>
@@ -170,8 +171,9 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 </br>
 
 
-* ### A* 알고리즘을 활용한 길 찾기 시스템 개발 및 최적화
-### 문제점
+### A* 알고리즘을 활용한 길 찾기 시스템 개발 및 최적화
+
+#### 문제점
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/e324928c-16b9-46f8-9805-d6c5afac6281" width="85%" height="85%"/>
@@ -182,7 +184,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    유닛을 맵의 끝에서 끝으로 가는 경로를 길찾기 알고리즘을 적용하여 찾았을 때 약 1초 가까이 걸리는 것을 확인할 수 있습니다. 이는 너무 느리기 때문에 실제 게임에 적용하기 힘듭니다. 
 </div>
 
-### 해결 과정
+#### 해결 과정
 
 <div>
    A* 알고리즘은 가중치가 가장 작은 노드를 선택해 길찾기를 하는 특성이 있습니다. 기존에는 List를 통해 순회하면서 가중치가 가장 작은 값을 찾았기 때문에 시간 복잡도가 O(n)이었습니다.
@@ -212,8 +214,8 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 </div>
 
 
-* ### Object Pool를 사용한 이펙트 생성 시스템 개발 및 최적화
-### 문제점
+### Object Pool를 사용한 이펙트 생성 시스템 개발 및 최적화
+#### 문제점
 
 <div align="center">
    평상시
@@ -230,7 +232,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    총기를 발사할 때 Effect와 Noise가 계속 생성되고 파괴되기 때문에 GC Spike가 많이 일어나며 프레임이 249에서 145까지 떨어지는 것을 확인할 수 있습니다.
 </div>
 
-### 해결 과정
+#### 해결 과정
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/c465c7a58a8f202b31801be35a3033ea732a1cd5/Valrorant/Assets/Scripts/ObjectPool.cs#L26">ObjectPool 코드 보러가기</a>
@@ -253,7 +255,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    GC Spike가 눈에 띄게 줄어든 것을 볼 수 있으며 프레임도 220정도를 유지하는 것을 확인할 수 있습니다.
 </div>
 
-* ### Factory 패턴을 사용한 생성 시스템 개발
+#### Factory 패턴을 사용한 생성 시스템 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Factory/Weapon/WeaponPlant.cs#L31C23-L31C36">WeaponFactory 코드 보러가기</a>
@@ -294,7 +296,7 @@ abstract public class BaseFactory<T1, T2>
    이를 통해 객체 간의 결합도를 낮췄습니다. 또한 Generic Programming을 적용하여 재사용성을 높혔습니다.
 </div>
 
-* ### Command 패턴을 사용한 입력 이벤트 시스템 개발
+#### Command 패턴을 사용한 입력 이벤트 시스템 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Input/InputHandler.cs#L6">InputHandler 코드 보러가기</a>
@@ -334,7 +336,7 @@ public class BaseCommand
    실행될 기능을 캡슐화함으로써 재사용성을 높혔습니다.
 </div>
 
-* ### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
+#### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/d91d53c992ab21327b267b507454a9afceb68fd5/Valrorant/Assets/Editor/Map/SprayEditor.cs#L15">SprayEditor 코드 보러가기</a>
@@ -349,7 +351,7 @@ public class BaseCommand
    총기 밸런싱 작업을 효율적으로 하기 위해 UI ToolKit Package를 사용하여 반동 에디터를 개발해봤습니다.
 </div>
 
-* ### Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
+#### Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c0eb37c8-92bd-4fa6-94df-e712123e9554" width="50%" height="50%"/>
