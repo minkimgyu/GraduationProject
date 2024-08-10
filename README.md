@@ -54,7 +54,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/1fd78ef5-e7b7-4dd8-82ec-f857d11d5a85" width="60%" height="60%"/>
 </div>
 
-- Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
++ Idle, TargetFollow State에 Behavior Tree를 구현하여 기능을 개발했습니다.
 
 </br>
 <details>
