@@ -214,7 +214,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
 </div>
 
 
-### Object Pool를 사용한 이펙트 생성 시스템 개발 및 최적화
+### Object Pool를 사용한 Effect 생성 시스템 개발 및 최적화
 #### 문제점
 
 <div align="center">
