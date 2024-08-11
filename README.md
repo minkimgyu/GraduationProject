@@ -255,7 +255,7 @@ FSM만으로 AI를 구현하기에 State가 너무 많아져서 유지보수가 
    GC Spike가 눈에 띄게 줄어든 것을 볼 수 있으며 프레임도 220정도를 유지하는 것을 확인할 수 있습니다.
 </div>
 
-#### Factory 패턴을 사용한 생성 시스템 개발
+### Factory 패턴을 사용한 생성 시스템 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Factory/Weapon/WeaponPlant.cs#L31C23-L31C36">WeaponFactory 코드 보러가기</a>
@@ -296,7 +296,7 @@ abstract public class BaseFactory<T1, T2>
    이를 통해 객체 간의 결합도를 낮췄습니다. 또한 Generic Programming을 적용하여 재사용성을 높혔습니다.
 </div>
 
-#### Command 패턴을 사용한 입력 이벤트 시스템 개발
+### Command 패턴을 사용한 입력 이벤트 시스템 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/e7e7c4bd03fe5930061d1ac35778dc7e14541275/Valrorant/Assets/Scripts/Input/InputHandler.cs#L6">InputHandler 코드 보러가기</a>
@@ -336,7 +336,7 @@ public class BaseCommand
    실행될 기능을 캡슐화함으로써 유지보수와 확장성을 높혔습니다.
 </div>
 
-#### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
+### UI Toolkit를 사용하여 반동 커스텀 에디터 개발
 
 <div align="center">
    <a href="https://github.com/minkimgyu/GraduationProject/blob/d91d53c992ab21327b267b507454a9afceb68fd5/Valrorant/Assets/Editor/Map/SprayEditor.cs#L15">SprayEditor 코드 보러가기</a>
@@ -351,7 +351,7 @@ public class BaseCommand
    총기 밸런싱 작업을 효율적으로 하기 위해 UI ToolKit Package를 사용하여 반동 에디터를 개발해봤습니다.
 </div>
 
-#### Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
+### Rig Builder Package를 사용하여 IK 장전 애니메이션 적용
 
 <div align="center">
    <img src="https://github.com/minkimgyu/GraduationProject/assets/48249824/c0eb37c8-92bd-4fa6-94df-e712123e9554" width="50%" height="50%"/>
