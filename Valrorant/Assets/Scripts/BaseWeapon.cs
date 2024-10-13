@@ -62,24 +62,23 @@ abstract public class BaseWeapon : MonoBehaviour
     protected WeaponEventBlackboard _weaponEventBlackboard;
 
 
+    //[SerializeField] AudioSource _audioSource;
+    //[SerializeField] AudioClipDictionary _clips;
 
-    [SerializeField] AudioSource _audioSource;
-    [SerializeField] AudioClipDictionary _clips;
+    //protected void PlaySFX(SoundType type, bool oneShot = false)
+    //{
+    //    if (_clips.ContainsKey(type) == false) return;
 
-    protected void PlaySFX(SoundType type, bool oneShot = false)
-    {
-        if (_clips.ContainsKey(type) == false) return;
-
-        if(oneShot)
-        {
-            _audioSource.PlayOneShot(_clips[type]);
-        }
-        else
-        {
-            _audioSource.clip = _clips[type];
-            _audioSource.Play();
-        }
-    }
+    //    if(oneShot)
+    //    {
+    //        _audioSource.PlayOneShot(_clips[type]);
+    //    }
+    //    else
+    //    {
+    //        _audioSource.clip = _clips[type];
+    //        _audioSource.Play();
+    //    }
+    //}
 
     void ChangeChildLayer(Transform child, int layer)
     {

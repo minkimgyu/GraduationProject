@@ -20,6 +20,11 @@ public class DungeonMode : BaseGameMode
     // 
     protected override void Initialize()
     {
+        SoundPlayer soundPlayer = FindObjectOfType<SoundPlayer>();
+        if (soundPlayer == null) return;
+
+        ServiceLocater.Provide(new SceneController());
+        ServiceLocater.Provide(soundPlayer);
         InitializeEventBus();
     }
 
