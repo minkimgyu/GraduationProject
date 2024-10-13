@@ -42,15 +42,19 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         //Cursor.visible = false;
         MyType = TargetType.Human;
 
-        HpViewer hpViwer = FindObjectOfType<HpViewer>();
         RoundViwer roundViwer = FindObjectOfType<RoundViwer>();
-
-        //(state) => {_lifeFsm.SetState(state); }, hpViwer.OnHpChange)
 
         _lifeFsm.Initialize(
               new Dictionary<LifeState, BaseState>
               {
-                    {LifeState.Alive, new AliveState(data.maxHp, (state) => {_lifeFsm.SetState(state); }, hpViwer.OnHpChange)},
+                    {
+                      LifeState.Alive, new AliveState
+                      (
+                        data.maxHp, 
+                        (state) => {_lifeFsm.SetState(state);},
+                        (ratio) => EventBusManager.Instance.ObserverEventBus.Publish(ObserverEventBus.Type.ChangeHp, ratio)
+                       )
+                    },
                     {LifeState.Die, new ExitGameState() },
               }
            );
@@ -77,7 +81,6 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
             false,
             zoomComponent.OnZoomCalled,
             (name, layer, nomalizedTime) => _ownerAnimator.Play(name, layer, nomalizedTime),
-            roundViwer.OnRoundCountChange,
             null,
             (BaseWeapon.Name name, BaseWeapon.Type type) => { weaponViewer.AddPreview(name, type); AddWeaponPreview?.Invoke(name, type); },
             (BaseWeapon.Type type) => { weaponViewer.RemovePreview(type); RemoveWeaponPreview?.Invoke(type); }
@@ -116,6 +119,8 @@ public class Player : DirectDamageTarget, IDamageable, ISightTarget
         InputHandler.AddInputEvent(InputHandler.Type.TurnOnOffPlayerRoutine, new Command(TurnOnOffRoutine));
 
 
+
+        // 아래는 이벤트 버스로 처리 필요
         if (shop == null) return;
 
         // 상점에 Event를 등록시켜준다.

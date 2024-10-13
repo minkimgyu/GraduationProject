@@ -6,6 +6,7 @@ using System;
 
 public class BaseCommand
 {
+    public BaseCommand() { }
     public BaseCommand(Action DoAction) { }
     public BaseCommand(Action<BaseWeapon> DoAction) { }
     public BaseCommand(Action<CharacterPlant.Name, BaseWeapon> DoAction) { }
@@ -14,6 +15,15 @@ public class BaseCommand
     public BaseCommand(Action<BaseWeapon.EventType> DoAction) { }
     public BaseCommand(Action<Vector3> DoAction) { }
     public BaseCommand(Action<float> DoAction) { }
+
+
+
+    public virtual void Execute(Vector3 cameraHolderPosition, Vector3 viewRotation) { }
+    public virtual void Execute(float fieldOfView, float ratio) { }
+    public virtual void Execute(bool turnOn, int current, int total) { }
+    public virtual void Execute(bool active) { }
+
+
 
     public virtual void Execute() { }
     public virtual void Execute(BaseWeapon weapon) { }

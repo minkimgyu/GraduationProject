@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Agent.Component
 {
-    public class ViewComponent : MonoBehaviour, IRecoilReceiver
+    public class ViewComponent : MonoBehaviour, IRecoilReceiver, IPoint
     {
         [SerializeField] private Transform _actorBone;
         [SerializeField] private Transform _direction;
 
         [SerializeField] private Transform _cameraHolder;
-        private Transform _camPivot;
-        private Transform _cam;
+        //private Transform _camPivot;
+        //private Transform _cam;
 
         //protected Vector2 _viewRotation;
 
@@ -21,7 +21,7 @@ namespace Agent.Component
         [SerializeField] private Vector2 _cameraRotationMultiplier;
         [SerializeField] private Vector2 _actorBoneRotationMultiplier;
 
-        [SerializeField] protected Transform _firePoint;
+        //[SerializeField] protected Transform _firePoint;
 
         [SerializeField] protected Vector2 _firePointRotationMultiplier;
         Vector2 _viewRotation;
@@ -33,11 +33,11 @@ namespace Agent.Component
 
         public void Initialize(float viewYRange, Vector2 viewSensitivity)
         {
-            CameraContainer controller = FindObjectOfType<CameraContainer>();
+            //CameraController controller = FindObjectOfType<CameraController>();
 
-            _camPivot = controller._cameraParent;
-            _cam = controller._mainCamera.transform;
-            _firePoint = controller._firePoint;
+            //_camPivot = controller._cameraParent;
+            //_cam = controller._mainCamera.transform;
+            //_firePoint = controller._firePoint;
 
             _viewYRange = viewYRange;
             _viewSensitivity = viewSensitivity;
@@ -58,17 +58,20 @@ namespace Agent.Component
 
             _direction.rotation = Quaternion.Euler(0, ActorBoneViewRotation.x, 0);
             _actorBone.rotation = Quaternion.Euler(ActorBoneViewRotation.y, _direction.eulerAngles.y, 0);
+
+            EventBusManager.Instance.ObserverEventBus.Publish
+            (
+                ObserverEventBus.Type.MoveCamera,
+                _cameraHolder.position, CameraViewRotation
+            );
         }
 
         public void ApplyRecoilToCamera()
         {
-            _firePoint.rotation = Quaternion.Euler(FireViewRotation.y, FireViewRotation.x, 0);
-            _camPivot.position = _cameraHolder.position;
-            _cam.rotation = Quaternion.Euler(CameraViewRotation.y, CameraViewRotation.x, 0);
+            _cameraHolder.rotation = Quaternion.Euler(FireViewRotation.y, FireViewRotation.x, 0);
         }
 
-        public Vector3 ReturnRaycastPos() { return _firePoint.position; }
-
-        public Vector3 ReturnRaycastDir() { return _firePoint.forward; }
+        public Vector3 ReturnPosition() { return _cameraHolder.position; }
+        public Vector3 ReturnDirection() { return _cameraHolder.forward; }
     }
 }

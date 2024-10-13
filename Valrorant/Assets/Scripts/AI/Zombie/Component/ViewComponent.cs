@@ -6,11 +6,7 @@ public interface IRecoilReceiver
 {
     Vector2 FireViewRotation { get; } // 총 발사 시작 지점 회전 값 프로퍼티
 
-    Vector3 ReturnRaycastPos();
-    Vector3 ReturnRaycastDir();
-
     void OnRecoilRequested(Vector2 recoilForce);
-
     void ApplyRecoilToCamera();
 }
 

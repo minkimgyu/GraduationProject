@@ -77,7 +77,12 @@ abstract public class Gun : BaseWeapon, IInteractable
     {
         _ammoCountsInMagazine = ammoInMagazine;
         _ammoCountsInPossession = ammoInPossession;
-        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+
+        EventBusManager.Instance.ObserverEventBus.Publish
+        (
+            ObserverEventBus.Type.ChangeAmmo,
+            true, _ammoCountsInMagazine, _ammoCountsInPossession
+        );
     }
 
     #endregion
@@ -118,7 +123,12 @@ abstract public class Gun : BaseWeapon, IInteractable
     public override void OnEquip()
     {
         base.OnEquip();
-        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+
+        EventBusManager.Instance.ObserverEventBus.Publish
+       (
+           ObserverEventBus.Type.ChangeAmmo,
+           true, _ammoCountsInMagazine, _ammoCountsInPossession
+       );
     }
 
     #endregion;
@@ -158,13 +168,21 @@ abstract public class Gun : BaseWeapon, IInteractable
         _ammoCountsInMagazine = _maxAmmoCountInMagazine;
         _ammoCountsInPossession = _maxAmmoCountsInPossession;
 
-        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+        EventBusManager.Instance.ObserverEventBus.Publish
+        (
+            ObserverEventBus.Type.ChangeAmmo,
+            true, _ammoCountsInMagazine, _ammoCountsInPossession
+        );
     }
 
     protected override void OnAction(EventType type)
     {
         base.OnAction(type);
-        _weaponEventBlackboard.OnShowRounds?.Invoke(true, _ammoCountsInMagazine, _ammoCountsInPossession);
+        EventBusManager.Instance.ObserverEventBus.Publish
+        (
+            ObserverEventBus.Type.ChangeAmmo,
+            true, _ammoCountsInMagazine, _ammoCountsInPossession
+        );
     }
 
     public void OnSightEnter()

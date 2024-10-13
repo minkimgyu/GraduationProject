@@ -42,7 +42,6 @@ namespace AI
 
         WeaponController _weaponController;
 
-        Action ApplyRecoil;
         [SerializeField] GameObject _modelObj;
         [SerializeField] Transform _myRig;
 
@@ -90,12 +89,9 @@ namespace AI
 
         Action<CharacterPlant.Name> OnDisableProfileRequested;
 
-        //private void Awake()
-        //{
-
-        //}
-
         CharacterPlant.Name _name;
+
+        IRecoilReceiver _recoilReceiver;
 
         public void Initialize(HelperData data, CharacterPlant.Name name, Func<Vector3> ReturnPlayerPos, Action<BaseWeapon.Name> OnWeaponProfileChangeRequested,
             Action<float> OnHpChangeRequested, Action<CharacterPlant.Name> OnDisableProfileRequested)
@@ -126,8 +122,7 @@ namespace AI
 
             RecoilViewComponent viewComponent = GetComponent<RecoilViewComponent>();
             viewComponent.Initialize(data.viewSpeed);
-
-            ApplyRecoil = viewComponent.ApplyRecoilToCamera;
+            _recoilReceiver = viewComponent;
 
             RouteTrackingComponent routeTrackingComponent = GetComponent<RouteTrackingComponent>();
             routeTrackingComponent.Initialize(data.pathFindDelay, moveComponent.Move, moveComponent.Stop, viewComponent.View, pathfinder.FindPath);
@@ -175,7 +170,6 @@ namespace AI
                 true, 
                 null, 
                 PlayAnimation, 
-                null, 
                 OnWeaponProfileChangeRequested,
                 AddWeaponPreview,
                 RemoveWeaponPreview
@@ -224,7 +218,7 @@ namespace AI
 
         private void LateUpdate()
         {
-            ApplyRecoil?.Invoke();
+            _recoilReceiver.ApplyRecoilToCamera();
         }
 
         public void GoToBuildFormationState()

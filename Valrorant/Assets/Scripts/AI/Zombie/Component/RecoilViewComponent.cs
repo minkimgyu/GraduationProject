@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using AI.Component;
 
-public class RecoilViewComponent : ViewComponent, IRecoilReceiver
+public class RecoilViewComponent : ViewComponent, IRecoilReceiver, IPoint
 {
     [SerializeField] protected Transform _firePoint;
     [SerializeField] Transform _sightPoint;
@@ -24,7 +24,6 @@ public class RecoilViewComponent : ViewComponent, IRecoilReceiver
         _firePointRotationMultiplier = recoilForce;
     }
 
-    public Vector3 ReturnRaycastPos() { return _firePoint.position; }
-
-    public Vector3 ReturnRaycastDir() { return _firePoint.forward; }
+    public Vector3 ReturnPosition() { return _firePoint.position; }
+    public Vector3 ReturnDirection() { return _firePoint.forward; }
 }

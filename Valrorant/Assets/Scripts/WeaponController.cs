@@ -66,7 +66,7 @@ namespace Agent.Controller
 
         // 여기에 이밴트 넣어서 WeaponEventBlackboard 이거 하당해주자
         public void Initialize(float weaponThrowPower, bool isTPS, Action<bool, float, Vector3, float> OnZoomRequested, 
-            Action<string, int, float> OnPlayOwnerAnimation, Action<bool, int, int> OnShowRounds = null, Action<BaseWeapon.Name> OnProfileChangeRequested = null,
+            Action<string, int, float> OnPlayOwnerAnimation, Action<BaseWeapon.Name> OnProfileChangeRequested = null,
             Action<BaseWeapon.Name, BaseWeapon.Type> AddPreview = null, Action<BaseWeapon.Type> RemovePreview = null)
         {
             this.AddPreview = AddPreview;
@@ -80,16 +80,17 @@ namespace Agent.Controller
 
             _weaponsContainer = new Dictionary<BaseWeapon.Type, BaseWeapon>();
             _rigidbody = GetComponent<Rigidbody>();
+
             IRecoilReceiver recoilReceiver = GetComponent<IRecoilReceiver>();
+            IPoint firePoint = GetComponent<IPoint>();
 
             _eventBlackboard = new WeaponEventBlackboard(
                OnZoomRequested,
                SendMoveDisplacement,
                recoilReceiver.OnRecoilRequested,
                OnPlayOwnerAnimation,
-               recoilReceiver.ReturnRaycastPos,
-               recoilReceiver.ReturnRaycastDir,
-               OnShowRounds
+               firePoint.ReturnPosition,
+               firePoint.ReturnDirection
            );
 
             InitializeWeapons();

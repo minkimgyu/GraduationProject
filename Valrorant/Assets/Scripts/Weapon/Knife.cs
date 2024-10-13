@@ -34,7 +34,11 @@ public class Knife : BaseWeapon
     public override void OnEquip()
     {
         base.OnEquip();
-        _weaponEventBlackboard.OnShowRounds?.Invoke(false, 0, 0);
+        EventBusManager.Instance.ObserverEventBus.Publish
+        (
+            ObserverEventBus.Type.ChangeAmmo,
+            false, 0, 0
+        );
     }
 
     public override void Initialize(KnifeData data)
